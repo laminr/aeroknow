@@ -1,0 +1,137 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion "25.0.2"
+    defaultConfig {
+        applicationId "biz.eventually.atpl"
+        minSdkVersion 16
+        targetSdkVersion 25
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+
+        debug {
+            applicationIdSuffix ".debug"
+            versionNameSuffix '-dev'
+            debuggable true
+            minifyEnabled false
+            buildConfigField 'String', 'API_ATPL_ENDPOINT', "\"http://atpl.eventually.biz/api/\""
+            buildConfigField 'String', 'API_ATPL_ENDPOINT_MOCK', "\"http://${getIP()}/~laminr/atpl/webapp/web/\""
+        }
+
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+            buildConfigField 'String', 'API_ATPL_ENDPOINT', "\"http://www.eventually.biz/api/atpl/\""
+
+            minifyEnabled true
+            zipAlignEnabled true
+            shrinkResources true
+        }
+    }
+
+    sourceSets {
+        main.java.srcDirs += 'src/source/kotlin'
+    }
+
+    packagingOptions {
+        exclude 'META-INF/rxjava.properties'
+    }
+}
+
+kapt {
+    generateStubs = true
+}
+
+ext {
+    supportVersion = '25.3.1'
+    leakCanary = '1.5'
+    retrofitVersion = '2.2.0'
+    butterknifeVersion = '8.5.1'
+    okhttpVersion = '3.6.0'
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+
+    compile "com.android.support:appcompat-v7:$supportVersion"
+    compile "com.android.support:design:$supportVersion"
+    compile "com.android.support:cardview-v7:$supportVersion"
+    compile "com.android.support:recyclerview-v7:$supportVersion"
+
+    compile "com.jakewharton:butterknife:$butterknifeVersion"
+
+    compile "com.squareup.retrofit2:retrofit:$retrofitVersion"
+    compile "com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion"
+    compile "com.squareup.retrofit2:converter-moshi:$retrofitVersion"
+
+    //RxJava dependencies
+    compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
+    compile 'io.reactivex.rxjava2:rxjava:2.0.7'
+    compile 'org.reactivestreams:reactive-streams:1.0.0'
+
+    compile 'io.reactivex.rxjava2:rxkotlin:2.0.0'
+
+    debugCompile "com.squareup.leakcanary:leakcanary-android:$leakCanary"
+    releaseCompile "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanary"
+    testCompile "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanary"
+
+    compile 'com.squareup.moshi:moshi:1.4.0'
+    compile 'com.squareup.picasso:picasso:2.5.2'
+    compile "com.squareup.okhttp3:okhttp:$okhttpVersion"
+    compile "com.squareup.okhttp3:logging-interceptor:$okhttpVersion"
+
+    // DAGGER
+    compile "com.google.dagger:dagger:2.9"
+    kapt 'com.google.dagger:dagger-compiler:2.9'
+    //provided 'javax.annotation:jsr250-api:1.0'
+    provided 'org.glassfish:javax.annotation:10.0-b28'
+
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+
+
+    // KOTLIN
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+
+    testCompile 'junit:junit:4.12'
+}
+repositories {
+    mavenCentral()
+}
+
+def getIP() {
+    InetAddress result = null;
+    Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
+    while (interfaces.hasMoreElements()) {
+        Enumeration<InetAddress> addresses = interfaces.nextElement().getInetAddresses();
+        while (addresses.hasMoreElements()) {
+            InetAddress address = addresses.nextElement();
+            if (!address.isLoopbackAddress()) {
+                if (address.isSiteLocalAddress()) {
+                    return address.getHostAddress();
+                } else if (result == null) {
+                    result = address;
+                }
+            }
+        }
+    }
+    return (result != null ? result : InetAddress.getLocalHost()).getHostAddress();
+}
+
+
+def getDate() {
+    def date = new Date()
+    def formattedDate = date.format('dd/MM/yy')
+    return formattedDate
+}

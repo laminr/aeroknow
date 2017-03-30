@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content" xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools">
+
+	<TextView
+		android:id="@+id/subject_title"
+		android:layout_marginLeft="@dimen/padding_thin"
+		android:layout_marginStart="@dimen/padding_thin"
+		android:padding="@dimen/padding_thin"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		app:layout_constraintTop_toTopOf="parent"
+		app:layout_constraintLeft_toLeftOf="parent"
+		android:textColor="@color/colorSecondary"
+	/>
+
+	<android.support.v7.widget.CardView
+		android:id="@+id/topic_card"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		app:layout_constraintTop_toTopOf="parent"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintLeft_toLeftOf="parent"
+		app:layout_constraintRight_toRightOf="parent"
+		android:layout_marginTop="@dimen/padding_thinner"
+		android:layout_marginRight="@dimen/padding_thin"
+		android:layout_marginEnd="@dimen/padding_thin"
+		android:layout_marginLeft="@dimen/padding_thin"
+		android:layout_marginStart="@dimen/padding_thin"
+	>
+
+		<RelativeLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:padding="@dimen/padding_thin"
+			>
+			<TextView
+				android:id="@+id/topic_item_name"
+				tools:text="One Topic"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:paddingRight="48dp"
+				android:paddingEnd="48dp"
+			/>
+
+			<LinearLayout android:layout_width="wrap_content"
+						  android:layout_height="wrap_content"
+						  android:layout_alignParentRight="true"
+						  android:layout_alignParentEnd="true"
+			>
+				<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="@string/sum_symbol"
+					android:textColor="@color/colorAccent"
+				/>
+				<TextView
+					android:id="@+id/topic_item_questions"
+					tools:text="100"
+					android:layout_width="24dp"
+					android:layout_height="wrap_content"
+					android:textAlignment="textEnd"
+					android:layout_gravity="end"
+					android:layout_marginLeft="@dimen/padding_thinner"
+					android:layout_marginStart="@dimen/padding_thinner"
+					android:layout_marginRight="@dimen/padding_thin"
+					android:layout_marginEnd="@dimen/padding_thin"
+				/>
+			</LinearLayout>
+		</RelativeLayout>
+	</android.support.v7.widget.CardView>
+</android.support.constraint.ConstraintLayout>
