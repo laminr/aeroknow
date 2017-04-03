@@ -8,15 +8,14 @@ import biz.eventually.atpl.AtplApplication
 import biz.eventually.atpl.R
 import biz.eventually.atpl.common.IntentIdentifier
 import biz.eventually.atpl.network.model.Source
+import biz.eventually.atpl.ui.BaseActivity
 import biz.eventually.atpl.ui.subject.SubjectActivity
 import kotlinx.android.synthetic.main.activity_source.*
 import java.util.*
 import javax.inject.Inject
 
 
-class SourceActivity : AppCompatActivity() {
-
-    @Inject lateinit var manager: SourceManager
+class SourceActivity : BaseActivity<SourceManager>() {
 
     private var mAdapter: SourceAdapter? = null
 

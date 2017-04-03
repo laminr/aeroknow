@@ -18,14 +18,13 @@ import kotlinx.android.synthetic.main.activity_subject.*
 import kotlinx.android.synthetic.main.content_subject.*
 import android.support.v7.widget.DefaultItemAnimator
 import biz.eventually.atpl.network.model.Topic
+import biz.eventually.atpl.ui.BaseActivity
 
-class SubjectActivity : AppCompatActivity() {
+class SubjectActivity : BaseActivity<SubjectManager>() {
 
     companion object {
         val TAG = "SubjectActivity"
     }
-
-    @Inject lateinit var manager: SubjectManager
 
     private var sourceId: Int = 0
     private var mAdapter: SubjectAdapter? = null
