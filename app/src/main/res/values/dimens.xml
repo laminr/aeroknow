@@ -9,4 +9,7 @@
     <dimen name="padding_thin">8dp</dimen>
     <dimen name="padding_large">16dp</dimen>
 
+
+	<dimen name="margin_large">16dp</dimen>
+
 </resources>

@@ -11,9 +11,8 @@ It includes:
 
 # Current
   - 1st screen : Source list
-  - 2nd screen : Subject and Topic for a source 
-# Next
-   - Questions campain screen for a topic
+  - 2nd screen : Subject and Topic for a source
+  - 3rd screen : Questions campain screen for a topic
 
 Continious work in progress ;-)
 

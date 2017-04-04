@@ -18,6 +18,7 @@ import kotlinx.android.synthetic.main.activity_subject.*
 import kotlinx.android.synthetic.main.content_subject.*
 import android.support.v7.widget.DefaultItemAnimator
 import biz.eventually.atpl.network.model.Topic
+import biz.eventually.atpl.network.model.dto.TopicDto
 import biz.eventually.atpl.ui.BaseActivity
 
 class SubjectActivity : BaseActivity<SubjectManager>() {
@@ -40,7 +41,7 @@ class SubjectActivity : BaseActivity<SubjectManager>() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val sourceName = intent.extras.getString(IntentIdentifier.SOURCE_NAME)
-        toolbar.title = sourceName
+        supportActionBar?.title = sourceName
 
         sourceId = intent.extras.getInt(IntentIdentifier.SOURCE_ID)
         if (sourceId > 0) {
@@ -56,10 +57,10 @@ class SubjectActivity : BaseActivity<SubjectManager>() {
 
     fun displaySubjects(subjects: List<Subject>?) : Unit {
         subjects?.let {
-            val topics = mutableListOf<Topic>()
+            val topics = mutableListOf<TopicDto>()
 
             subjects.forEach { s ->
-                topics.add(Topic(-1, s.name, 0, 0, 0))
+                topics.add(TopicDto(-1, s.name, 0, 0, 0))
                 topics.addAll(s.topics)
             }
 

@@ -1,12 +1,17 @@
 package biz.eventually.atpl.ui.subject
 
+import android.content.Intent
+import android.support.v4.content.ContextCompat.startActivity
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import biz.eventually.atpl.R
-import biz.eventually.atpl.network.model.Subject
+import biz.eventually.atpl.common.IntentIdentifier
 import biz.eventually.atpl.network.model.Topic
+import biz.eventually.atpl.network.model.dto.TopicDto
+import biz.eventually.atpl.ui.questions.QuestionsActivity
 
 
 /**
@@ -15,7 +20,8 @@ import biz.eventually.atpl.network.model.Topic
 class SubjectAdapter : RecyclerView.Adapter<SubjectViewHolder>() {
 
     var name: TextView? = null
-    private var mTopics = mutableListOf<Topic>()
+    private var mTopics = mutableListOf<TopicDto>()
+    private var mParent: ViewGroup? = null
 
     override fun onBindViewHolder(holder: SubjectViewHolder?, position: Int) {
         holder?.apply {
@@ -28,11 +34,21 @@ class SubjectAdapter : RecyclerView.Adapter<SubjectViewHolder>() {
     }
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): SubjectViewHolder {
+        mParent = parent
         val view = LayoutInflater.from(parent?.context).inflate(R.layout.item_subject_row, parent, false)
-        return SubjectViewHolder(view)
+        return SubjectViewHolder(view, this::onItemClick)
     }
 
-    fun bind(topics: List<Topic>) : Unit {
+    private fun onItemClick(dto: TopicDto): Unit {
+
+        val intent = Intent(mParent?.context, QuestionsActivity::class.java)
+        val topic = Topic(dto.id, dto.name, listOf(), 0, 0)
+        intent.putExtra(IntentIdentifier.TOPIC, topic)
+        startActivity(mParent?.context, intent, null)
+
+    }
+
+    fun bind(topics: List<TopicDto>): Unit {
         mTopics.addAll(topics)
     }
 }

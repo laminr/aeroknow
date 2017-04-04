@@ -1,5 +1,6 @@
 package biz.eventually.atpl.di
 
+import biz.eventually.atpl.ui.questions.QuestionsActivity
 import biz.eventually.atpl.ui.source.SourceActivity
 import biz.eventually.atpl.ui.subject.SubjectActivity
 
@@ -12,5 +13,7 @@ interface AppGraph {
     fun inject(source: SourceActivity)
 
     fun inject(source: SubjectActivity)
+
+    fun inject(questionsActivity: QuestionsActivity)
 
 }

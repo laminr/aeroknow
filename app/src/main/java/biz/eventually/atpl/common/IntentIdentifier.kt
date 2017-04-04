@@ -7,5 +7,6 @@ interface IntentIdentifier {
     companion object {
         val SOURCE_ID = "intent.source.id"
         val SOURCE_NAME = "intent.source.name"
+        val TOPIC = "intent.object.topic"
     }
 }

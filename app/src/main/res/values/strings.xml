@@ -1,6 +1,8 @@
 <resources>
-    <string name="app_name">ATPL</string>
-    <string name="action_settings">Settings</string>
-    <string name="title_activity_subject">Subjects</string>
+	<string name="app_name">Aero Know</string>
+	<string name="action_settings">Settings</string>
+	<string name="title_activity_subject">Subjects</string>
 	<string name="sum_symbol">Σ</string>
+	<string name="question_back">back</string>
+	<string name="question_next">next</string>
 </resources>
