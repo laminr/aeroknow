@@ -1,25 +1,16 @@
 package biz.eventually.atpl.ui.subject
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
-import android.util.Log
 import biz.eventually.atpl.AtplApplication
-
 import biz.eventually.atpl.R
 import biz.eventually.atpl.common.IntentIdentifier
 import biz.eventually.atpl.network.model.Subject
-import biz.eventually.atpl.ui.source.SourceAdapter
-import javax.inject.Inject
-
-import kotlinx.android.synthetic.main.activity_subject.*
-import kotlinx.android.synthetic.main.content_subject.*
-import android.support.v7.widget.DefaultItemAnimator
-import biz.eventually.atpl.network.model.Topic
 import biz.eventually.atpl.network.model.dto.TopicDto
 import biz.eventually.atpl.ui.BaseActivity
+import kotlinx.android.synthetic.main.content_subject.*
 
 class SubjectActivity : BaseActivity<SubjectManager>() {
 
@@ -45,6 +36,7 @@ class SubjectActivity : BaseActivity<SubjectManager>() {
 
         sourceId = intent.extras.getInt(IntentIdentifier.SOURCE_ID)
         if (sourceId > 0) {
+            rotateloading.start()
             manager.getSubjects(sourceId, this::displaySubjects)
         }
 
@@ -66,6 +58,7 @@ class SubjectActivity : BaseActivity<SubjectManager>() {
 
             mAdapter?.bind(topics)
             mAdapter?.notifyDataSetChanged()
+            rotateloading.stop()
         }
     }
 }

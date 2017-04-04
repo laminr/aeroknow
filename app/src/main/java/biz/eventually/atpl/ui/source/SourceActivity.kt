@@ -26,6 +26,7 @@ class SourceActivity : BaseActivity<SourceManager>() {
         setContentView(R.layout.activity_source)
 
         manager.getSources(this::displayData)
+        rotateloading.start()
     }
 
 
@@ -42,6 +43,7 @@ class SourceActivity : BaseActivity<SourceManager>() {
                 intent.putExtra(IntentIdentifier.SOURCE_NAME, get(position).name)
                 startActivity(intent)
             }
+            rotateloading.stop()
         }
     }
 }

@@ -61,4 +61,16 @@
         android:divider="@null"
         />
 
+	<com.victor.loading.rotate.RotateLoading
+		android:id="@+id/rotateloading"
+		android:layout_width="80dp"
+		android:layout_height="80dp"
+		app:loading_width="5dp"
+		app:loading_color="@color/colorAccent"
+		android:layout_centerInParent="true"
+		app:layout_constraintTop_toTopOf="parent"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintLeft_toLeftOf="parent"
+		app:layout_constraintRight_toRightOf="parent"
+	/>
 </android.support.constraint.ConstraintLayout>

@@ -27,8 +27,10 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
 
         mTopic = intent.extras.getParcelable<Topic>(IntentIdentifier.TOPIC)
         mTopic?.apply {
+            rotateloading.start()
             manager.getQuestions(id) { t ->
                 mTopic = t
+                rotateloading.stop()
                 displayQuestion()
             }
         }
