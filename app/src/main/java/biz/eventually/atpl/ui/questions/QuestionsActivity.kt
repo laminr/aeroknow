@@ -1,12 +1,14 @@
 package biz.eventually.atpl.ui.questions
 
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.support.v4.content.ContextCompat
 import android.view.MenuItem
 import android.view.View
 import biz.eventually.atpl.AtplApplication
 import biz.eventually.atpl.R
 import biz.eventually.atpl.common.IntentIdentifier
+import biz.eventually.atpl.common.StateIdentifier
 import biz.eventually.atpl.network.model.Topic
 import biz.eventually.atpl.ui.BaseActivity
 import biz.eventually.atpl.ui.source.QuestionsManager
@@ -60,6 +62,22 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
                 return true
             }
             else -> return super.onOptionsItemSelected(item)
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle?) {
+        super.onSaveInstanceState(outState)
+        outState?.let {
+            it.putParcelable(StateIdentifier.TOPIC, mTopic)
+            it.putInt(StateIdentifier.QUEST_CURRENT, mCurrentQuestion)
+        }
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
+        super.onRestoreInstanceState(savedInstanceState)
+        savedInstanceState?.let {
+            mTopic = it.getParcelable(StateIdentifier.TOPIC)
+            mCurrentQuestion = it.getInt(StateIdentifier.QUEST_CURRENT)
         }
     }
 

@@ -24,7 +24,6 @@
 			android:layout_height="80dp"
 			app:loading_width="5dp"
 			app:loading_color="@color/colorAccent"
-			android:layout_centerInParent="true"
 			android:layout_gravity="center"
 			android:foregroundGravity="center"
 			app:layout_constraintTop_toTopOf="parent"

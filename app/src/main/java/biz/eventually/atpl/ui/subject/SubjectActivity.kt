@@ -7,6 +7,7 @@ import android.support.v7.widget.Toolbar
 import biz.eventually.atpl.AtplApplication
 import biz.eventually.atpl.R
 import biz.eventually.atpl.common.IntentIdentifier
+import biz.eventually.atpl.common.StateIdentifier
 import biz.eventually.atpl.network.model.Subject
 import biz.eventually.atpl.network.model.dto.TopicDto
 import biz.eventually.atpl.ui.BaseActivity
@@ -18,7 +19,7 @@ class SubjectActivity : BaseActivity<SubjectManager>() {
         val TAG = "SubjectActivity"
     }
 
-    private var sourceId: Int = 0
+    private var mSourceId: Int = 0
     private var mAdapter: SubjectAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,10 +35,10 @@ class SubjectActivity : BaseActivity<SubjectManager>() {
         val sourceName = intent.extras.getString(IntentIdentifier.SOURCE_NAME)
         supportActionBar?.title = sourceName
 
-        sourceId = intent.extras.getInt(IntentIdentifier.SOURCE_ID)
-        if (sourceId > 0) {
+        mSourceId = intent.extras.getInt(IntentIdentifier.SOURCE_ID)
+        if (mSourceId > 0) {
             rotateloading.start()
-            manager.getSubjects(sourceId, this::displaySubjects)
+            manager.getSubjects(mSourceId, this::displaySubjects)
         }
 
         val mLayoutManager = LinearLayoutManager(applicationContext)

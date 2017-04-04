@@ -2,6 +2,7 @@ package biz.eventually.atpl.ui.source
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.support.v7.app.AppCompatActivity
 import android.widget.AdapterView
 import biz.eventually.atpl.AtplApplication
@@ -28,7 +29,6 @@ class SourceActivity : BaseActivity<SourceManager>() {
         manager.getSources(this::displayData)
         rotateloading.start()
     }
-
 
     private fun displayData(sources: List<Source>?): Unit {
 
