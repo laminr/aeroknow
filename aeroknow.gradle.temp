@@ -1,0 +1,16 @@
+android {
+    signingConfigs {
+        release {
+            keyAlias 'MyKeyAlias'
+            keyPassword 'password'
+            storeFile file(project.property("aeroknow.signing") + ".jks")
+            storePassword 'password'
+        }
+    }
+
+    buildTypes {
+        release {
+            signingConfig signingConfigs.release
+        }
+    }
+}

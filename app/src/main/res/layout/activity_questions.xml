@@ -48,7 +48,7 @@
 				android:layout_marginLeft="@dimen/margin_large"
 				android:layout_marginRight="@dimen/margin_large"
 				app:contentPadding="@dimen/padding_thinner"
-				app:cardCornerRadius="@dimen/padding_thin"
+				app:cardCornerRadius="@dimen/padding_thinner"
 			>
 				<LinearLayout
 					android:layout_width="match_parent"
@@ -80,7 +80,7 @@
 				android:layout_marginLeft="@dimen/margin_large"
 				android:layout_marginRight="@dimen/margin_large"
 				app:contentPadding="@dimen/padding_thinner"
-				app:cardCornerRadius="@dimen/padding_thin"
+				app:cardCornerRadius="@dimen/padding_thinner"
 			>
 				<LinearLayout
 					android:layout_width="match_parent"
@@ -111,7 +111,7 @@
 				android:layout_marginLeft="@dimen/margin_large"
 				android:layout_marginRight="@dimen/margin_large"
 				app:contentPadding="@dimen/padding_thinner"
-				app:cardCornerRadius="@dimen/padding_thin"
+				app:cardCornerRadius="@dimen/padding_thinner"
 			>
 				<LinearLayout
 					android:layout_width="match_parent"
@@ -134,29 +134,32 @@
 				android:id="@+id/question_answer_4"
 				android:layout_width="0dp"
 				android:layout_height="wrap_content"
-				app:layout_constraintTop_toBottomOf="@+id/question_answer_3"
-				app:layout_constraintLeft_toLeftOf="parent"
-				app:layout_constraintRight_toRightOf="parent"
-				android:layout_marginTop="@dimen/margin_large"
-				android:padding="@dimen/padding_large"
 				android:layout_marginLeft="@dimen/margin_large"
 				android:layout_marginRight="@dimen/margin_large"
+				android:layout_marginTop="@dimen/margin_large"
+				android:padding="@dimen/padding_large"
+				app:cardCornerRadius="@dimen/padding_thinner"
 				app:contentPadding="@dimen/padding_thinner"
-				app:cardCornerRadius="@dimen/padding_thin"
-			>
+				app:layout_constraintLeft_toLeftOf="parent"
+				app:layout_constraintRight_toRightOf="parent"
+				app:layout_constraintTop_toBottomOf="@+id/question_answer_3">
+
 				<LinearLayout
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
 					android:orientation="horizontal">
 
-					<CheckBox android:layout_width="wrap_content" android:layout_height="wrap_content"
-							  android:layout_gravity="center" />
+					<CheckBox
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_gravity="center" />
+
 					<TextView
 						android:id="@+id/question_answer_4_text"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
-						android:layout_marginTop="@dimen/padding_thin"
 						android:layout_marginBottom="@dimen/padding_thin"
+						android:layout_marginTop="@dimen/padding_thin"
 						tools:text="Answer 4" />
 				</LinearLayout>
 			</android.support.v7.widget.CardView>

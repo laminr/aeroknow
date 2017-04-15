@@ -1,10 +1,14 @@
 package biz.eventually.atpl.ui.questions
 
+import android.animation.ArgbEvaluator
+import android.animation.ValueAnimator
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.support.v4.content.ContextCompat
 import android.view.MenuItem
 import android.view.View
+import android.widget.CheckBox
+import android.widget.TextView
 import biz.eventually.atpl.AtplApplication
 import biz.eventually.atpl.R
 import biz.eventually.atpl.common.IntentIdentifier
@@ -53,6 +57,8 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
                 displayQuestion()
             }
         }
+
+        animateBackground(question_answer_1_text)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -114,6 +120,8 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
 
     fun onAnswerClick(view: View) {
         showAnswer()
+        val check = view as CheckBox
+        check.isChecked = !check.isChecked
     }
 
     private fun showAnswer() {
@@ -129,4 +137,32 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
             }
         }
     }
+
+     private fun animateBackground(text: TextView) {
+         val colorFrom = ContextCompat.getColor(applicationContext, R.color.colorAccent)
+         val colorTo = ContextCompat.getColor(applicationContext, R.color.colorSecondary)
+
+         val colorAnimation = ValueAnimator.ofObject(ArgbEvaluator(), colorFrom, colorTo)
+         colorAnimation.duration = 250
+         colorAnimation.addUpdateListener { animator ->
+             text.setBackgroundColor(animator.animatedValue as Int)
+         }
+
+         colorAnimation.start()
+         /*
+         int colorFrom = getResources().getColor(R.color.red);
+        int colorTo = getResources().getColor(R.color.blue);
+        ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorTo);
+        colorAnimation.setDuration(250); // milliseconds
+        colorAnimation.addUpdateListener(new AnimatorUpdateListener() {
+
+            @Override
+            public void onAnimationUpdate(ValueAnimator animator) {
+                textView.setBackgroundColor((int) animator.getAnimatedValue());
+            }
+
+        });
+        colorAnimation.start();
+         */
+     }
 }
