@@ -7,10 +7,10 @@ import android.support.v7.widget.Toolbar
 import biz.eventually.atpl.AtplApplication
 import biz.eventually.atpl.R
 import biz.eventually.atpl.common.IntentIdentifier
-import biz.eventually.atpl.common.StateIdentifier
 import biz.eventually.atpl.network.model.Subject
 import biz.eventually.atpl.network.model.dto.TopicDto
 import biz.eventually.atpl.ui.BaseActivity
+import kotlinx.android.synthetic.main.activity_questions.*
 import kotlinx.android.synthetic.main.content_subject.*
 
 class SubjectActivity : BaseActivity<SubjectManager>() {

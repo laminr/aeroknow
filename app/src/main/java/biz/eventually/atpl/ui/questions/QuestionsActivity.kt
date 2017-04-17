@@ -5,8 +5,11 @@ import android.animation.ValueAnimator
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.support.v4.content.ContextCompat
+import android.support.v7.widget.AppCompatCheckBox
+import android.support.v7.widget.CardView
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.TextView
 import biz.eventually.atpl.AtplApplication
@@ -24,6 +27,8 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
 
     private var mTopic: Topic? = null
     private var mCurrentQuestion: Int = 0
+    private var mShowAnswer = false
+    private var mIndexTick = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,10 +46,10 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
             }
         }
 
-        question_answer_1.setOnClickListener { onAnswerClick(it) }
-        question_answer_2.setOnClickListener { onAnswerClick(it) }
-        question_answer_3.setOnClickListener { onAnswerClick(it) }
-        question_answer_4.setOnClickListener { onAnswerClick(it) }
+        question_answer_1.setOnClickListener { onAnswerClick(it, 0) }
+        question_answer_2.setOnClickListener { onAnswerClick(it, 1) }
+        question_answer_3.setOnClickListener { onAnswerClick(it, 2) }
+        question_answer_4.setOnClickListener { onAnswerClick(it, 3) }
 
         question_previous.setOnClickListener {
             if (mCurrentQuestion >= 1) mCurrentQuestion -= 1
@@ -58,7 +63,6 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
             }
         }
 
-        animateBackground(question_answer_1_text)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -92,6 +96,7 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
     }
 
     fun displayQuestion() {
+        resetCheckbox()
 
         mTopic?.questions?.get(mCurrentQuestion)?.apply {
             question_label.text = getHtml(label)
@@ -112,57 +117,66 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
             question_next.visibility = if (mCurrentQuestion < it.count() - 1) View.VISIBLE else View.GONE
         }
 
+        initCheckboxes()
+    }
+
+    fun initCheckboxes() {
         question_answer_1.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.cardview_light_background))
         question_answer_2.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.cardview_light_background))
         question_answer_3.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.cardview_light_background))
         question_answer_4.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.cardview_light_background))
     }
 
-    fun onAnswerClick(view: View) {
-        showAnswer()
-        val check = view as CheckBox
-        check.isChecked = !check.isChecked
+    fun onAnswerClick(view: View, index: Int) {
+
+        mIndexTick = index
+        mShowAnswer = !mShowAnswer
+
+        if (mShowAnswer) {
+            resetCheckbox()
+            checkOneBox(view as CardView, true)
+            showAnswer()
+        } else {
+            initCheckboxes()
+            resetCheckbox()
+        }
+
+    }
+
+    private fun resetCheckbox() {
+        checkOneBox(question_answer_1, false)
+        checkOneBox(question_answer_2, false)
+        checkOneBox(question_answer_3, false)
+        checkOneBox(question_answer_4, false)
+    }
+
+    private fun checkOneBox(card: CardView, check: Boolean ) {
+
+        // get the LinearLayout inside the CardView
+        val group = (card as ViewGroup).getChildAt(0) as ViewGroup
+        var box: CheckBox? = null
+
+        (0..(group.childCount - 1)).forEach { i ->
+            if (group.getChildAt(i) is CheckBox) {
+                box = group.getChildAt(i) as CheckBox
+            }
+        }
+
+        box?.let { it.isChecked = check }
     }
 
     private fun showAnswer() {
         mTopic?.questions?.get(mCurrentQuestion)?.answers?.let {
             for (i in 0..it.count() - 1) {
                 val color = if (it[i].good) ContextCompat.getColor(applicationContext, R.color.colorAccent) else ContextCompat.getColor(applicationContext, R.color.colorSecondary)
+                val bckg = if (it[i].good) ContextCompat.getDrawable(applicationContext, R.drawable.answer_right) else  ContextCompat.getDrawable(applicationContext, R.drawable.answer_wrong)
                 when (i) {
-                    0 -> question_answer_1.setBackgroundColor(color)
-                    1 -> question_answer_2.setBackgroundColor(color)
-                    2 -> question_answer_3.setBackgroundColor(color)
-                    3 -> question_answer_4.setBackgroundColor(color)
+                    0 -> question_answer_1.background = bckg
+                    1 -> question_answer_2.background = bckg
+                    2 -> question_answer_3.background = bckg
+                    3 -> question_answer_4.background = bckg
                 }
             }
         }
     }
-
-     private fun animateBackground(text: TextView) {
-         val colorFrom = ContextCompat.getColor(applicationContext, R.color.colorAccent)
-         val colorTo = ContextCompat.getColor(applicationContext, R.color.colorSecondary)
-
-         val colorAnimation = ValueAnimator.ofObject(ArgbEvaluator(), colorFrom, colorTo)
-         colorAnimation.duration = 250
-         colorAnimation.addUpdateListener { animator ->
-             text.setBackgroundColor(animator.animatedValue as Int)
-         }
-
-         colorAnimation.start()
-         /*
-         int colorFrom = getResources().getColor(R.color.red);
-        int colorTo = getResources().getColor(R.color.blue);
-        ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorTo);
-        colorAnimation.setDuration(250); // milliseconds
-        colorAnimation.addUpdateListener(new AnimatorUpdateListener() {
-
-            @Override
-            public void onAnimationUpdate(ValueAnimator animator) {
-                textView.setBackgroundColor((int) animator.getAnimatedValue());
-            }
-
-        });
-        colorAnimation.start();
-         */
-     }
 }

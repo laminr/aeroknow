@@ -55,4 +55,14 @@
 
     <include layout="@layout/content_subject" />
 
+	<com.victor.loading.rotate.RotateLoading
+		android:id="@+id/rotateloading"
+		android:layout_width="80dp"
+		android:layout_height="80dp"
+		app:loading_width="5dp"
+		app:loading_color="@color/colorAccent"
+		android:layout_gravity="center"
+		android:foregroundGravity="center"
+		/>
+
 </android.support.design.widget.CoordinatorLayout>

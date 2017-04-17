@@ -4,6 +4,7 @@ import android.util.Log
 import biz.eventually.atpl.common.RxBaseManager
 import biz.eventually.atpl.network.DataProvider
 import biz.eventually.atpl.network.model.Source
+import cn.pedant.SweetAlert.SweetAlertDialog
 
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -21,12 +22,13 @@ class SourceManager @Inject constructor (private val dataProvider: DataProvider)
         val TAG = "SourceManager"
     }
 
-    fun getSources(display: (List<Source>?) -> Unit) {
+    fun getSources(display: (List<Source>?) -> Unit, error: () -> Unit) {
 
         dataProvider.dataGetSources()?.subscribeOn(Schedulers.io())?.observeOn(AndroidSchedulers.mainThread())?.subscribe({ s ->
             display(s)
         }, { error ->
             Log.d(TAG, "getSources: "+error)
+            error()
         })
 
     }

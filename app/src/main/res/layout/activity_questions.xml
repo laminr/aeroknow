@@ -1,204 +1,216 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:tools="http://schemas.android.com/tools"
-	xmlns:app="http://schemas.android.com/apk/res-auto"
-	android:layout_height="wrap_content"
-	android:layout_width="match_parent"
-	android:fillViewport="true"
->
-	<FrameLayout
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content">
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:fillViewport="true">
 
-		<android.support.constraint.ConstraintLayout
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			tools:context="biz.eventually.atpl.ui.questions.QuestionsActivity">
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-			<TextView
-				android:id="@+id/question_label"
-				tools:text="One Question label"
-				android:gravity="start"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				app:layout_constraintTop_toTopOf="parent"
-				app:layout_constraintLeft_toLeftOf="parent"
-				app:layout_constraintRight_toRightOf="parent"
-				android:layout_marginTop="@dimen/margin_large"
-				android:layout_marginBottom="@dimen/margin_large"
-				android:textAppearance="@style/TextAppearance.AppCompat.Large"
-				android:layout_marginLeft="@dimen/margin_large"
-				android:layout_marginRight="@dimen/margin_large"
-				android:padding="@dimen/padding_large"
-				android:textAlignment="textStart"
-				app:layout_constraintHorizontal_bias="0.5"
-				android:textSize="18sp"
-			/>
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:context="biz.eventually.atpl.ui.questions.QuestionsActivity">
 
-			<android.support.v7.widget.CardView
-				android:id="@+id/question_answer_1"
-				android:layout_width="0dp"
-				android:layout_height="wrap_content"
-				app:layout_constraintTop_toBottomOf="@+id/question_label"
-				app:layout_constraintLeft_toLeftOf="parent"
-				app:layout_constraintRight_toRightOf="parent"
-				android:layout_marginTop="@dimen/margin_large"
-				android:padding="@dimen/padding_large"
-				android:layout_marginLeft="@dimen/margin_large"
-				android:layout_marginRight="@dimen/margin_large"
-				app:contentPadding="@dimen/padding_thinner"
-				app:cardCornerRadius="@dimen/padding_thinner"
-			>
-				<LinearLayout
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:orientation="horizontal">
+            <TextView
+                android:id="@+id/question_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_large"
+                android:layout_marginLeft="@dimen/margin_large"
+                android:layout_marginRight="@dimen/margin_large"
+                android:layout_marginTop="@dimen/margin_large"
+                android:gravity="start"
+                android:padding="@dimen/padding_large"
+                android:textAlignment="textStart"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textSize="18sp"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="One Question label" />
 
-					<CheckBox android:layout_width="wrap_content" android:layout_height="wrap_content"
-							  android:layout_gravity="center" />
-					<TextView
-						android:id="@+id/question_answer_1_text"
-						android:layout_width="wrap_content"
-						android:layout_height="wrap_content"
-						android:layout_marginTop="@dimen/padding_thin"
-						android:layout_marginBottom="@dimen/padding_thin"
-						tools:text="Answer 1"
-					/>
-				</LinearLayout>
-			</android.support.v7.widget.CardView>
+            <android.support.v7.widget.CardView
+                android:id="@+id/question_answer_1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_large"
+                android:layout_marginRight="@dimen/margin_large"
+                android:layout_marginTop="@dimen/margin_large"
+                android:padding="@dimen/padding_large"
+                app:cardCornerRadius="@dimen/padding_thinner"
+                app:contentPadding="@dimen/padding_thinner"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/question_label">
 
-			<android.support.v7.widget.CardView
-				android:id="@+id/question_answer_2"
-				android:layout_width="0dp"
-				android:layout_height="wrap_content"
-				app:layout_constraintTop_toBottomOf="@+id/question_answer_1"
-				app:layout_constraintLeft_toLeftOf="parent"
-				app:layout_constraintRight_toRightOf="parent"
-				android:layout_marginTop="@dimen/margin_large"
-				android:padding="@dimen/padding_thin"
-				android:layout_marginLeft="@dimen/margin_large"
-				android:layout_marginRight="@dimen/margin_large"
-				app:contentPadding="@dimen/padding_thinner"
-				app:cardCornerRadius="@dimen/padding_thinner"
-			>
-				<LinearLayout
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:orientation="horizontal">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
-					<CheckBox android:layout_width="wrap_content" android:layout_height="wrap_content"
-							  android:layout_gravity="center" />
-					<TextView
-						android:id="@+id/question_answer_2_text"
-						android:layout_width="wrap_content"
-						android:layout_height="wrap_content"
-						android:layout_marginTop="@dimen/padding_thin"
-						android:layout_marginBottom="@dimen/padding_thin"
-						tools:text="Answer 2" />
-				</LinearLayout>
-			</android.support.v7.widget.CardView>
+                    <CheckBox
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        app:buttonTint="@color/colorPrimaryDark"
+                        android:textColor="@color/colorPrimaryDark" />
 
-			<android.support.v7.widget.CardView
-				android:id="@+id/question_answer_3"
-				android:layout_width="0dp"
-				android:layout_height="wrap_content"
-				app:layout_constraintTop_toBottomOf="@+id/question_answer_2"
-				app:layout_constraintLeft_toLeftOf="parent"
-				app:layout_constraintRight_toRightOf="parent"
-				android:layout_marginTop="@dimen/margin_large"
-				android:padding="@dimen/padding_large"
-				android:layout_marginLeft="@dimen/margin_large"
-				android:layout_marginRight="@dimen/margin_large"
-				app:contentPadding="@dimen/padding_thinner"
-				app:cardCornerRadius="@dimen/padding_thinner"
-			>
-				<LinearLayout
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/question_answer_1_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/padding_thin"
+                        android:layout_marginTop="@dimen/padding_thin"
+                        tools:text="Answer 1" />
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
 
-					<CheckBox android:layout_width="wrap_content" android:layout_height="wrap_content"
-							  android:layout_gravity="center" />
-					<TextView
-						android:id="@+id/question_answer_3_text"
-						android:layout_width="wrap_content"
-						android:layout_height="wrap_content"
-						android:layout_marginTop="@dimen/padding_thin"
-						android:layout_marginBottom="@dimen/padding_thin"
-						tools:text="Answer 3" />
-				</LinearLayout>
-			</android.support.v7.widget.CardView>
+            <android.support.v7.widget.CardView
+                android:id="@+id/question_answer_2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_large"
+                android:layout_marginRight="@dimen/margin_large"
+                android:layout_marginTop="@dimen/margin_large"
+                android:padding="@dimen/padding_thin"
+                app:cardCornerRadius="@dimen/padding_thinner"
+                app:contentPadding="@dimen/padding_thinner"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/question_answer_1">
 
-			<android.support.v7.widget.CardView
-				android:id="@+id/question_answer_4"
-				android:layout_width="0dp"
-				android:layout_height="wrap_content"
-				android:layout_marginLeft="@dimen/margin_large"
-				android:layout_marginRight="@dimen/margin_large"
-				android:layout_marginTop="@dimen/margin_large"
-				android:padding="@dimen/padding_large"
-				app:cardCornerRadius="@dimen/padding_thinner"
-				app:contentPadding="@dimen/padding_thinner"
-				app:layout_constraintLeft_toLeftOf="parent"
-				app:layout_constraintRight_toRightOf="parent"
-				app:layout_constraintTop_toBottomOf="@+id/question_answer_3">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
-				<LinearLayout
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:orientation="horizontal">
+                    <CheckBox
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        app:buttonTint="@color/colorPrimaryDark"
+                        android:textColor="@color/colorPrimaryDark" />
 
-					<CheckBox
-						android:layout_width="wrap_content"
-						android:layout_height="wrap_content"
-						android:layout_gravity="center" />
+                    <TextView
+                        android:id="@+id/question_answer_2_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/padding_thin"
+                        android:layout_marginTop="@dimen/padding_thin"
+                        tools:text="Answer 2" />
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
 
-					<TextView
-						android:id="@+id/question_answer_4_text"
-						android:layout_width="wrap_content"
-						android:layout_height="wrap_content"
-						android:layout_marginBottom="@dimen/padding_thin"
-						android:layout_marginTop="@dimen/padding_thin"
-						tools:text="Answer 4" />
-				</LinearLayout>
-			</android.support.v7.widget.CardView>
+            <android.support.v7.widget.CardView
+                android:id="@+id/question_answer_3"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_large"
+                android:layout_marginRight="@dimen/margin_large"
+                android:layout_marginTop="@dimen/margin_large"
+                android:padding="@dimen/padding_large"
+                app:cardCornerRadius="@dimen/padding_thinner"
+                app:contentPadding="@dimen/padding_thinner"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/question_answer_2">
 
-			<Button
-				android:text="@string/question_next"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:id="@+id/question_next"
-				android:layout_marginTop="16dp"
-				android:layout_marginRight="16dp"
-				android:layout_marginEnd="16dp"
-				app:layout_constraintTop_toBottomOf="@+id/question_answer_4"
-				app:layout_constraintRight_toRightOf="parent"
-				app:layout_constraintBottom_toBottomOf="parent"
-				android:layout_marginBottom="16dp"
-				app:layout_constraintVertical_bias="1.0"
-			/>
-			<Button
-				android:text="@string/question_back"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:id="@+id/question_previous" android:layout_marginTop="16dp"
-				app:layout_constraintTop_toBottomOf="@+id/question_answer_4"
-				android:layout_marginLeft="16dp"
-				android:layout_marginStart="16dp"
-				app:layout_constraintLeft_toLeftOf="parent"
-				app:layout_constraintBottom_toBottomOf="parent"
-				android:layout_marginBottom="16dp" app:layout_constraintVertical_bias="1.0" />
-		</android.support.constraint.ConstraintLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
-		<com.victor.loading.rotate.RotateLoading
-			android:id="@+id/rotateloading"
-			android:layout_width="80dp"
-			android:layout_height="80dp"
-			app:loading_width="5dp"
-			app:loading_color="@color/colorAccent"
-			android:layout_gravity="center"
-			android:foregroundGravity="center"
-		/>
-	</FrameLayout>
+                    <CheckBox
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+
+                        android:layout_gravity="center"
+                        app:buttonTint="@color/colorPrimaryDark"
+                        android:textColor="@color/colorPrimaryDark" />
+
+                    <TextView
+                        android:id="@+id/question_answer_3_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/padding_thin"
+                        android:layout_marginTop="@dimen/padding_thin"
+                        tools:text="Answer 3" />
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/question_answer_4"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_large"
+                android:layout_marginRight="@dimen/margin_large"
+                android:layout_marginTop="@dimen/margin_large"
+                android:padding="@dimen/padding_large"
+                app:cardCornerRadius="@dimen/padding_thinner"
+                app:contentPadding="@dimen/padding_thinner"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/question_answer_3">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <CheckBox
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        app:buttonTint="@color/colorPrimaryDark"
+                        android:textColor="@color/colorPrimaryDark" />
+
+                    <TextView
+                        android:id="@+id/question_answer_4_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/padding_thin"
+                        android:layout_marginTop="@dimen/padding_thin"
+                        tools:text="Answer 4" />
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+
+            <Button
+                android:id="@+id/question_next"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/question_next"
+                app:backgroundTint="@color/colorAccent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/question_answer_4" />
+
+            <Button
+                android:id="@+id/question_previous"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/question_back"
+                app:backgroundTint="@color/colorAccent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/question_answer_4" />
+        </android.support.constraint.ConstraintLayout>
+
+        <com.victor.loading.rotate.RotateLoading
+            android:id="@+id/rotateloading"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_gravity="center"
+            android:foregroundGravity="center"
+            app:loading_color="@color/colorAccent"
+            app:loading_width="5dp" />
+    </FrameLayout>
 </ScrollView>

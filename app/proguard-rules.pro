@@ -24,8 +24,7 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
--dontwarn com.squareup.okhttp.**
-
+#RETROFIT RULES
 # Platform calls Class.forName on types which do not exist on Android to determine platform.
 -dontnote retrofit2.Platform
 # Platform used when running on Java 8 VMs. Will not be used at runtime.
@@ -35,8 +34,34 @@
 # Retain declared checked exceptions for use by a Proxy instance.
 -keepattributes Exceptions
 
+-dontwarn okio.**
+
 # for kotlin breakpoint
 -renamesourcefileattribute SourceFile
 -keepattributes SourceFile,LineNumberTable
 -keep public class * extends android.support.v4.** {*;}
 -keep public class * extends android.app.Fragment
+
+
+# Warning
+-dontwarn java8.util.**
+-dontwarn java.lang.invoke.*
+
+# FirebaseCrash
+-keep class com.google.android.gms.crash.** {*;}
+
+# MOSHI
+-keepclassmembers class  biz.eventually.atpl.network.network.** {*;}
+
+# Recycler view
+-keep public class * extends android.support.v7.widget.RecyclerView$ViewHolder {
+    public <init>(...);
+}
+
+# Tests
+#-keepclassmembers class fr.planetvo.pvo2mobility.data.app.model.** {*;}
+-keep interface javax.inject.Inject
+
+# Google analytics
+-keep public class com.google.android.gms.* { public *; }
+-dontwarn com.google.android.gms.**
