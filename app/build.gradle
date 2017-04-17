@@ -9,12 +9,13 @@ ext {
     patchVersion = "1"
 }
 
+// Load keystore
+// http://stackoverflow.com/questions/20562189/sign-apk-without-putting-keystore-info-in-build-gradle
+def keystorePropertiesFile = rootProject.file("keystore.properties");
+def keystoreProperties = new Properties()
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
 android {
-    // https://www.timroes.de/2013/09/22/handling-signing-configs-with-gradle/
-    if(project.hasProperty("aeroknow.signing")
-            && new File(project.property("aeroknow.signing") + ".gradle").exists()) {
-        apply from: project.property("aeroknow.signing") + ".gradle";
-    }
 
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
@@ -22,12 +23,22 @@ android {
         applicationId "biz.eventually.atpl"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 2
+        versionCode 3
         versionName majorVersion + "." + minorVersion + "." + patchVersion + "." + versionCode
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         buildConfigField 'String', 'API_ATPL_ENDPOINT', "\"http://atpl.eventually.biz/api/\""
     }
+
+    signingConfigs {
+        release {
+            storeFile file(keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+        }
+    }
+
     buildTypes {
         debug {
             applicationIdSuffix ".debug"
@@ -46,7 +57,7 @@ android {
             applicationIdSuffix '.release'
             versionNameSuffix '-prod'
 
-            //signingConfig signingConfigs.release
+            signingConfig signingConfigs.release
         }
     }
     sourceSets {

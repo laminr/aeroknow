@@ -1,5 +1,5 @@
 # file to store password
-aeroknow.gradle
+keystore.properties
 
 # Built application files
 *.apk
