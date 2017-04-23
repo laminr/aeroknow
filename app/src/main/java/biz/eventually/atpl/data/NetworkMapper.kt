@@ -1,10 +1,10 @@
-package biz.eventually.atpl.network
+package biz.eventually.atpl.data
 
-import biz.eventually.atpl.network.model.Source
-import biz.eventually.atpl.network.model.Subject
-import biz.eventually.atpl.network.model.Topic
-import biz.eventually.atpl.network.model.dto.TopicDto
-import biz.eventually.atpl.network.network.*
+import biz.eventually.atpl.data.model.Source
+import biz.eventually.atpl.data.model.Subject
+import biz.eventually.atpl.data.model.Topic
+import biz.eventually.atpl.data.model.dto.TopicDto
+import biz.eventually.atpl.data.network.*
 
 /**
  * Created by thibault on 21/03/17.

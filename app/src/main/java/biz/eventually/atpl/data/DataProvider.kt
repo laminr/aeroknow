@@ -1,12 +1,12 @@
-package biz.eventually.atpl.network
+package biz.eventually.atpl.data
 
-import biz.eventually.atpl.network.model.Source
-import biz.eventually.atpl.network.model.Subject
-import biz.eventually.atpl.network.model.Topic
-import biz.eventually.atpl.network.network.Question
-import biz.eventually.atpl.network.network.QuestionNetwork
-import biz.eventually.atpl.network.toAppSources
-import biz.eventually.atpl.network.service.SourceService
+import biz.eventually.atpl.data.model.Source
+import biz.eventually.atpl.data.model.Subject
+import biz.eventually.atpl.data.model.Topic
+import biz.eventually.atpl.data.network.Question
+import biz.eventually.atpl.data.network.QuestionNetwork
+import biz.eventually.atpl.data.toAppSources
+import biz.eventually.atpl.data.service.SourceService
 import io.reactivex.Observable
 
 import javax.inject.Inject

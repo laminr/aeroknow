@@ -9,8 +9,8 @@ import android.view.ViewGroup
 import android.widget.TextView
 import biz.eventually.atpl.R
 import biz.eventually.atpl.common.IntentIdentifier
-import biz.eventually.atpl.network.model.Topic
-import biz.eventually.atpl.network.model.dto.TopicDto
+import biz.eventually.atpl.data.model.Topic
+import biz.eventually.atpl.data.model.dto.TopicDto
 import biz.eventually.atpl.ui.questions.QuestionsActivity
 
 

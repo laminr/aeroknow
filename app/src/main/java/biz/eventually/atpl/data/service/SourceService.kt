@@ -1,9 +1,9 @@
-package biz.eventually.atpl.network.service
+package biz.eventually.atpl.data.service
 
-import biz.eventually.atpl.network.network.QuestionNetwork
-import biz.eventually.atpl.network.network.SourceNetwork
-import biz.eventually.atpl.network.network.SubjectNetwork
-import biz.eventually.atpl.network.network.TopicNetwork
+import biz.eventually.atpl.data.network.QuestionNetwork
+import biz.eventually.atpl.data.network.SourceNetwork
+import biz.eventually.atpl.data.network.SubjectNetwork
+import biz.eventually.atpl.data.network.TopicNetwork
 import retrofit2.http.GET
 import io.reactivex.Observable
 import retrofit2.http.Path

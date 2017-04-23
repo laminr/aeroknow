@@ -1,6 +1,6 @@
-package biz.eventually.atpl.network.model
+package biz.eventually.atpl.data.model
 
-import biz.eventually.atpl.network.model.dto.TopicDto
+import biz.eventually.atpl.data.model.dto.TopicDto
 
 /**
  * Created by thibault on 20/03/17.

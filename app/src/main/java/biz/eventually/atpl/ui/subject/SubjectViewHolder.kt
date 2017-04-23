@@ -5,7 +5,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.TextView
 import biz.eventually.atpl.R
-import biz.eventually.atpl.network.model.dto.TopicDto
+import biz.eventually.atpl.data.model.dto.TopicDto
 
 /**
  * Created by Thibault de Lambilly on 29/03/2017.

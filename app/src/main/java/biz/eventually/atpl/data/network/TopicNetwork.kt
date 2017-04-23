@@ -1,12 +1,12 @@
-package biz.eventually.atpl.network.network
+package biz.eventually.atpl.data.network
 
 /**
  * Created by thibault on 20/03/17.
  */
-data class TopicDtoNetwork(
+data class TopicNetwork(
         val id: Int,
         val name: String,
-        val questions: Int = 0,
+        val questions: List<QuestionNetwork>?,
         val follow: Int,
         val focus: Int
 )

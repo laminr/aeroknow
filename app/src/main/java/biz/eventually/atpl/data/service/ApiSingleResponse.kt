@@ -1,11 +1,11 @@
-package biz.eventually.atpl.network.service
+package biz.eventually.atpl.data.service
 
 /**
  * Created by thibault on 21/03/17.
  */
-class ApiResponse<T> {
+class ApiSingleResponse<T> {
 
-    val data: List<T>? = null
+    val data: T? = null
 
     val action: String? = null
 

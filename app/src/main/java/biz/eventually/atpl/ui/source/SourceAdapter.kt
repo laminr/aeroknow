@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
 import biz.eventually.atpl.R
-import biz.eventually.atpl.network.model.Source
+import biz.eventually.atpl.data.model.Source
 import butterknife.BindView
 import butterknife.ButterKnife
 

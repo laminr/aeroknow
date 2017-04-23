@@ -2,8 +2,8 @@ package biz.eventually.atpl.ui.subject
 
 import android.util.Log
 import biz.eventually.atpl.common.RxBaseManager
-import biz.eventually.atpl.network.DataProvider
-import biz.eventually.atpl.network.model.Subject
+import biz.eventually.atpl.data.DataProvider
+import biz.eventually.atpl.data.model.Subject
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject

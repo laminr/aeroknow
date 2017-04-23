@@ -23,7 +23,7 @@ android {
         applicationId "biz.eventually.atpl"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 3
+        versionCode 5
         versionName majorVersion + "." + minorVersion + "." + patchVersion + "." + versionCode
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -48,12 +48,11 @@ android {
             buildConfigField 'String', 'API_ATPL_ENDPOINT_MOCK', "\"http://${getIP()}/~laminr/atpl/webapp/web/\""
         }
         release {
-            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            minifyEnabled false
+            shrinkResources false
 
-            minifyEnabled true
             zipAlignEnabled true
-            shrinkResources true
             applicationIdSuffix '.release'
             versionNameSuffix '-prod'
 

@@ -8,7 +8,7 @@ import android.widget.AdapterView
 import biz.eventually.atpl.AtplApplication
 import biz.eventually.atpl.R
 import biz.eventually.atpl.common.IntentIdentifier
-import biz.eventually.atpl.network.model.Source
+import biz.eventually.atpl.data.model.Source
 import biz.eventually.atpl.ui.BaseActivity
 import biz.eventually.atpl.ui.subject.SubjectActivity
 import cn.pedant.SweetAlert.SweetAlertDialog

@@ -1,6 +1,6 @@
 package biz.eventually.atpl.di.module
 
-import biz.eventually.atpl.network.service.SourceService
+import biz.eventually.atpl.data.service.SourceService
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit

@@ -1,4 +1,4 @@
-package biz.eventually.atpl.network.network
+package biz.eventually.atpl.data.network
 
 /**
  * Created by thibault on 20/03/17.

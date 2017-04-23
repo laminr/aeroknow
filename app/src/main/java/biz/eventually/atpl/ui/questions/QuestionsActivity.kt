@@ -16,7 +16,7 @@ import biz.eventually.atpl.AtplApplication
 import biz.eventually.atpl.R
 import biz.eventually.atpl.common.IntentIdentifier
 import biz.eventually.atpl.common.StateIdentifier
-import biz.eventually.atpl.network.model.Topic
+import biz.eventually.atpl.data.model.Topic
 import biz.eventually.atpl.ui.BaseActivity
 import biz.eventually.atpl.ui.source.QuestionsManager
 import biz.eventually.atpl.utils.getHtml
@@ -168,13 +168,14 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
     private fun showAnswer() {
         mTopic?.questions?.get(mCurrentQuestion)?.answers?.let {
             for (i in 0..it.count() - 1) {
-                val color = if (it[i].good) ContextCompat.getColor(applicationContext, R.color.colorAccent) else ContextCompat.getColor(applicationContext, R.color.colorSecondary)
-                val bckg = if (it[i].good) ContextCompat.getDrawable(applicationContext, R.drawable.answer_right) else  ContextCompat.getDrawable(applicationContext, R.drawable.answer_wrong)
-                when (i) {
-                    0 -> question_answer_1.background = bckg
-                    1 -> question_answer_2.background = bckg
-                    2 -> question_answer_3.background = bckg
-                    3 -> question_answer_4.background = bckg
+                if (it[i].good) {
+                    val bckg = if (it[i].good) ContextCompat.getDrawable(applicationContext, R.drawable.answer_right) else  ContextCompat.getDrawable(applicationContext, R.drawable.answer_wrong)
+                    when (i) {
+                        0 -> question_answer_1.background = bckg
+                        1 -> question_answer_2.background = bckg
+                        2 -> question_answer_3.background = bckg
+                        3 -> question_answer_4.background = bckg
+                    }
                 }
             }
         }

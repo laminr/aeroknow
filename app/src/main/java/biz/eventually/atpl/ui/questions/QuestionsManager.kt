@@ -2,10 +2,10 @@ package biz.eventually.atpl.ui.source
 
 import android.util.Log
 import biz.eventually.atpl.common.RxBaseManager
-import biz.eventually.atpl.network.DataProvider
-import biz.eventually.atpl.network.model.Source
-import biz.eventually.atpl.network.model.Topic
-import biz.eventually.atpl.network.network.Question
+import biz.eventually.atpl.data.DataProvider
+import biz.eventually.atpl.data.model.Source
+import biz.eventually.atpl.data.model.Topic
+import biz.eventually.atpl.data.network.Question
 
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.android.schedulers.AndroidSchedulers

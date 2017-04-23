@@ -1,8 +1,8 @@
-package biz.eventually.atpl.network.model
+package biz.eventually.atpl.data.model
 
 import android.os.Parcel
 import android.os.Parcelable
-import biz.eventually.atpl.network.network.Question
+import biz.eventually.atpl.data.network.Question
 
 /**
  * Created by thibault on 20/03/17.
