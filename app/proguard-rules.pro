@@ -55,8 +55,7 @@
 -keep class com.google.android.gms.crash.** {*;}
 
 # MOSHI
--keepclassmembers class  biz.eventually.atpl.data.model.** {*;}
--keepclassmembers class  biz.eventually.atpl.data.network.** {*;}
+-keepclassmembers class  biz.eventually.atpl.data.** {*;}
 
 # Recycler view
 -keep public class * extends android.support.v7.widget.RecyclerView$ViewHolder {

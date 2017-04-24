@@ -51,7 +51,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             proguardFiles fileTree(dir: 'proguard/', include: ['*.pro']).asList().toArray()
 
-            debuggable true
+            debuggable false
             minifyEnabled true
             shrinkResources true
 
