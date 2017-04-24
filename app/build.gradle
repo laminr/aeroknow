@@ -49,8 +49,11 @@ android {
         }
         release {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            minifyEnabled false
-            shrinkResources false
+            proguardFiles fileTree(dir: 'proguard/', include: ['*.pro']).asList().toArray()
+
+            debuggable true
+            minifyEnabled true
+            shrinkResources true
 
             zipAlignEnabled true
             applicationIdSuffix '.release'

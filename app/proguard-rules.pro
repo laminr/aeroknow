@@ -42,6 +42,10 @@
 -keep public class * extends android.support.v4.** {*;}
 -keep public class * extends android.app.Fragment
 
+# Sweet Dialog
+-keep class cn.pedant.SweetAlert.Rotate3dAnimation {
+  public <init>(...);
+}
 
 # Warning
 -dontwarn java8.util.**
