@@ -1,17 +1,12 @@
 package biz.eventually.atpl.ui.questions
 
-import android.animation.ArgbEvaluator
-import android.animation.ValueAnimator
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.support.v4.content.ContextCompat
-import android.support.v7.widget.AppCompatCheckBox
 import android.support.v7.widget.CardView
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
-import android.widget.TextView
 import biz.eventually.atpl.AtplApplication
 import biz.eventually.atpl.R
 import biz.eventually.atpl.common.IntentIdentifier
@@ -96,6 +91,7 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
     }
 
     fun displayQuestion() {
+        mShowAnswer = false
         resetCheckbox()
 
         mTopic?.questions?.get(mCurrentQuestion)?.apply {

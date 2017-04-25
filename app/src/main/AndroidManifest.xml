@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:tools="http://schemas.android.com/tools"
-	package="biz.eventually.atpl">
+		  xmlns:tools="http://schemas.android.com/tools"
+		  package="biz.eventually.atpl">
 
 	<uses-permission android:name="android.permission.INTERNET" />
 
@@ -12,14 +12,14 @@
 		android:label="@string/app_name"
 		android:roundIcon="@mipmap/ic_launcher"
 		android:supportsRtl="true"
-		tools:replace="android:icon"
-		android:theme="@style/AppTheme.NoActionBar">
+		android:theme="@style/AppTheme.NoActionBar"
+		tools:replace="android:icon">
 		<activity android:name=".ui.source.SourceActivity">
-			<intent-filter>
+<!--			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
 
 				<category android:name="android.intent.category.LAUNCHER" />
-			</intent-filter>
+			</intent-filter>-->
 		</activity>
 		<activity
 			android:name=".ui.subject.SubjectActivity"
@@ -36,6 +36,14 @@
 			<meta-data
 				android:name="android.support.PARENT_ACTIVITY"
 				android:value="biz.eventually.atpl.ui.subject.SubjectActivity" />
+		</activity>
+		<activity android:name=".MainActivity"
+				  android:theme="@style/SplashTheme">
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN" />
+
+				<category android:name="android.intent.category.LAUNCHER" />
+			</intent-filter>
 		</activity>
 	</application>
 
