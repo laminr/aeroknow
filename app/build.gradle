@@ -23,7 +23,7 @@ android {
         applicationId "biz.eventually.atpl"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 5
+        versionCode 6
         versionName majorVersion + "." + minorVersion + "." + patchVersion + "." + versionCode
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -51,7 +51,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             proguardFiles fileTree(dir: 'proguard/', include: ['*.pro']).asList().toArray()
 
-            debuggable true
+            debuggable false
             minifyEnabled true
             shrinkResources true
 
