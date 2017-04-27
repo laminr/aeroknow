@@ -3,24 +3,26 @@ package biz.eventually.atpl.ui.questions
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.CardView
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.CheckBox
 import biz.eventually.atpl.AtplApplication
 import biz.eventually.atpl.R
 import biz.eventually.atpl.common.IntentIdentifier
 import biz.eventually.atpl.common.StateIdentifier
 import biz.eventually.atpl.data.model.Topic
+import biz.eventually.atpl.data.network.Question
 import biz.eventually.atpl.ui.BaseActivity
 import biz.eventually.atpl.ui.source.QuestionsManager
 import biz.eventually.atpl.utils.getHtml
+import biz.eventually.atpl.utils.shuffle
 import butterknife.ButterKnife
 import kotlinx.android.synthetic.main.activity_questions.*
 
 class QuestionsActivity : BaseActivity<QuestionsManager>() {
 
     private var mTopic: Topic? = null
+    private var mQuestions = mutableListOf<Question>()
+
     private var mCurrentQuestion: Int = 0
     private var mShowAnswer = false
     private var mIndexTick = -1
@@ -36,6 +38,7 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
             rotateloading.start()
             manager.getQuestions(id) { t ->
                 mTopic = t
+                mQuestions = t.questions as MutableList<Question>
                 rotateloading.stop()
                 displayQuestion()
             }
@@ -60,12 +63,24 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
 
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        val inflater = menuInflater
+        inflater.inflate(R.menu.menu_shuffle, menu)
+
+        return super.onCreateOptionsMenu(menu)
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {
                 onBackPressed()
                 return true
             }
+            R.id.action_shuffle -> {
+                shuffleQuestions()
+                return true
+            }
+
             else -> return super.onOptionsItemSelected(item)
         }
     }
@@ -82,6 +97,7 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
         super.onRestoreInstanceState(savedInstanceState)
         savedInstanceState?.let {
             mTopic = it.getParcelable(StateIdentifier.TOPIC)
+            mQuestions = mTopic?.questions as MutableList<Question>
             mCurrentQuestion = it.getInt(StateIdentifier.QUEST_CURRENT)
         }
     }
@@ -90,11 +106,17 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
         super.onBackPressed()
     }
 
+    fun shuffleQuestions() {
+        mQuestions = shuffle(mQuestions) as MutableList<Question>
+        mCurrentQuestion = 0
+        displayQuestion()
+    }
+
     fun displayQuestion() {
         mShowAnswer = false
         resetCheckbox()
 
-        mTopic?.questions?.get(mCurrentQuestion)?.apply {
+        mQuestions[mCurrentQuestion].apply {
             question_label.text = getHtml(label)
 
             for (i in 0..answers.count() - 1) {
@@ -105,6 +127,10 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
                     3 -> question_answer_4_text.text = answers[i].value
                 }
             }
+        }
+
+        mQuestions.isNotEmpty().apply {
+            question_range.text = "${mCurrentQuestion+1} / ${mQuestions.count()}"
         }
 
         question_previous.visibility = if (mCurrentQuestion > 0) View.VISIBLE else View.GONE

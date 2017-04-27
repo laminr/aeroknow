@@ -8,4 +8,5 @@
 	<string name="network_error_message">An error has occured, Sorry!</string>
 	<string name="error_dialog_title">Oops...</string>
 	<string name="error_dialog_message">Network Error: Something went wrong!</string>
+	<string name="action_shuffle">shuffle</string>
 </resources>
