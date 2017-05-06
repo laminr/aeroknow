@@ -6,6 +6,6 @@
 	<item>
 		<bitmap
 			android:gravity="center"
-			android:src="@mipmap/ic_launcher"/>
+			android:src="@drawable/atr_background"/>
 	</item>
 </layer-list>

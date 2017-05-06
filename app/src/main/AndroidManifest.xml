@@ -14,6 +14,14 @@
 		android:supportsRtl="true"
 		android:theme="@style/AppTheme.NoActionBar"
 		tools:replace="android:icon">
+
+		<activity android:name=".MainActivity"
+			android:theme="@style/SplashTheme">
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN" />
+				<category android:name="android.intent.category.LAUNCHER" />
+			</intent-filter>
+		</activity>
 		<activity android:name=".ui.source.SourceActivity">
 <!--			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
@@ -36,14 +44,6 @@
 			<meta-data
 				android:name="android.support.PARENT_ACTIVITY"
 				android:value="biz.eventually.atpl.ui.subject.SubjectActivity" />
-		</activity>
-		<activity android:name=".MainActivity"
-				  android:theme="@style/SplashTheme">
-			<intent-filter>
-				<action android:name="android.intent.action.MAIN" />
-
-				<category android:name="android.intent.category.LAUNCHER" />
-			</intent-filter>
 		</activity>
 	</application>
 

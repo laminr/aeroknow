@@ -2,6 +2,7 @@ package biz.eventually.atpl.ui.source
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.widget.AdapterView
@@ -24,13 +25,21 @@ class SourceActivity : BaseActivity<SourceManager>() {
         AtplApplication.component.inject(this)
         setContentView(R.layout.activity_source)
 
-        source_error.visibility = GONE
-        manager.getSources(this::displayData, this::onError)
-        rotateloading.start()
+        val sources = intent.getParcelableArrayListExtra<Source>(IntentIdentifier.SOURCE_LIST)
+
+        sources?.let {
+            displayData(it)
+        } ?: run {
+            source_error.visibility = GONE
+            onError()
+        }
+
+        source_refresh.setOnClickListener {
+            loadData()
+        }
     }
 
     private fun displayData(sources: List<Source>?): Unit {
-
 
         sources?.apply {
             mAdapter = SourceAdapter(this@SourceActivity, sources)
@@ -47,13 +56,24 @@ class SourceActivity : BaseActivity<SourceManager>() {
         }
     }
 
+    private fun loadData() {
+        showHideError(View.GONE)
+        rotateloading.start()
+        manager.getSources(this::displayData, this::onError)
+    }
+
+    private fun showHideError(show: Int) {
+        source_error.visibility = show
+        source_refresh.visibility = show
+    }
+
     private fun onError(): Unit {
-        SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
-                .setTitleText(getString(R.string.error_dialog_title))
-                .setContentText(getString(R.string.error_dialog_message))
-                .show()
+//        SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
+//                .setTitleText(getString(R.string.error_dialog_title))
+//                .setContentText(getString(R.string.error_dialog_message))
+//                .show()
 
         rotateloading.stop()
-        source_error.visibility = VISIBLE
+        showHideError(View.VISIBLE)
     }
 }
