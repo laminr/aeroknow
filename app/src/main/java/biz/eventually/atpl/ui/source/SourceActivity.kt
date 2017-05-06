@@ -68,11 +68,6 @@ class SourceActivity : BaseActivity<SourceManager>() {
     }
 
     private fun onError(): Unit {
-//        SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
-//                .setTitleText(getString(R.string.error_dialog_title))
-//                .setContentText(getString(R.string.error_dialog_message))
-//                .show()
-
         rotateloading.stop()
         showHideError(View.VISIBLE)
     }
