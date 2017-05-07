@@ -1,6 +1,7 @@
 # file to store password
 keystore.properties
 
+.DS_Store
 # Built application files
 *.apk
 *.ap_
@@ -54,3 +55,12 @@ google-services.json
 freeline.py
 freeline/
 freeline_project_description.json
+app/.DS_Store
+app/src/.DS_Store
+app/src/androidTest/.DS_Store
+app/src/debug/.DS_Store
+app/src/debug/res/.DS_Store
+app/src/main/.DS_Store
+app/src/main/res/.DS_Store
+app/src/test/.DS_Store
+gradle/.DS_Store
