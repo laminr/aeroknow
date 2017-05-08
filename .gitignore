@@ -1,6 +1,8 @@
 # file to store password
 keystore.properties
 
+.DS_Store
+
 # Built application files
 *.apk
 *.ap_

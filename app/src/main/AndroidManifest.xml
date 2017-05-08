@@ -22,7 +22,9 @@
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
-		<activity android:name=".ui.source.SourceActivity">
+		<activity
+			android:name=".ui.source.SourceActivity"
+			>
 <!--			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
 
