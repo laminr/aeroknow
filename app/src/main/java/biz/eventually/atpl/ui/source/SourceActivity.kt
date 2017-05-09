@@ -2,6 +2,7 @@ package biz.eventually.atpl.ui.source
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
@@ -9,7 +10,9 @@ import android.widget.AdapterView
 import biz.eventually.atpl.AtplApplication
 import biz.eventually.atpl.R
 import biz.eventually.atpl.common.IntentIdentifier
+import biz.eventually.atpl.common.StateIdentifier
 import biz.eventually.atpl.data.model.Source
+import biz.eventually.atpl.data.model.Subject
 import biz.eventually.atpl.ui.BaseActivity
 import biz.eventually.atpl.ui.subject.SubjectActivity
 import cn.pedant.SweetAlert.SweetAlertDialog
@@ -18,6 +21,7 @@ import kotlinx.android.synthetic.main.activity_source.*
 class SourceActivity : BaseActivity<SourceManager>() {
 
     private var mAdapter: SourceAdapter? = null
+    private var mSourceList: List<Source>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,19 +29,50 @@ class SourceActivity : BaseActivity<SourceManager>() {
         AtplApplication.component.inject(this)
         setContentView(R.layout.activity_source)
 
-        val sources = intent.getParcelableArrayListExtra<Source>(IntentIdentifier.SOURCE_LIST)
+        savedInstanceState?.let {
+            mSourceList = it.getParcelableArrayList<Source>(StateIdentifier.SOURCE_LIST)
+        }
 
-        sources?.let {
-            displayData(it)
-        } ?: run {
-            source_error.visibility = GONE
-            onError()
+        mSourceList = mSourceList ?: intent.getParcelableArrayListExtra<Source>(IntentIdentifier.SOURCE_LIST)
+
+        when(intent.getBooleanExtra(IntentIdentifier.NETWORK_ERROR, false)) {
+            true -> {
+                source_error.visibility = GONE
+                onError()
+            }
+            false -> {
+                mSourceList?.let {
+                    displayData(it)
+                } ?: run {
+                    loadData()
+                }
+            }
         }
 
         source_refresh.setOnClickListener {
             loadData()
         }
     }
+
+    override fun onPause() {
+        super.onPause()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle?, outPersistentState: PersistableBundle?) {
+        outState?.putParcelableArrayList(StateIdentifier.SOURCE_LIST, mSourceList as ArrayList<Subject>)
+        super.onSaveInstanceState(outState, outPersistentState)
+    }
+
+    /*
+    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
+        super.onRestoreInstanceState(savedInstanceState)
+
+        savedInstanceState?.let {
+            mSourceList = it.getParcelableArrayList(StateIdentifier.SOURCE_LIST)
+            displayData(mSourceList)
+        }
+    }
+    */
 
     private fun displayData(sources: List<Source>?): Unit {
 

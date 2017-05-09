@@ -29,8 +29,9 @@ class MainActivity : BaseActivity<SourceManager>() {
         rotateloading.stop()
         val intent = Intent(this, SourceActivity::class.java)
 
-        sources?.let {
-            intent.putParcelableArrayListExtra(IntentIdentifier.SOURCE_LIST, it as ArrayList<Source>)
+        when(sources) {
+            null -> intent.putExtra(IntentIdentifier.NETWORK_ERROR, true)
+            else -> intent.putParcelableArrayListExtra(IntentIdentifier.SOURCE_LIST, sources as ArrayList<Source>)
         }
 
         startActivity(intent)

@@ -36,11 +36,6 @@ captures/
 # Intellij
 *.iml
 .idea/
-.idea/workspace.xml
-.idea/tasks.xml
-.idea/gradle.xml
-.idea/dictionaries
-.idea/libraries
 
 # Keystore files
 *.jks
@@ -55,12 +50,3 @@ google-services.json
 freeline.py
 freeline/
 freeline_project_description.json
-app/.DS_Store
-app/src/.DS_Store
-app/src/androidTest/.DS_Store
-app/src/debug/.DS_Store
-app/src/debug/res/.DS_Store
-app/src/main/.DS_Store
-app/src/main/res/.DS_Store
-app/src/test/.DS_Store
-gradle/.DS_Store

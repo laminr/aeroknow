@@ -1,13 +1,16 @@
 package biz.eventually.atpl.ui.subject
 
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.Toolbar
+import android.view.MenuItem
 import android.view.View
 import biz.eventually.atpl.AtplApplication
 import biz.eventually.atpl.R
 import biz.eventually.atpl.common.IntentIdentifier
+import biz.eventually.atpl.common.StateIdentifier
 import biz.eventually.atpl.data.model.Subject
 import biz.eventually.atpl.data.model.dto.TopicDto
 import biz.eventually.atpl.ui.BaseActivity
@@ -21,6 +24,8 @@ class SubjectActivity : BaseActivity<SubjectManager>() {
     }
 
     private var mSourceId: Int = 0
+    private var mSubjectList: List<Subject>? = null
+
     private var mAdapter: SubjectAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,7 +42,11 @@ class SubjectActivity : BaseActivity<SubjectManager>() {
         supportActionBar?.title = sourceName
 
         mSourceId = intent.extras.getInt(IntentIdentifier.SOURCE_ID)
-        loadData()
+
+        when(mSubjectList) {
+            null -> loadData()
+            else -> displaySubjects(mSubjectList)
+        }
 
         val mLayoutManager = LinearLayoutManager(applicationContext)
         mAdapter = SubjectAdapter()
@@ -50,13 +59,24 @@ class SubjectActivity : BaseActivity<SubjectManager>() {
         }
     }
 
+    // to avoid source reloading
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        if (item?.itemId == android.R.id.home) {
+            onBackPressed()
+            return true
+        }
+
+        return super.onOptionsItemSelected(item)
+    }
+
     fun displaySubjects(subjects: List<Subject>?) : Unit {
-        subjects?.let {
+        mSubjectList = subjects
+        mSubjectList?.let {
             val topics = mutableListOf<TopicDto>()
 
-            subjects.forEach { s ->
-                topics.add(TopicDto(-1, s.name, 0, 0, 0))
-                topics.addAll(s.topics)
+            it.forEach { (_, name, topic) ->
+                topics.add(TopicDto(-1, name, 0, 0, 0))
+                topics.addAll(topic)
             }
 
             mAdapter?.bind(topics)
