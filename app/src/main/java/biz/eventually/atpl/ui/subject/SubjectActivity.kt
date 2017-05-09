@@ -5,6 +5,7 @@ import android.os.PersistableBundle
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.Toolbar
+import android.view.MenuItem
 import android.view.View
 import biz.eventually.atpl.AtplApplication
 import biz.eventually.atpl.R
@@ -58,6 +59,15 @@ class SubjectActivity : BaseActivity<SubjectManager>() {
         }
     }
 
+    // to avoid source reloading
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        if (item?.itemId == android.R.id.home) {
+            onBackPressed()
+            return true
+        }
+
+        return super.onOptionsItemSelected(item)
+    }
 
     fun displaySubjects(subjects: List<Subject>?) : Unit {
         mSubjectList = subjects

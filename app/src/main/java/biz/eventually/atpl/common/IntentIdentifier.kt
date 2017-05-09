@@ -9,5 +9,6 @@ interface IntentIdentifier {
         val SOURCE_ID = "intent.source.id"
         val SOURCE_NAME = "intent.source.name"
         val TOPIC = "intent.object.topic"
+        val NETWORK_ERROR = "intent.network.error"
     }
 }

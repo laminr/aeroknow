@@ -24,6 +24,7 @@
 		</activity>
 		<activity
 			android:name=".ui.source.SourceActivity"
+			android:configChanges="orientation|screenSize|keyboardHidden"
 			>
 <!--			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
@@ -35,14 +36,18 @@
 			android:name=".ui.subject.SubjectActivity"
 			android:label="@string/title_activity_subject"
 			android:parentActivityName=".ui.source.SourceActivity"
-			android:theme="@style/AppTheme.NoActionBar">
+			android:theme="@style/AppTheme.NoActionBar"
+			android:configChanges="orientation|screenSize|keyboardHidden"
+		>
 			<meta-data
 				android:name="android.support.PARENT_ACTIVITY"
 				android:value="biz.eventually.atpl.ui.source.SourceActivity" />
 		</activity>
 		<activity
 			android:name=".ui.questions.QuestionsActivity"
-			android:theme="@style/AppTheme">
+			android:theme="@style/AppTheme"
+			android:configChanges="orientation|screenSize|keyboardHidden"
+		>
 			<meta-data
 				android:name="android.support.PARENT_ACTIVITY"
 				android:value="biz.eventually.atpl.ui.subject.SubjectActivity" />

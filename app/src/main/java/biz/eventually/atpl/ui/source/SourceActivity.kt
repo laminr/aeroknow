@@ -34,11 +34,19 @@ class SourceActivity : BaseActivity<SourceManager>() {
         }
 
         mSourceList = mSourceList ?: intent.getParcelableArrayListExtra<Source>(IntentIdentifier.SOURCE_LIST)
-        mSourceList?.let {
-            displayData(it)
-        } ?: run {
-            source_error.visibility = GONE
-            onError()
+
+        when(intent.getBooleanExtra(IntentIdentifier.NETWORK_ERROR, false)) {
+            true -> {
+                source_error.visibility = GONE
+                onError()
+            }
+            false -> {
+                mSourceList?.let {
+                    displayData(it)
+                } ?: run {
+                    loadData()
+                }
+            }
         }
 
         source_refresh.setOnClickListener {
