@@ -28,6 +28,7 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         buildConfigField 'String', 'API_ATPL_ENDPOINT', "\"http://atpl.eventually.biz/api/\""
+        buildConfigField 'String', 'API_ATPL_IMG', "\"http://atpl.eventually.biz/img/questions/\""
     }
 
     signingConfigs {
@@ -57,7 +58,7 @@ android {
 
             zipAlignEnabled true
             applicationIdSuffix '.release'
-            versionNameSuffix '-prod'
+            versionNameSuffix '-beta'
 
             signingConfig signingConfigs.release
         }
@@ -108,18 +109,21 @@ dependencies {
     compile 'org.reactivestreams:reactive-streams:1.0.0'
     compile 'io.reactivex.rxjava2:rxkotlin:2.0.0'
     compile 'com.squareup.moshi:moshi:1.4.0'
-    //compile 'com.squareup.picasso:picasso:2.5.2'
-    compile "com.squareup.okhttp3:okhttp:$okhttpVersion"
+    compile 'com.squareup.picasso:picasso:2.5.2'
 
+    compile "com.squareup.okhttp3:okhttp:$okhttpVersion"
     compile "com.squareup.okhttp3:logging-interceptor:$okhttpVersion"
+
     // LOADER
     compile 'com.victor:lib:1.0.4'
+
     // DAGGER
     compile 'com.google.dagger:dagger:2.9'
     kapt 'com.google.dagger:dagger-compiler:2.9'
-    //provided 'javax.annotation:jsr250-api:1.0'
+
     provided 'org.glassfish:javax.annotation:10.0-b28'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
+
     // KOTLIN
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
     testCompile 'junit:junit:4.12'

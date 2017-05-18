@@ -5,7 +5,9 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.widget.CardView
 import android.view.*
 import android.widget.CheckBox
+import android.widget.ImageView
 import biz.eventually.atpl.AtplApplication
+import biz.eventually.atpl.BuildConfig
 import biz.eventually.atpl.R
 import biz.eventually.atpl.common.IntentIdentifier
 import biz.eventually.atpl.common.StateIdentifier
@@ -16,6 +18,7 @@ import biz.eventually.atpl.ui.source.QuestionsManager
 import biz.eventually.atpl.utils.getHtml
 import biz.eventually.atpl.utils.shuffle
 import butterknife.ButterKnife
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_questions.*
 
 class QuestionsActivity : BaseActivity<QuestionsManager>() {
@@ -42,6 +45,8 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
                 rotateloading.stop()
                 displayQuestion()
             }
+
+            supportActionBar?.title = name
         }
 
         question_answer_1.setOnClickListener { onAnswerClick(it, 0) }
@@ -113,6 +118,11 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
     }
 
     fun displayQuestion() {
+
+        if (question_imgs.childCount > 0) {
+            question_imgs.removeAllViews()
+        }
+
         mShowAnswer = false
         resetCheckbox()
 
@@ -126,6 +136,15 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
                     2 -> question_answer_3_text.text = answers[i].value
                     3 -> question_answer_4_text.text = answers[i].value
                 }
+            }
+
+            img?.forEach { img ->
+                val imgContainer = ImageView(applicationContext)
+                Picasso.with(applicationContext)
+                        .load(BuildConfig.API_ATPL_IMG + img)
+                        .into(imgContainer)
+
+                question_imgs.addView(imgContainer)
             }
         }
 
