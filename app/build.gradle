@@ -23,7 +23,7 @@ android {
         applicationId "biz.eventually.atpl"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 8
+        versionCode 9
         versionName majorVersion + "." + minorVersion + "." + patchVersion + "." + versionCode
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
