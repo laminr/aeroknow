@@ -1,5 +1,6 @@
 package biz.eventually.atpl.ui.questions
 
+import android.graphics.Color
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.CardView
@@ -66,6 +67,8 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
             }
         }
 
+        question_label.setBackgroundColor(Color.TRANSPARENT)
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -127,7 +130,7 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
         resetCheckbox()
 
         mQuestions[mCurrentQuestion].apply {
-            question_label.text = getHtml(label)
+            question_label.loadData(label, "text/html; charset=utf-8", "UTF-8")
 
             for (i in 0..answers.count() - 1) {
                 when (i) {

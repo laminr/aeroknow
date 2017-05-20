@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:fillViewport="true">
+    android:fillViewport="true"
+    tools:context="biz.eventually.atpl.ui.questions.QuestionsActivity"
+    >
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -12,23 +14,22 @@
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:context="biz.eventually.atpl.ui.questions.QuestionsActivity">
+            android:layout_height="match_parent"
+            >
 
-            <TextView
+            <WebView
                 android:id="@+id/question_label"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/margin_large"
                 android:layout_marginLeft="@dimen/margin_large"
                 android:layout_marginRight="@dimen/margin_large"
                 android:layout_marginTop="@dimen/margin_large"
+                android:background="@android:color/transparent"
                 android:gravity="start"
                 android:padding="@dimen/padding_large"
                 android:textAlignment="textStart"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 android:textSize="18sp"
-                app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -233,15 +234,6 @@
 
             </LinearLayout>
 
-            <!--<ImageView-->
-                <!--android:layout_width="0dp"-->
-                <!--android:layout_height="0dp"-->
-                <!--app:layout_constraintTop_toTopOf="parent"-->
-                <!--app:layout_constraintBottom_toBottomOf="parent"-->
-                <!--app:layout_constraintLeft_toLeftOf="parent"-->
-                <!--app:layout_constraintRight_toRightOf="parent"-->
-                <!--android:layout_margin="8dp"-->
-                <!--/>-->
         </android.support.constraint.ConstraintLayout>
 
         <com.victor.loading.rotate.RotateLoading
