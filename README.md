@@ -1,13 +1,14 @@
 # AeroKnow
 
 AeroKnow is small Android App to practice Airline Pilot theorical questions.
-The project has been started as Proof-Of-Concept to test development with Jetbrain Koltin language for Android. 
+The project has been started as Proof-Of-Concept to test development with Jetbrain Koltin language for Android.
 It includes:
   - Kotlin 1.1
   - [Dagger 2][dagger] for Depedencies injection
   - [RxJava / RxAndroid 2][rxLink] for asynch task
   - [Square Retrofit][retrofitLink] as HTTP Client
   - [Square Moshi][moshiLink] for JSON parsing
+  - [Square Picasso][picassoLink] for Image display
 
 # Current
   - 1st screen : Source list
@@ -29,4 +30,5 @@ MIT
    [dagger]: <https://google.github.io/dagger/>
    [retrofitLink]: <http://square.github.io/retrofit/>
    [moshiLink]: <https://github.com/square/moshi>
+   [picassoLink]: <https://github.com/square/picasso>
 
