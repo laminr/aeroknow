@@ -16,7 +16,6 @@ import biz.eventually.atpl.data.model.Topic
 import biz.eventually.atpl.data.network.Question
 import biz.eventually.atpl.ui.BaseActivity
 import biz.eventually.atpl.ui.source.QuestionsManager
-import biz.eventually.atpl.utils.getHtml
 import biz.eventually.atpl.utils.shuffle
 import butterknife.ButterKnife
 import com.squareup.picasso.Picasso

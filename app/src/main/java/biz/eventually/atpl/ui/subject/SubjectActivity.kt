@@ -1,7 +1,6 @@
 package biz.eventually.atpl.ui.subject
 
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.Toolbar
@@ -10,12 +9,10 @@ import android.view.View
 import biz.eventually.atpl.AtplApplication
 import biz.eventually.atpl.R
 import biz.eventually.atpl.common.IntentIdentifier
-import biz.eventually.atpl.common.StateIdentifier
 import biz.eventually.atpl.data.model.Subject
 import biz.eventually.atpl.data.model.dto.TopicDto
 import biz.eventually.atpl.ui.BaseActivity
 import kotlinx.android.synthetic.main.activity_subject.*
-import kotlinx.android.synthetic.main.content_subject.*
 
 class SubjectActivity : BaseActivity<SubjectManager>() {
 

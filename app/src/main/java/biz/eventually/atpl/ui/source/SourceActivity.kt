@@ -59,7 +59,10 @@ class SourceActivity : BaseActivity<SourceManager>() {
     }
 
     override fun onSaveInstanceState(outState: Bundle?, outPersistentState: PersistableBundle?) {
-        outState?.putParcelableArrayList(StateIdentifier.SOURCE_LIST, mSourceList as ArrayList<Subject>)
+        mSourceList?.let {
+            outState?.putParcelableArrayList(StateIdentifier.SOURCE_LIST, it as ArrayList<Subject>)
+        }
+
         super.onSaveInstanceState(outState, outPersistentState)
     }
 
@@ -80,7 +83,7 @@ class SourceActivity : BaseActivity<SourceManager>() {
             mAdapter = SourceAdapter(this@SourceActivity, sources)
 
             source_listview.adapter = mAdapter
-            source_listview.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
+            source_listview.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
 
                 val intent = Intent(this@SourceActivity, SubjectActivity::class.java)
                 intent.putExtra(IntentIdentifier.SOURCE_ID, get(position).id)
