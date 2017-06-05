@@ -5,8 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:fillViewport="true"
-    tools:context="biz.eventually.atpl.ui.questions.QuestionsActivity"
-    >
+    tools:context="biz.eventually.atpl.ui.questions.QuestionsActivity">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -14,8 +13,41 @@
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            >
+            android:layout_height="match_parent">
+
+            <Switch
+                android:id="@+id/question_follow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginTop="@dimen/margin_large"
+                android:visibility="gone"
+                />
+
+            <ImageView
+                android:id="@+id/question_care"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/margin_large"
+                android:layout_marginRight="@dimen/margin_large"
+                android:layout_marginTop="@dimen/margin_large"
+                android:contentDescription="do I care"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_star" />
+
+            <ImageView
+                android:id="@+id/question_dontcare"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="@dimen/margin_large"
+                android:contentDescription="I don't care"
+                app:layout_constraintRight_toLeftOf="@+id/question_care"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_visibility_off" />
 
             <WebView
                 android:id="@+id/question_label"
@@ -32,7 +64,7 @@
                 android:textSize="18sp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/question_care"
                 tools:text="One Question label" />
 
             <android.support.v7.widget.CardView
@@ -55,11 +87,11 @@
                     android:orientation="horizontal">
 
                     <CheckBox
-						android:layout_width="wrap_content"
-						android:layout_height="wrap_content"
-						android:layout_gravity="center"
-						app:buttonTint="@color/colorPrimaryDark"
-						android:textColor="@color/colorPrimaryDark" />
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:theme="@style/MyCheckBox" />
 
                     <TextView
                         android:id="@+id/question_answer_1_text"
@@ -94,8 +126,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-						app:buttonTint="@color/colorPrimaryDark"
-                        android:textColor="@color/colorPrimaryDark" />
+                        android:textColor="@color/colorPrimaryDark"
+                        android:theme="@style/MyCheckBox" />
 
                     <TextView
                         android:id="@+id/question_answer_2_text"
@@ -129,10 +161,9 @@
                     <CheckBox
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-
                         android:layout_gravity="center"
-						app:buttonTint="@color/colorPrimaryDark"
-                        android:textColor="@color/colorPrimaryDark" />
+                        android:textColor="@color/colorPrimaryDark"
+                        android:theme="@style/MyCheckBox" />
 
                     <TextView
                         android:id="@+id/question_answer_3_text"
@@ -167,7 +198,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-						app:buttonTint="@color/colorPrimaryDark"
+                        android:theme="@style/MyCheckBox"
                         android:textColor="@color/colorPrimaryDark" />
 
                     <TextView
@@ -188,19 +219,18 @@
                 android:layout_marginRight="16dp"
                 android:layout_marginTop="16dp"
                 android:text="@string/question_next"
-				app:backgroundTint="@color/colorAccent"
+                android:background="@color/colorAccent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/question_answer_4" />
 
-			<TextView
-				android:id="@+id/question_range"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_marginTop="32dp"
-				app:layout_constraintTop_toBottomOf="@+id/question_answer_4"
-				app:layout_constraintRight_toRightOf="parent"
-				app:layout_constraintLeft_toLeftOf="parent"
-			/>
+            <TextView
+                android:id="@+id/question_range"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/question_answer_4" />
 
             <Button
                 android:id="@+id/question_previous"
@@ -209,27 +239,26 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
+                android:background="@color/colorAccent"
                 android:text="@string/question_back"
-				app:backgroundTint="@color/colorAccent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/question_answer_4" />
 
             <LinearLayout
                 android:id="@+id/question_imgs"
-                android:orientation="horizontal"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="80dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginEnd="16dp"
                 android:layout_marginBottom="16dp"
-                app:layout_constraintTop_toBottomOf="@+id/question_answer_4"
+                android:layout_marginEnd="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="80dp"
+                android:gravity="center"
+                android:orientation="horizontal"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                android:gravity="center"
-                >
+                app:layout_constraintTop_toBottomOf="@+id/question_answer_4">
 
 
             </LinearLayout>

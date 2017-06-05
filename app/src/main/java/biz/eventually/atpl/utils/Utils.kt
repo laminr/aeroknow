@@ -1,5 +1,8 @@
 package biz.eventually.atpl.utils
 
+import biz.eventually.atpl.data.db.Focus
+import biz.eventually.atpl.data.network.Question
+import com.vicpin.krealmextensions.queryAll
 import java.util.*
 
 /**
@@ -16,3 +19,71 @@ fun <T:Comparable<T>>shuffle(items:MutableList<T>):List<T>{
     }
     return items
 }
+
+fun List<Question>.orderByFollowAndFocus(): MutableList<Question> {
+    var care : List<Question> = arrayListOf()
+    var dontCare : List<Question> = arrayListOf()
+    var others : List<Question> = arrayListOf()
+
+    val focusPrimary = Focus().queryAll()
+    val focus = mutableMapOf<Int, Focus>()
+
+    focusPrimary.forEach { f ->
+        focus[f.questionId] = f
+    }
+
+    this.forEach { question ->
+        val hasFocus = focus[question.id]
+
+        if (hasFocus != null) {
+            when (hasFocus.care) {
+                true -> care += question
+                false -> dontCare += question
+            }
+        } else {
+            others += question
+        }
+    }
+
+    val data  : MutableList<Question> = mutableListOf()
+    data.addAll(care)
+    data.addAll(others)
+    data.addAll(dontCare)
+
+    return data
+}
+
+//
+//fun orderByFollowAndFocus( questions: List<Question>): MutableList<Question> {
+//
+//    var care : List<Question> = arrayListOf()
+//    var dontCare : List<Question> = arrayListOf()
+//    var others : List<Question> = arrayListOf()
+//    var data  : MutableList<Question> = mutableListOf()
+//
+//    val focusPrimary = Focus().queryAll()
+//    val focus = mutableMapOf<Int, Focus>()
+//
+//    focusPrimary.forEach { f ->
+//        focus[f.questionId] = f
+//    }
+//
+//    questions.forEach { question ->
+//        val hasFocus = focus[question.id]
+//
+//        if (hasFocus != null) {
+//            when (hasFocus.care) {
+//                true -> care += question
+//                false -> dontCare += question
+//            }
+//        } else {
+//            others += question
+//        }
+//    }
+//
+//    data.addAll(care)
+//    data.addAll(others)
+//    data.addAll(dontCare)
+//
+//    return data
+//}

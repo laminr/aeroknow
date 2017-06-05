@@ -12,13 +12,20 @@ import biz.eventually.atpl.BuildConfig
 import biz.eventually.atpl.R
 import biz.eventually.atpl.common.IntentIdentifier
 import biz.eventually.atpl.common.StateIdentifier
+import biz.eventually.atpl.data.db.Focus
+import biz.eventually.atpl.data.db.Follow
 import biz.eventually.atpl.data.model.Topic
 import biz.eventually.atpl.data.network.Question
 import biz.eventually.atpl.ui.BaseActivity
 import biz.eventually.atpl.ui.source.QuestionsManager
+import biz.eventually.atpl.utils.orderByFollowAndFocus
 import biz.eventually.atpl.utils.shuffle
-import butterknife.ButterKnife
 import com.squareup.picasso.Picasso
+import com.vicpin.krealmextensions.delete
+import com.vicpin.krealmextensions.query
+import com.vicpin.krealmextensions.queryFirst
+import com.vicpin.krealmextensions.save
+import io.realm.RealmObject
 import kotlinx.android.synthetic.main.activity_questions.*
 
 class QuestionsActivity : BaseActivity<QuestionsManager>() {
@@ -30,18 +37,20 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
     private var mShowAnswer = false
     private var mIndexTick = -1
 
+    private var mFollow: Follow? = null
+    private var mFocus: Focus? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_questions)
         AtplApplication.component.inject(this)
-        ButterKnife.bind(this)
 
         mTopic = intent.extras.getParcelable<Topic>(IntentIdentifier.TOPIC)
         mTopic?.apply {
             rotateloading.start()
             manager.getQuestions(id) { t ->
                 mTopic = t
-                mQuestions = t.questions as MutableList<Question>
+                mQuestions = t.questions.orderByFollowAndFocus()
                 rotateloading.stop()
                 displayQuestion()
             }
@@ -121,6 +130,11 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
 
     fun displayQuestion() {
 
+        mQuestions[mCurrentQuestion].let {
+            mFocus = Focus().queryFirst { query -> query.equalTo("questionId", it.id) }
+            mFollow = Follow().queryFirst { query -> query.equalTo("questionId", it.id) }
+        }
+
         if (question_imgs.childCount > 0) {
             question_imgs.removeAllViews()
         }
@@ -140,6 +154,9 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
                 }
             }
 
+            displayFollowAndFocus()
+            attachFocusListener()
+
             img?.forEach { img ->
                 val imgContainer = ImageView(applicationContext)
                 Picasso.with(applicationContext)
@@ -151,7 +168,7 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
         }
 
         mQuestions.isNotEmpty().apply {
-            question_range.text = "${mCurrentQuestion+1} / ${mQuestions.count()}"
+            question_range.text = "${mCurrentQuestion + 1} / ${mQuestions.count()}"
         }
 
         question_previous.visibility = if (mCurrentQuestion > 0) View.VISIBLE else View.GONE
@@ -163,14 +180,77 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
         initCheckboxes()
     }
 
-    fun initCheckboxes() {
+    private fun attachFocusListener() {
+
+        question_care.setOnClickListener {
+            if (mFocus == null) {
+                mFocus = Focus(-1, mQuestions[mCurrentQuestion].id, true)
+                mFocus?.save()
+            } else {
+                when(mFocus?.care) {
+                    true -> {
+                        mFocus = null
+                        Focus().delete { query -> query.equalTo("questionId", mQuestions[mCurrentQuestion].id) }
+                    }
+                    false -> {
+                        mFocus?.care = true
+                        mFocus?.save()
+                    }
+                }
+            }
+            displayFollowAndFocus()
+        }
+
+        question_dontcare.setOnClickListener {
+
+            if (mFocus == null) {
+                mFocus = Focus(-1, mQuestions[mCurrentQuestion].id, false)
+                mFocus?.save()
+            } else {
+                when(mFocus?.care) {
+                    true -> {
+                        mFocus?.care = false
+                        mFocus?.save()
+                    }
+                    false -> {
+                        mFocus = null
+                        Focus().delete { query -> query.equalTo("questionId", mQuestions[mCurrentQuestion].id) }
+                    }
+                }
+            }
+            displayFollowAndFocus()
+        }
+    }
+
+    private fun displayFollowAndFocus() {
+
+        if (mFocus == null) {
+            question_care.setColorFilter(ContextCompat.getColor(applicationContext, R.color.colorGrey))
+            question_dontcare.setColorFilter(ContextCompat.getColor(applicationContext, R.color.colorGrey))
+        }
+
+        when (mFocus?.care) {
+            true -> {
+                question_care.setColorFilter(ContextCompat.getColor(applicationContext, R.color.colorAccent))
+                question_dontcare.setColorFilter(ContextCompat.getColor(applicationContext, R.color.colorGrey))
+            }
+            false -> {
+                question_care.setColorFilter(ContextCompat.getColor(applicationContext, R.color.colorGrey))
+                question_dontcare.setColorFilter(ContextCompat.getColor(applicationContext, R.color.colorAccent))
+            }
+        }
+
+        mFollow.let { }
+    }
+
+    private fun initCheckboxes() {
         question_answer_1.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.cardview_light_background))
         question_answer_2.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.cardview_light_background))
         question_answer_3.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.cardview_light_background))
         question_answer_4.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.cardview_light_background))
     }
 
-    fun onAnswerClick(view: View, index: Int) {
+    private fun onAnswerClick(view: View, index: Int) {
 
         mIndexTick = index
         mShowAnswer = !mShowAnswer
@@ -193,7 +273,7 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
         checkOneBox(question_answer_4, false)
     }
 
-    private fun checkOneBox(card: CardView, check: Boolean ) {
+    private fun checkOneBox(card: CardView, check: Boolean) {
 
         // get the LinearLayout inside the CardView
         val group = (card as ViewGroup).getChildAt(0) as ViewGroup
@@ -212,7 +292,7 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
         mTopic?.questions?.get(mCurrentQuestion)?.answers?.let {
             for (i in 0..it.count() - 1) {
                 if (it[i].good) {
-                    val bckg = if (it[i].good) ContextCompat.getDrawable(applicationContext, R.drawable.answer_right) else  ContextCompat.getDrawable(applicationContext, R.drawable.answer_wrong)
+                    val bckg = if (it[i].good) ContextCompat.getDrawable(applicationContext, R.drawable.answer_right) else ContextCompat.getDrawable(applicationContext, R.drawable.answer_wrong)
                     when (i) {
                         0 -> question_answer_1.background = bckg
                         1 -> question_answer_2.background = bckg

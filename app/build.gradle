@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'realm-android'
 
 ext {
     majorVersion = "0"
@@ -23,12 +24,14 @@ android {
         applicationId "biz.eventually.atpl"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 10
+        versionCode 11
         versionName majorVersion + "." + minorVersion + "." + patchVersion + "." + versionCode
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         buildConfigField 'String', 'API_ATPL_ENDPOINT', "\"http://atpl.eventually.biz/api/\""
         buildConfigField 'String', 'API_ATPL_IMG', "\"http://atpl.eventually.biz/img/questions/\""
+
+        vectorDrawables.useSupportLibrary = true
     }
 
     signingConfigs {
@@ -113,6 +116,9 @@ dependencies {
 
     compile "com.squareup.okhttp3:okhttp:$okhttpVersion"
     compile "com.squareup.okhttp3:logging-interceptor:$okhttpVersion"
+
+    // REALM Extension
+    compile 'com.github.vicpinm:krealmextensions:1.0.7'
 
     // LOADER
     compile 'com.victor:lib:1.0.4'

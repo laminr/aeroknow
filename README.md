@@ -9,11 +9,15 @@ It includes:
   - [Square Retrofit][retrofitLink] as HTTP Client
   - [Square Moshi][moshiLink] for JSON parsing
   - [Square Picasso][picassoLink] for Image display
+  - [Realm][realmLink] to store user progression
+  - [Realm Extension][realmExtLink] extension by Víctor Manuel Pineda Murcia to help with Realm
 
 # Current
   - 1st screen : Source list
   - 2nd screen : Subject and Topic for a source
   - 3rd screen : Questions campain screen for a topic
+
+Realm is used to store important or disinterest in question. Question are then sorted by important question, then usual one and eventually the none important ones
 
 Continious work in progress ;-)
 
@@ -31,4 +35,6 @@ MIT
    [retrofitLink]: <http://square.github.io/retrofit/>
    [moshiLink]: <https://github.com/square/moshi>
    [picassoLink]: <https://github.com/square/picasso>
+   [realmLink]: <https://realm.io/>
+   [realmExtLink]: <https://github.com/vicpinm/Kotlin-Realm-Extensions>
 
