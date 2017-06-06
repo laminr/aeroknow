@@ -9,9 +9,11 @@ import android.view.View
 import biz.eventually.atpl.AtplApplication
 import biz.eventually.atpl.R
 import biz.eventually.atpl.common.IntentIdentifier
+import biz.eventually.atpl.data.db.Focus
 import biz.eventually.atpl.data.model.Subject
 import biz.eventually.atpl.data.model.dto.TopicDto
 import biz.eventually.atpl.ui.BaseActivity
+import com.vicpin.krealmextensions.query
 import kotlinx.android.synthetic.main.activity_subject.*
 
 class SubjectActivity : BaseActivity<SubjectManager>() {
@@ -71,8 +73,9 @@ class SubjectActivity : BaseActivity<SubjectManager>() {
         mSubjectList?.let {
             val topics = mutableListOf<TopicDto>()
 
-            it.forEach { (_, name, topic) ->
-                topics.add(TopicDto(-1, name, 0, 0, 0))
+            it.forEach { (id, name, topic) ->
+                val focus = Focus().query { query -> query.equalTo("topicId", id) }.count()
+                topics.add(TopicDto(-1, name, 0, 0, focus))
                 topics.addAll(topic)
             }
 

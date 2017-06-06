@@ -184,7 +184,7 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
 
         question_care.setOnClickListener {
             if (mFocus == null) {
-                mFocus = Focus(-1, mQuestions[mCurrentQuestion].id, true)
+                mFocus = Focus(-1, mTopic?.id ?: 0, mQuestions[mCurrentQuestion].id, true)
                 mFocus?.save()
             } else {
                 when(mFocus?.care) {
@@ -204,7 +204,7 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
         question_dontcare.setOnClickListener {
 
             if (mFocus == null) {
-                mFocus = Focus(-1, mQuestions[mCurrentQuestion].id, false)
+                mFocus = Focus(-1, mTopic?.id ?: 0, mQuestions[mCurrentQuestion].id, false)
                 mFocus?.save()
             } else {
                 when(mFocus?.care) {

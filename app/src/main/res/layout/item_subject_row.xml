@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<FrameLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
-	android:layout_height="wrap_content" xmlns:app="http://schemas.android.com/apk/res-auto"
-	xmlns:tools="http://schemas.android.com/tools">
+	android:layout_height="wrap_content"
+>
 
 	<TextView
 		android:id="@+id/subject_title"
@@ -12,15 +14,14 @@
 		android:padding="@dimen/padding_thin"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		app:layout_constraintTop_toTopOf="parent"
-		app:layout_constraintLeft_toLeftOf="parent"
+		android:layout_gravity="start"
 		android:textColor="@color/colorSecondary"
 	/>
 
 	<android.support.v7.widget.CardView
 		android:id="@+id/topic_card"
-		android:layout_width="0dp"
-		android:layout_height="wrap_content"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
 		app:layout_constraintTop_toTopOf="parent"
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintLeft_toLeftOf="parent"
@@ -31,45 +32,103 @@
 		android:layout_marginLeft="@dimen/padding_thin"
 		android:layout_marginStart="@dimen/padding_thin"
 	>
-
-		<RelativeLayout
+		<android.support.constraint.ConstraintLayout
 			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:padding="@dimen/padding_thin"
-			>
+			android:layout_height="match_parent"
+		>
 			<TextView
 				android:id="@+id/topic_item_name"
 				tools:text="One Topic"
-				android:layout_width="match_parent"
+				android:layout_width="0dp"
 				android:layout_height="wrap_content"
-				android:paddingRight="48dp"
-				android:paddingEnd="48dp"
+				app:layout_constraintTop_toTopOf="parent"
+				app:layout_constraintBottom_toBottomOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				android:layout_marginTop="8dp"
+				android:layout_marginBottom="8dp"
+				android:layout_marginStart="8dp"
+				app:layout_constraintEnd_toStartOf="@+id/topic_care_ico"
+				android:layout_marginEnd="8dp"
 			/>
 
-			<LinearLayout android:layout_width="wrap_content"
-						  android:layout_height="wrap_content"
-						  android:layout_alignParentRight="true"
-						  android:layout_alignParentEnd="true"
-			>
-				<TextView
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:text="@string/sum_symbol"
-					android:textColor="@color/colorAccent"
-				/>
-				<TextView
-					android:id="@+id/topic_item_questions"
-					tools:text="100"
-					android:layout_width="24dp"
-					android:layout_height="wrap_content"
-					android:textAlignment="textEnd"
-					android:layout_gravity="end"
-					android:layout_marginLeft="@dimen/padding_thinner"
-					android:layout_marginStart="@dimen/padding_thinner"
-					android:layout_marginRight="@dimen/padding_thin"
-					android:layout_marginEnd="@dimen/padding_thin"
-				/>
-			</LinearLayout>
-		</RelativeLayout>
+			<ImageView
+				android:id="@+id/topic_care_ico"
+				app:srcCompat="@drawable/ic_star"
+				android:tint="@color/colorGrey"
+				android:layout_width="15dp"
+				android:layout_height="15dp"
+				app:layout_constraintTop_toTopOf="@+id/topic_care_nbr"
+				app:layout_constraintBottom_toBottomOf="@+id/topic_care_nbr"
+				app:layout_constraintRight_toLeftOf="@+id/topic_care_nbr"
+				android:layout_marginEnd="2dp"
+				android:layout_marginRight="2dp"
+			/>
+
+			<TextView
+				android:id="@+id/topic_care_nbr"
+				tools:text="50"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:textAlignment="textEnd"
+				android:layout_gravity="end"
+				app:layout_constraintTop_toTopOf="@+id/topic_done_nbr"
+				app:layout_constraintBottom_toBottomOf="@+id/topic_done_nbr"
+				app:layout_constraintRight_toLeftOf="@+id/topic_done_ico"
+				android:layout_marginEnd="8dp"
+				android:layout_marginRight="8dp"
+			/>
+
+			<ImageView
+				android:id="@+id/topic_done_ico"
+				app:srcCompat="@drawable/ic_check"
+				android:tint="@color/colorGrey"
+				android:layout_width="15dp"
+				android:layout_height="15dp"
+				app:layout_constraintTop_toTopOf="@+id/topic_done_nbr"
+				app:layout_constraintBottom_toBottomOf="@+id/topic_done_nbr"
+				app:layout_constraintRight_toLeftOf="@+id/topic_done_nbr"
+				android:layout_marginEnd="2dp"
+				android:layout_marginRight="2dp"
+			/>
+
+			<TextView
+				android:id="@+id/topic_done_nbr"
+				tools:text="100"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:textAlignment="textEnd"
+				android:layout_gravity="end"
+				app:layout_constraintEnd_toStartOf="@+id/textView"
+				app:layout_constraintTop_toTopOf="parent"
+				app:layout_constraintBottom_toBottomOf="parent"
+				android:layout_marginEnd="8dp"
+				android:layout_marginRight="8dp"
+			/>
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="@string/sum_symbol"
+				android:textColor="@color/colorAccent"
+				app:layout_constraintTop_toTopOf="@+id/topic_item_questions"
+				app:layout_constraintBottom_toBottomOf="@+id/topic_item_questions"
+				app:layout_constraintRight_toLeftOf="@+id/topic_item_questions"
+				android:layout_marginEnd="4dp"
+				android:layout_marginRight="4dp"
+				android:id="@+id/textView" />
+			<TextView
+				android:id="@+id/topic_item_questions"
+				tools:text="100"
+				android:layout_width="24dp"
+				android:layout_height="wrap_content"
+				android:textAlignment="textEnd"
+				android:layout_gravity="end"
+				android:layout_marginEnd="8dp"
+				android:layout_marginRight="8dp"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintTop_toTopOf="parent"
+				app:layout_constraintBottom_toBottomOf="parent"
+			/>
+		</android.support.constraint.ConstraintLayout>
 	</android.support.v7.widget.CardView>
-</android.support.constraint.ConstraintLayout>
+</FrameLayout>

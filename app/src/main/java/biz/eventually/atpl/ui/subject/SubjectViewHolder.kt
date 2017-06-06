@@ -16,15 +16,26 @@ class SubjectViewHolder(itemView: View, val itemClick: (TopicDto) -> Unit) : Rec
             itemView.subject_title.text = "processing...."
             if (id == -1) {
                 itemView.subject_title.text = name
-                itemView.subject_title.visibility = View.VISIBLE
 
+                itemView.subject_title.visibility = View.VISIBLE
                 itemView.topic_card.visibility = View.GONE
+
+                itemView.topic_done_ico.visibility = View.GONE
+                itemView.topic_done_nbr.visibility = View.GONE
+                itemView.topic_care_ico.visibility = View.GONE
+                itemView.topic_care_nbr.visibility = View.GONE
             } else {
                 itemView.topic_item_name.text = name
                 itemView.topic_item_questions.text = questions.toString()
 
                 itemView.subject_title.visibility = View.GONE
                 itemView.topic_card.visibility = View.VISIBLE
+
+                itemView.topic_done_ico.visibility = if (follow == 0) View.GONE else View.VISIBLE
+                itemView.topic_done_nbr.visibility = if (follow == 0) View.GONE else View.VISIBLE
+
+                itemView.topic_care_ico.visibility = if (focus == 0) View.GONE else View.VISIBLE
+                itemView.topic_care_nbr.visibility = if (focus == 0) View.GONE else View.VISIBLE
             }
 
             itemView.setOnClickListener { itemClick(this) }
