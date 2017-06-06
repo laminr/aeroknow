@@ -31,9 +31,17 @@ class SubjectViewHolder(itemView: View, val itemClick: (TopicDto) -> Unit) : Rec
                 itemView.subject_title.visibility = View.GONE
                 itemView.topic_card.visibility = View.VISIBLE
 
+                // follow
+                if (follow > 0) {
+                    itemView.topic_done_nbr.text = follow.toString()
+                }
                 itemView.topic_done_ico.visibility = if (follow == 0) View.GONE else View.VISIBLE
                 itemView.topic_done_nbr.visibility = if (follow == 0) View.GONE else View.VISIBLE
 
+                // focus
+                if (focus > 0) {
+                    itemView.topic_care_nbr.text = focus.toString()
+                }
                 itemView.topic_care_ico.visibility = if (focus == 0) View.GONE else View.VISIBLE
                 itemView.topic_care_nbr.visibility = if (focus == 0) View.GONE else View.VISIBLE
             }

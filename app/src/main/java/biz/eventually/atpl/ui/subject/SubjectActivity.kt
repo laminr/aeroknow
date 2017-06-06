@@ -73,9 +73,15 @@ class SubjectActivity : BaseActivity<SubjectManager>() {
         mSubjectList?.let {
             val topics = mutableListOf<TopicDto>()
 
-            it.forEach { (id, name, topic) ->
-                val focus = Focus().query { query -> query.equalTo("topicId", id) }.count()
-                topics.add(TopicDto(-1, name, 0, 0, focus))
+            it.forEach { (_, name, topic) ->
+                // header
+                topics.add(TopicDto(-1, name, 0, 0, 0))
+
+                topic.forEach { t ->
+                    val focus = Focus().query { query -> query.equalTo("topicId", t.id).equalTo("care", true) }.count()
+                    t.focus = focus
+                }
+                // line of topics
                 topics.addAll(topic)
             }
 

@@ -21,6 +21,7 @@ open class Focus() : RealmObject() {
 
     constructor(idWeb: Int, topicId: Int, questionId: Int, care: Boolean) : this() {
         this.idWeb = idWeb
+        this.topicId = topicId
         this.questionId = questionId
         this.care = care
     }
