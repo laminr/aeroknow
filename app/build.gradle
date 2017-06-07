@@ -4,6 +4,8 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'realm-android'
 
+apply plugin: 'io.fabric'
+
 ext {
     majorVersion = "0"
     minorVersion = "0"
@@ -132,11 +134,21 @@ dependencies {
 
     // KOTLIN
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+
+    // Fabric
+    compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
+        transitive = true
+    }
+
     testCompile 'junit:junit:4.12'
     debugCompile "com.squareup.leakcanary:leakcanary-android:$leakCanary"
     releaseCompile "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanary"
     testCompile "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanary"
+
 }
+
+// should be at the bottom
+apply plugin: 'com.google.gms.google-services'
 
 def getIP() {
     InetAddress result = null;

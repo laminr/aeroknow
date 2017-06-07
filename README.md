@@ -19,6 +19,11 @@ It includes:
 
 Realm is used to store important or disinterest in question. Question are then sorted by important question, then usual one and eventually the none important ones
 
+# To compile
+You need to create your keystore.properties at the root of the project. A file keystore.properties.temp is present to get the requested format
+
+A fabric.properties file must be as well created at the root of APP folder. A file fabric.properties.temp is present to get the requested format
+
 Continious work in progress ;-)
 
 License

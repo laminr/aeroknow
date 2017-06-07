@@ -10,12 +10,15 @@ import biz.eventually.atpl.ui.source.SourceManager
 import java.util.*
 
 import kotlinx.android.synthetic.main.activity_splash.*
+import com.crashlytics.android.Crashlytics
+import io.fabric.sdk.android.Fabric
 
 // https://www.bignerdranch.com/blog/splash-screens-the-right-way/
 class MainActivity : BaseActivity<SourceManager>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Fabric.with(this, Crashlytics())
 
         setContentView(R.layout.activity_splash)
 
