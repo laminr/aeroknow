@@ -2,6 +2,7 @@ package biz.eventually.atpl
 
 import android.app.Application
 import biz.eventually.atpl.di.AppComponent
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.squareup.leakcanary.LeakCanary
 import io.realm.Realm
 
@@ -11,6 +12,8 @@ import io.realm.Realm
 
 class AtplApplication : Application() {
 
+    lateinit var mFirebaseAnalytics : FirebaseAnalytics
+
     companion object {
         lateinit var component: AppComponent
     }
@@ -19,6 +22,9 @@ class AtplApplication : Application() {
         super.onCreate()
         component = AppComponent.Initializer.init(this)
         println("AtplApplication")
+
+        // Obtain the FirebaseAnalytics instance.
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this)
 
         // Initialize Realm
         Realm.init(this)
