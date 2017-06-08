@@ -1,6 +1,7 @@
 package biz.eventually.atpl
 
 import android.app.Application
+import biz.eventually.atpl.data.db.checkRealmVersion
 import biz.eventually.atpl.di.AppComponent
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.squareup.leakcanary.LeakCanary
@@ -28,6 +29,7 @@ class AtplApplication : Application() {
 
         // Initialize Realm
         Realm.init(this)
+        checkRealmVersion()
 
         /*
         if (LeakCanary.isInAnalyzerProcess(this)) {

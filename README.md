@@ -26,6 +26,9 @@ A fabric.properties file must be as well created at the root of APP folder. A fi
 
 Continious work in progress ;-)
 
+# Known bug
+After having shuffled the questions, the answers are not synchronize anymore (wtf)
+
 License
 ----
 
