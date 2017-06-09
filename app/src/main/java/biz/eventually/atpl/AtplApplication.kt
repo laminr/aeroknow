@@ -13,7 +13,7 @@ import io.realm.Realm
 
 class AtplApplication : Application() {
 
-    lateinit var mFirebaseAnalytics : FirebaseAnalytics
+    private lateinit var mFirebaseAnalytics : FirebaseAnalytics
 
     companion object {
         lateinit var component: AppComponent
@@ -24,7 +24,7 @@ class AtplApplication : Application() {
         component = AppComponent.Initializer.init(this)
         println("AtplApplication")
 
-        // Obtain the FirebaseAnalytics instance.
+        // Firebase Analytics
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this)
 
         // Initialize Realm

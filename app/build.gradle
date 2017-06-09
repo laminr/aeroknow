@@ -131,13 +131,11 @@ dependencies {
 
     provided 'org.glassfish:javax.annotation:10.0-b28'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-
-    compile 'com.google.firebase:firebase-core:10.2.6'
-
+    
     // KOTLIN
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 
-    // Fabric
+    // Fabric crashlytics
     compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
         transitive = true
     }
@@ -147,6 +145,7 @@ dependencies {
     releaseCompile "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanary"
     testCompile "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanary"
 
+    compile 'com.google.firebase:firebase-core:11.0.0'
 }
 
 // should be at the bottom
