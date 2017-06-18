@@ -7,7 +7,7 @@ import biz.eventually.atpl.data.model.dto.TopicDto
 /**
  * Created by thibault on 20/03/17.
  */
-data class Subject(val id: Int, val name: String, val topics: List<TopicDto>) : Parcelable{
+data class Subject(val id: Int, val name: String, val topics: List<TopicDto>, val focus: Int = -1, val follow: Int = 0) : Parcelable {
 
     companion object {
         @JvmField val CREATOR: Parcelable.Creator<Subject> = object : Parcelable.Creator<Subject> {
@@ -17,9 +17,11 @@ data class Subject(val id: Int, val name: String, val topics: List<TopicDto>) : 
     }
 
     constructor(source: Parcel) : this(
-    source.readInt(),
-    source.readString(),
-    ArrayList<TopicDto>().apply { source.readList(this, TopicDto::class.java.classLoader) }
+            source.readInt(),
+            source.readString(),
+            ArrayList<TopicDto>().apply { source.readList(this, TopicDto::class.java.classLoader) },
+            source.readInt(),
+            source.readInt()
     )
 
     override fun describeContents() = 0
@@ -28,6 +30,8 @@ data class Subject(val id: Int, val name: String, val topics: List<TopicDto>) : 
         dest.writeInt(id)
         dest.writeString(name)
         dest.writeList(topics)
+        dest.writeInt(focus)
+        dest.writeInt(follow)
     }
 }
 

@@ -1,5 +1,6 @@
 package biz.eventually.atpl.ui.subject
 
+import android.icu.util.ValueIterator
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import biz.eventually.atpl.data.model.dto.TopicDto
@@ -32,13 +33,23 @@ class SubjectViewHolder(itemView: View, val itemClick: (TopicDto) -> Unit) : Rec
                 itemView.topic_card.visibility = View.VISIBLE
 
                 // follow
-                if (follow > 0) {
-                    itemView.topic_done_nbr.text = follow.toString()
-                }
-                itemView.topic_done_ico.visibility = if (follow == 0) View.GONE else View.VISIBLE
-                itemView.topic_done_nbr.visibility = if (follow == 0) View.GONE else View.VISIBLE
+                if (follow == 0) {
 
-                // focus
+                    itemView.topic_done_ico.visibility = View.GONE
+                    itemView.topic_done_nbr.visibility = View.GONE
+                } else if (follow == questions) {
+
+                    itemView.topic_item_questions_ico.visibility = View.GONE
+                    itemView.topic_done_nbr.visibility = View.GONE
+                } else {
+
+                    itemView.topic_done_nbr.text = follow.toString()
+
+                    itemView.topic_done_ico.visibility = View.VISIBLE
+                    itemView.topic_done_nbr.visibility = View.VISIBLE
+                }
+
+                // care
                 if (focus > 0) {
                     itemView.topic_care_nbr.text = focus.toString()
                 }

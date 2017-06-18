@@ -7,5 +7,7 @@ data class QuestionNetwork(
         val id: Int,
         val label: String,
         val answers: List<AnswerNetwork>,
-        val img: String?
+        val img: String?,
+        val focus: Boolean?,
+        val follow: FollowNetwork?
 )

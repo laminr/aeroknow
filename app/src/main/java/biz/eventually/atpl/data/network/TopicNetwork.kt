@@ -7,6 +7,6 @@ data class TopicNetwork(
         val id: Int,
         val name: String,
         val questions: List<QuestionNetwork>?,
-        val follow: Int,
-        val focus: Int
+        val follow: Int?,
+        val focus: Int?
 )

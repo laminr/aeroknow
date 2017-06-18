@@ -4,7 +4,6 @@ import android.util.Log
 import biz.eventually.atpl.common.RxBaseManager
 import biz.eventually.atpl.data.DataProvider
 import biz.eventually.atpl.data.model.Source
-import cn.pedant.SweetAlert.SweetAlertDialog
 
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.android.schedulers.AndroidSchedulers

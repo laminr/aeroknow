@@ -7,6 +7,6 @@ data class TopicDtoNetwork(
         val id: Int,
         val name: String,
         val questions: Int = 0,
-        val follow: Int,
-        val focus: Int
+        val follow: Int?,
+        val focus: Int?
 )

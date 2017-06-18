@@ -23,13 +23,36 @@ class QuestionsManager @Inject constructor (private val dataProvider: DataProvid
         val TAG = "QuestionsManager"
     }
 
-    fun getQuestions(topicId: Int, display: (Topic) -> Unit) {
+    fun getQuestions(topicId: Int, display: (t: Topic) -> Unit, error: () -> Unit) {
         dataProvider.dataGetTopicQuestions(topicId)?.subscribeOn(Schedulers.io())?.observeOn(AndroidSchedulers.mainThread())?.subscribe({ s ->
             display(s)
         }, { error ->
-            Log.d(TAG, "getNbrQuestions: "+error)
+            error()
+            Log.d(TAG, "getQuestions: "+error)
         })
+    }
 
+    fun updateFocus(questionId: Int, care: Boolean, then: (state: Boolean?) -> Unit, error: () -> Unit) {
+        dataProvider.updateFocus(questionId, care)?.subscribeOn(Schedulers.io())?.observeOn(AndroidSchedulers.mainThread())?.subscribe({ focusInt ->
+            val focus = when(focusInt) {
+                0 -> false
+                1 -> true
+                else -> null
+            }
+
+            then(focus)
+        }, { error ->
+            Log.d(TAG, "updateFocus: "+error)
+            error()
+        })
+    }
+
+    fun updateFollow(questionId: Int, good: Boolean) {
+        dataProvider.updateFollow(questionId, good)?.subscribeOn(Schedulers.io())?.observeOn(AndroidSchedulers.mainThread())?.subscribe({ s ->
+            //display(s)
+        }, { error ->
+            Log.d(TAG, "updateFollow: "+error)
+        })
     }
 }
 

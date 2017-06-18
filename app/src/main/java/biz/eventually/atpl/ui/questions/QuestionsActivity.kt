@@ -4,7 +4,10 @@ import android.graphics.Color
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.CardView
-import android.view.*
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.ImageView
 import biz.eventually.atpl.AtplApplication
@@ -12,8 +15,6 @@ import biz.eventually.atpl.BuildConfig
 import biz.eventually.atpl.R
 import biz.eventually.atpl.common.IntentIdentifier
 import biz.eventually.atpl.common.StateIdentifier
-import biz.eventually.atpl.data.db.Focus
-import biz.eventually.atpl.data.db.Follow
 import biz.eventually.atpl.data.model.Topic
 import biz.eventually.atpl.data.network.Question
 import biz.eventually.atpl.ui.BaseActivity
@@ -21,11 +22,7 @@ import biz.eventually.atpl.ui.source.QuestionsManager
 import biz.eventually.atpl.utils.orderByFollowAndFocus
 import biz.eventually.atpl.utils.shuffle
 import com.squareup.picasso.Picasso
-import com.vicpin.krealmextensions.delete
-import com.vicpin.krealmextensions.query
-import com.vicpin.krealmextensions.queryFirst
-import com.vicpin.krealmextensions.save
-import io.realm.RealmObject
+import com.tapadoo.alerter.Alerter
 import kotlinx.android.synthetic.main.activity_questions.*
 
 class QuestionsActivity : BaseActivity<QuestionsManager>() {
@@ -37,9 +34,6 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
     private var mShowAnswer = false
     private var mIndexTick = -1
 
-    private var mFollow: Follow? = null
-    private var mFocus: Focus? = null
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_questions)
@@ -48,12 +42,7 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
         mTopic = intent.extras.getParcelable<Topic>(IntentIdentifier.TOPIC)
         mTopic?.apply {
             rotateloading.start()
-            manager.getQuestions(id) { t ->
-                mTopic = t
-                mQuestions = t.questions.orderByFollowAndFocus()
-                rotateloading.stop()
-                displayQuestion()
-            }
+            manager.getQuestions(id, { t -> questionsLoaded(t) }, { loadError() })
 
             supportActionBar?.title = name
         }
@@ -64,12 +53,26 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
         question_answer_4.setOnClickListener { onAnswerClick(it, 3) }
 
         question_previous.setOnClickListener {
+            if (question_follow.isChecked && mIndexTick > -1) {
+                manager.updateFollow(
+                        mQuestions[mCurrentQuestion].id,
+                        mQuestions[mCurrentQuestion].answers[mIndexTick].good
+                )
+            }
+
             if (mCurrentQuestion >= 1) mCurrentQuestion -= 1
             displayQuestion()
         }
 
         question_next.setOnClickListener {
             mTopic?.questions?.let {
+                if (question_follow.isChecked && mIndexTick > -1) {
+                    manager.updateFollow(
+                            mQuestions[mCurrentQuestion].id,
+                            mQuestions[mCurrentQuestion].answers[mIndexTick].good
+                    )
+                }
+
                 if (mCurrentQuestion < it.count() - 1) mCurrentQuestion += 1
                 displayQuestion()
             }
@@ -128,12 +131,29 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
         displayQuestion()
     }
 
-    fun displayQuestion() {
+    private fun questionsLoaded(topic: Topic): Unit {
 
+        mTopic = topic
+        mQuestions = topic.questions.orderByFollowAndFocus()
+        rotateloading.stop()
+
+        if (mQuestions.size > 0) {
+            displayQuestion()
+        }
+    }
+
+    private fun loadError() {
+        rotateloading.stop()
+    }
+
+    fun displayQuestion() {
+/*
         mQuestions[mCurrentQuestion].let {
             mFocus = Focus().queryFirst { query -> query.equalTo("questionId", it.id) }
-            mFollow = Follow().queryFirst { query -> query.equalTo("questionId", it.id) }
+            mFollow = FollowDb().queryFirst { query -> query.equalTo("questionId", it.id) }
         }
+*/
+        mIndexTick = -1
 
         if (question_imgs.childCount > 0) {
             question_imgs.removeAllViews()
@@ -183,6 +203,15 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
     private fun attachFocusListener() {
 
         question_care.setOnClickListener {
+            it.visibility = View.GONE
+            manager.updateFocus(mQuestions[mCurrentQuestion].id, true, this::onFocusSaves, this::onSavinError)
+
+/*            when (mQuestions[mCurrentQuestion].focus) {
+                true -> mQuestions[mCurrentQuestion].focus = null
+                else -> mQuestions[mCurrentQuestion].focus = true
+            }*/
+
+            /*
             if (mFocus == null) {
                 mFocus = Focus(-1, mTopic?.id ?: 0, mQuestions[mCurrentQuestion].id, true)
                 mFocus?.save()
@@ -198,49 +227,52 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
                     }
                 }
             }
+            */
             displayFollowAndFocus()
         }
 
         question_dontcare.setOnClickListener {
+            it.visibility = View.GONE
+            manager.updateFocus(mQuestions[mCurrentQuestion].id, false, this::onFocusSaves, this::onSavinError)
 
-            if (mFocus == null) {
-                mFocus = Focus(-1, mTopic?.id ?: 0, mQuestions[mCurrentQuestion].id, false)
-                mFocus?.save()
-            } else {
-                when(mFocus?.care) {
-                    true -> {
-                        mFocus?.care = false
-                        mFocus?.save()
-                    }
-                    false -> {
-                        mFocus = null
-                        Focus().delete { query -> query.equalTo("questionId", mQuestions[mCurrentQuestion].id) }
-                    }
-                }
-            }
             displayFollowAndFocus()
         }
     }
 
+    private fun onFocusSaves(state: Boolean?) {
+        mQuestions[mCurrentQuestion].focus = state
+        displayFollowAndFocus()
+    }
+
+    private fun onSavinError() {
+        Alerter.create(this)
+                .setTitle(getString(R.string.error_dialog_title))
+                .setText(getString(R.string.question_focus_error))
+                .setBackgroundColor(R.color.colorAccent)
+                .show()
+
+        displayFollowAndFocus()
+    }
+
     private fun displayFollowAndFocus() {
 
-        if (mFocus == null) {
-            question_care.setColorFilter(ContextCompat.getColor(applicationContext, R.color.colorGrey))
-            question_dontcare.setColorFilter(ContextCompat.getColor(applicationContext, R.color.colorGrey))
-        }
+        question_dontcare.visibility = View.VISIBLE
+        question_care.visibility = View.VISIBLE
 
-        when (mFocus?.care) {
-            true -> {
-                question_care.setColorFilter(ContextCompat.getColor(applicationContext, R.color.colorAccent))
+        when (mQuestions[mCurrentQuestion].focus) {
+            null -> {
+                question_care.setColorFilter(ContextCompat.getColor(applicationContext, R.color.colorGrey))
                 question_dontcare.setColorFilter(ContextCompat.getColor(applicationContext, R.color.colorGrey))
             }
             false -> {
                 question_care.setColorFilter(ContextCompat.getColor(applicationContext, R.color.colorGrey))
                 question_dontcare.setColorFilter(ContextCompat.getColor(applicationContext, R.color.colorAccent))
             }
+            true -> {
+                question_care.setColorFilter(ContextCompat.getColor(applicationContext, R.color.colorAccent))
+                question_dontcare.setColorFilter(ContextCompat.getColor(applicationContext, R.color.colorGrey))
+            }
         }
-
-        mFollow.let { }
     }
 
     private fun initCheckboxes() {
@@ -252,8 +284,8 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
 
     private fun onAnswerClick(view: View, index: Int) {
 
-        mIndexTick = index
         mShowAnswer = !mShowAnswer
+        mIndexTick = if (mShowAnswer) index else -1
 
         if (mShowAnswer) {
             resetCheckbox()

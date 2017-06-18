@@ -2,7 +2,8 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tool="http://schemas.android.com/tools">
 
     <com.victor.loading.rotate.RotateLoading
         android:id="@+id/rotateloading"
@@ -18,4 +19,15 @@
         app:loading_width="5dp"
         app:layout_constraintVertical_bias="0.7" />
 
+    <TextView
+        android:id="@+id/splash_version"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tool:text="v0.0.1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:textColor="@color/colorAccent"
+        android:layout_marginBottom="32dp"
+        />
 </android.support.constraint.ConstraintLayout>

@@ -10,4 +10,6 @@
 	<string name="error_dialog_message">Network Error: Something went wrong!</string>
 	<string name="action_shuffle">shuffle</string>
     <string name="try_again">Try again</string>
+    <string name="question_focus_error">the focus request has not been saved</string>
+	<string name="question_follow_up_label">Follow up</string>
 </resources>

@@ -1,6 +1,7 @@
 package biz.eventually.atpl
 
 import android.content.Intent
+import android.graphics.Bitmap
 import android.os.Bundle
 import biz.eventually.atpl.common.IntentIdentifier
 import biz.eventually.atpl.data.model.Source
@@ -21,8 +22,9 @@ class MainActivity : BaseActivity<SourceManager>() {
         Fabric.with(this, Crashlytics())
 
         setContentView(R.layout.activity_splash)
-
         AtplApplication.component.inject(this)
+
+        splash_version.text = "v${BuildConfig.VERSION_NAME}"
         rotateloading.start()
         manager.getSources({ s -> openSourceActivity(s)}, { openSourceActivity(null)})
     }

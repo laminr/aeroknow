@@ -15,7 +15,6 @@ import biz.eventually.atpl.data.model.Source
 import biz.eventually.atpl.data.model.Subject
 import biz.eventually.atpl.ui.BaseActivity
 import biz.eventually.atpl.ui.subject.SubjectActivity
-import cn.pedant.SweetAlert.SweetAlertDialog
 import kotlinx.android.synthetic.main.activity_source.*
 
 class SourceActivity : BaseActivity<SourceManager>() {
@@ -58,13 +57,14 @@ class SourceActivity : BaseActivity<SourceManager>() {
         super.onPause()
     }
 
+    /*
     override fun onSaveInstanceState(outState: Bundle?, outPersistentState: PersistableBundle?) {
         mSourceList?.let {
-            outState?.putParcelableArrayList(StateIdentifier.SOURCE_LIST, it as ArrayList<Subject>)
+            outState?.putParcelableArrayList(StateIdentifier.SOURCE_LIST, it as? ArrayList<Subject>)
         }
 
         super.onSaveInstanceState(outState, outPersistentState)
-    }
+    }*/
 
     /*
     override fun onRestoreInstanceState(savedInstanceState: Bundle?) {

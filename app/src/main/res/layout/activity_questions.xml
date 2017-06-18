@@ -22,7 +22,21 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 android:layout_marginTop="@dimen/margin_large"
-                android:visibility="gone"
+                android:layout_marginLeft="@dimen/margin_large"
+                android:layout_marginStart="@dimen/margin_large"
+                />
+
+            <TextView
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/question_follow_up_label"
+                app:layout_constraintLeft_toRightOf="@+id/question_follow"
+                app:layout_constraintTop_toTopOf="@+id/question_follow"
+                app:layout_constraintBottom_toBottomOf="@+id/question_follow"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:textColor="@color/colorGrey"
                 />
 
             <ImageView
