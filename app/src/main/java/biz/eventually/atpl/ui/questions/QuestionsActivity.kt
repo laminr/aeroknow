@@ -2,9 +2,13 @@ package biz.eventually.atpl.ui.questions
 
 import android.graphics.Color
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.CardView
-import android.view.*
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.ImageView
 import biz.eventually.atpl.AtplApplication
@@ -22,11 +26,10 @@ import biz.eventually.atpl.utils.orderByFollowAndFocus
 import biz.eventually.atpl.utils.shuffle
 import com.squareup.picasso.Picasso
 import com.vicpin.krealmextensions.delete
-import com.vicpin.krealmextensions.query
 import com.vicpin.krealmextensions.queryFirst
 import com.vicpin.krealmextensions.save
-import io.realm.RealmObject
 import kotlinx.android.synthetic.main.activity_questions.*
+
 
 class QuestionsActivity : BaseActivity<QuestionsManager>() {
 
@@ -39,6 +42,10 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
 
     private var mFollow: Follow? = null
     private var mFocus: Focus? = null
+
+    private var transparentColor : Int = 0x00000000
+    private var mTimer: CountDownTimer? = null
+    private var isLight : Boolean = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -143,6 +150,7 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
         resetCheckbox()
 
         mQuestions[mCurrentQuestion].apply {
+            question_label.setBackgroundColor(transparentColor)
             question_label.loadData(label, "text/html; charset=utf-8", "UTF-8")
 
             for (i in 0..answers.count() - 1) {
@@ -165,6 +173,8 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
 
                 question_imgs.addView(imgContainer)
             }
+
+            launchCountDown()
         }
 
         mQuestions.isNotEmpty().apply {
@@ -178,6 +188,24 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
         }
 
         initCheckboxes()
+    }
+
+    private fun launchCountDown() {
+        mTimer = object : CountDownTimer(60000, 1000) {
+            override fun onFinish() {
+                question_label.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.colorAccent))
+            }
+
+            override fun onTick(millisUntilFinished: Long) {
+                if (millisUntilFinished < 10000) {
+                    when(isLight) {
+                        true -> question_label.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.colorGreyLight))
+                        false -> question_label.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.colorLight))
+                    }
+                    isLight = !isLight
+                }
+            }
+        }.start()
     }
 
     private fun attachFocusListener() {
