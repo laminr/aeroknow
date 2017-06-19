@@ -233,9 +233,23 @@
                 android:layout_marginRight="16dp"
                 android:layout_marginTop="16dp"
                 android:text="@string/question_next"
-                android:background="@color/colorAccent"
+                android:background="@drawable/question_button"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/question_answer_4" />
+
+            <ImageButton
+                android:id="@+id/question_last"
+                android:layout_width="87dp"
+                android:layout_height="50dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="16dp"
+                app:srcCompat="@drawable/ic_check"
+                android:background="@drawable/question_button"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/question_answer_4"
+                android:elevation="2dp"
+                />
 
             <TextView
                 android:id="@+id/question_range"
@@ -253,7 +267,7 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
-                android:background="@color/colorAccent"
+                android:background="@drawable/question_button"
                 android:text="@string/question_back"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/question_answer_4" />

@@ -38,9 +38,9 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
     private var mShowAnswer = false
     private var mIndexTick = -1
 
-    private var transparentColor : Int = 0x00000000
+    private var transparentColor: Int = 0x00000000
     private var mTimer: CountDownTimer? = null
-    private var isLight : Boolean = true
+    private var isLight: Boolean = true
 
     private var mTimeLength: Long = 1000
 
@@ -88,6 +88,13 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
                 if (mCurrentQuestion < it.count() - 1) mCurrentQuestion += 1
                 displayQuestion()
             }
+        }
+
+        question_last.setOnClickListener {
+            manager.updateFollow(
+                    mQuestions[mCurrentQuestion].id,
+                    mQuestions[mCurrentQuestion].answers[mIndexTick].good
+            )
         }
 
         question_label.setBackgroundColor(Color.TRANSPARENT)
@@ -210,6 +217,7 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
 
         mTopic?.questions?.let {
             question_next.visibility = if (mCurrentQuestion < it.count() - 1) View.VISIBLE else View.GONE
+            question_last.visibility = if (question_follow.isChecked && mCurrentQuestion == it.count() - 1) View.VISIBLE else View.GONE
         }
 
         initCheckboxes()
@@ -224,7 +232,7 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
 
             override fun onTick(millisUntilFinished: Long) {
                 if (millisUntilFinished < 10000) {
-                    when(isLight) {
+                    when (isLight) {
                         true -> question_label.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.colorGreyLight))
                         false -> question_label.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.colorLight))
                     }
