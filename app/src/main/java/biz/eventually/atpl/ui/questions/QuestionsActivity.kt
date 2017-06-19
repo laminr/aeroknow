@@ -91,13 +91,21 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
         }
 
         question_last.setOnClickListener {
-            manager.updateFollow(
-                    mQuestions[mCurrentQuestion].id,
-                    mQuestions[mCurrentQuestion].answers[mIndexTick].good
-            )
+            if (mIndexTick > -1 ) {
+                manager.updateFollow(
+                        mQuestions[mCurrentQuestion].id,
+                        mQuestions[mCurrentQuestion].answers[mIndexTick].good
+                )
+
+                it.visibility = View.GONE
+            }
         }
 
         question_label.setBackgroundColor(Color.TRANSPARENT)
+
+        question_follow.setOnCheckedChangeListener { _, isChecked ->
+            question_last.visibility = if (isChecked) View.VISIBLE else View.GONE
+        }
 
     }
 
@@ -172,6 +180,8 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
             mFollow = FollowDb().queryFirst { query -> query.equalTo("questionId", it.id) }
         }
 */
+        mTimer?.cancel()
+
         mIndexTick = -1
 
         if (question_imgs.childCount > 0) {
