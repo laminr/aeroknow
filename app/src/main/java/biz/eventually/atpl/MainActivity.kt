@@ -8,6 +8,10 @@ import biz.eventually.atpl.data.model.Source
 import biz.eventually.atpl.ui.BaseActivity
 import biz.eventually.atpl.ui.source.SourceActivity
 import biz.eventually.atpl.ui.source.SourceManager
+import biz.eventually.atpl.utils.PREF_TIMER
+import biz.eventually.atpl.utils.putInt
+import biz.eventually.atpl.utils.putLong
+import biz.eventually.atpl.utils.putString
 import java.util.*
 
 import kotlinx.android.synthetic.main.activity_splash.*
@@ -27,6 +31,9 @@ class MainActivity : BaseActivity<SourceManager>() {
         splash_version.text = "v${BuildConfig.VERSION_NAME}"
         rotateloading.start()
         manager.getSources({ s -> openSourceActivity(s)}, { openSourceActivity(null)})
+
+        // save default time - 1 sec
+        putLong(applicationContext, PREF_TIMER, 1000)
     }
 
     fun openSourceActivity(sources: List<Source>?) {
