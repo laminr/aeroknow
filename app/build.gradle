@@ -8,8 +8,8 @@ apply plugin: 'io.fabric'
 
 ext {
     majorVersion = "0"
-    minorVersion = "0"
-    patchVersion = "1"
+    minorVersion = "12"
+    patchVersion = "5"
 }
 
 // Load keystore
@@ -27,8 +27,8 @@ android {
         minSdkVersion 16
         targetSdkVersion 25
 
-        versionCode 11
-        versionName majorVersion + "." + minorVersion + "." + patchVersion + "." + versionCode
+        versionCode 12
+        versionName "${majorVersion}.${minorVersion}.${patchVersion} build " + getDate()
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -184,6 +184,6 @@ def getIP() {
 
 def getDate() {
     def date = new Date()
-    def formattedDate = date.format('dd/MM/yy')
-    return formattedDate
+    def formattedDate = date.format('yyMMdd')
+    return formattedDate.toLong()
 }

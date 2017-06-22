@@ -8,6 +8,7 @@ import android.content.Context
 import android.preference.PreferenceManager
 
 val PREF_TIMER : String = "prefs.question.timer"
+val PREF_TOKEN : String = "prefs.api.token"
 
 
 

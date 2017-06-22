@@ -22,11 +22,10 @@ import biz.eventually.atpl.ui.BaseActivity
 import biz.eventually.atpl.ui.source.QuestionsManager
 import biz.eventually.atpl.utils.*
 import com.squareup.picasso.Picasso
-import com.vicpin.krealmextensions.delete
-import com.vicpin.krealmextensions.queryFirst
-import com.vicpin.krealmextensions.save
 import com.tapadoo.alerter.Alerter
 import kotlinx.android.synthetic.main.activity_questions.*
+import android.app.Activity
+import android.content.Intent
 
 
 class QuestionsActivity : BaseActivity<QuestionsManager>() {
@@ -42,10 +41,13 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
     private var mTimer: CountDownTimer? = null
     private var isLight: Boolean = true
 
+    private var mHadChange = false
+
     private var mTimeLength: Long = 1000
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.activity_questions)
         AtplApplication.component.inject(this)
 
@@ -66,6 +68,7 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
 
         question_previous.setOnClickListener {
             if (question_follow.isChecked && mIndexTick > -1) {
+                mHadChange = true
                 manager.updateFollow(
                         mQuestions[mCurrentQuestion].id,
                         mQuestions[mCurrentQuestion].answers[mIndexTick].good
@@ -79,6 +82,7 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
         question_next.setOnClickListener {
             mTopic?.questions?.let {
                 if (question_follow.isChecked && mIndexTick > -1) {
+                    mHadChange = true
                     manager.updateFollow(
                             mQuestions[mCurrentQuestion].id,
                             mQuestions[mCurrentQuestion].answers[mIndexTick].good
@@ -91,7 +95,8 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
         }
 
         question_last.setOnClickListener {
-            if (mIndexTick > -1 ) {
+            if (mIndexTick > -1) {
+                mHadChange = true
                 manager.updateFollow(
                         mQuestions[mCurrentQuestion].id,
                         mQuestions[mCurrentQuestion].answers[mIndexTick].good
@@ -104,7 +109,7 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
         question_label.setBackgroundColor(Color.TRANSPARENT)
 
         question_follow.setOnCheckedChangeListener { _, isChecked ->
-            question_last.visibility = if (isChecked) View.VISIBLE else View.GONE
+            question_last.visibility = if (isChecked && mCurrentQuestion == mQuestions.size - 1) View.VISIBLE else View.GONE
         }
 
     }
@@ -131,6 +136,8 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
         }
     }
 
+
+
     override fun onSaveInstanceState(outState: Bundle?) {
         super.onSaveInstanceState(outState)
         outState?.let {
@@ -149,6 +156,13 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
     }
 
     override fun onBackPressed() {
+
+        if (mHadChange) {
+            setResult(Activity.RESULT_OK, Intent())
+        } else {
+            setResult(Activity.RESULT_CANCELED, Intent())
+        }
+
         super.onBackPressed()
     }
 
@@ -205,6 +219,7 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
             }
 
             displayFollowAndFocus()
+            displayFollowCount()
             attachFocusListener()
 
             img?.forEach { img ->
@@ -255,6 +270,7 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
     private fun attachFocusListener() {
 
         question_care.setOnClickListener {
+            mHadChange = true
             it.visibility = View.GONE
             manager.updateFocus(mQuestions[mCurrentQuestion].id, true, this::onFocusSaves, this::onSavinError)
 
@@ -284,6 +300,7 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
         }
 
         question_dontcare.setOnClickListener {
+            mHadChange = true
             it.visibility = View.GONE
             manager.updateFocus(mQuestions[mCurrentQuestion].id, false, this::onFocusSaves, this::onSavinError)
 
@@ -327,6 +344,39 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
         }
     }
 
+    private fun displayFollowCount() {
+
+        val good = mQuestions[mCurrentQuestion].follow.good
+        val wrong = mQuestions[mCurrentQuestion].follow.wrong
+
+        if (good == 0 && wrong == 0) {
+            question_good_img.visibility = View.GONE
+            question_good_value.visibility = View.GONE
+
+            question_wrong_img.visibility = View.GONE
+            question_wrong_value.visibility = View.GONE
+        } else {
+            question_good_img.visibility = View.VISIBLE
+            question_good_value.visibility = View.VISIBLE
+            question_good_value.text = good.toString()
+
+            question_wrong_img.visibility = View.VISIBLE
+            question_wrong_value.visibility = View.VISIBLE
+            question_wrong_value.text = wrong.toString()
+
+            if (good > wrong) {
+                question_good_img.setColorFilter(ContextCompat.getColor(applicationContext, R.color.colorAccent))
+                question_wrong_img.setColorFilter(ContextCompat.getColor(applicationContext, R.color.colorGrey))
+            } else if (good < wrong) {
+                question_good_img.setColorFilter(ContextCompat.getColor(applicationContext, R.color.colorGrey))
+                question_wrong_img.setColorFilter(ContextCompat.getColor(applicationContext, R.color.colorAccent))
+            } else {
+                question_good_img.setColorFilter(ContextCompat.getColor(applicationContext, R.color.colorGrey))
+                question_wrong_img.setColorFilter(ContextCompat.getColor(applicationContext, R.color.colorGrey))
+            }
+        }
+    }
+
     private fun initCheckboxes() {
         question_answer_1.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.cardview_light_background))
         question_answer_2.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.cardview_light_background))
@@ -343,6 +393,7 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
             resetCheckbox()
             checkOneBox(view as CardView, true)
             showAnswer()
+            mTimer?.cancel()
         } else {
             initCheckboxes()
             resetCheckbox()
@@ -373,7 +424,7 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
     }
 
     private fun showAnswer() {
-        mTopic?.questions?.get(mCurrentQuestion)?.answers?.let {
+        mQuestions[mCurrentQuestion].answers.let {
             for (i in 0..it.count() - 1) {
                 if (it[i].good) {
                     val bckg = if (it[i].good) ContextCompat.getDrawable(applicationContext, R.drawable.answer_right) else ContextCompat.getDrawable(applicationContext, R.drawable.answer_wrong)

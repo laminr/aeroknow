@@ -8,10 +8,7 @@ import biz.eventually.atpl.data.model.Source
 import biz.eventually.atpl.ui.BaseActivity
 import biz.eventually.atpl.ui.source.SourceActivity
 import biz.eventually.atpl.ui.source.SourceManager
-import biz.eventually.atpl.utils.PREF_TIMER
-import biz.eventually.atpl.utils.putInt
-import biz.eventually.atpl.utils.putLong
-import biz.eventually.atpl.utils.putString
+import biz.eventually.atpl.utils.*
 import java.util.*
 
 import kotlinx.android.synthetic.main.activity_splash.*
@@ -32,8 +29,9 @@ class MainActivity : BaseActivity<SourceManager>() {
         rotateloading.start()
         manager.getSources({ s -> openSourceActivity(s)}, { openSourceActivity(null)})
 
-        // save default time - 1 sec
+        // save preference waiting to do the screen
         putLong(applicationContext, PREF_TIMER, 1000)
+        putString(applicationContext, PREF_TOKEN, "myToken")
     }
 
     fun openSourceActivity(sources: List<Source>?) {

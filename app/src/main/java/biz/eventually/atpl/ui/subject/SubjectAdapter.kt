@@ -17,7 +17,7 @@ import biz.eventually.atpl.ui.questions.QuestionsActivity
 /**
  * Created by laminr on 29/03/2017.
  */
-class SubjectAdapter : RecyclerView.Adapter<SubjectViewHolder>() {
+class SubjectAdapter(val onClick: (dto: TopicDto) -> Unit) : RecyclerView.Adapter<SubjectViewHolder>() {
 
     var name: TextView? = null
     private var mTopics = mutableListOf<TopicDto>()
@@ -36,19 +36,11 @@ class SubjectAdapter : RecyclerView.Adapter<SubjectViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): SubjectViewHolder {
         mParent = parent
         val view = LayoutInflater.from(parent?.context).inflate(R.layout.item_subject_row, parent, false)
-        return SubjectViewHolder(view, this::onItemClick)
-    }
-
-    private fun onItemClick(dto: TopicDto): Unit {
-
-        val intent = Intent(mParent?.context, QuestionsActivity::class.java)
-        val topic = Topic(dto.id, dto.name, listOf(), 0, 0)
-        intent.putExtra(IntentIdentifier.TOPIC, topic)
-        startActivity(mParent?.context, intent, null)
-
+        return SubjectViewHolder(view, onClick)
     }
 
     fun bind(topics: List<TopicDto>): Unit {
+        mTopics = mutableListOf()
         mTopics.addAll(topics)
     }
 }
