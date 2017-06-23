@@ -42,6 +42,7 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
     private var isLight: Boolean = true
 
     private var mHadChange = false
+    private var mHasToken = true
 
     private var mTimeLength: Long = 1000
 
@@ -52,6 +53,15 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
         AtplApplication.component.inject(this)
 
         mTimeLength = getLong(applicationContext, PREF_TIMER, mTimeLength)
+
+        // has Token ?
+        PrefsGetString(this@QuestionsActivity, PREF_TOKEN)?.let {
+            question_care.visibility = View.VISIBLE
+            question_dontcare.visibility = View.VISIBLE
+
+            question_follow.visibility = View.VISIBLE
+            question_follow_label.visibility = View.VISIBLE
+        } ?: kotlin.run { mHasToken = false }
 
         mTopic = intent.extras.getParcelable<Topic>(IntentIdentifier.TOPIC)
         mTopic?.apply {
@@ -175,7 +185,7 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
     private fun questionsLoaded(topic: Topic): Unit {
 
         mTopic = topic
-        mQuestions = topic.questions.orderByFollowAndFocus()
+        mQuestions = topic.questions.toMutableList()
         rotateloading.stop()
 
         if (mQuestions.size > 0) {
@@ -195,7 +205,6 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
         }
 */
         mTimer?.cancel()
-
         mIndexTick = -1
 
         if (question_imgs.childCount > 0) {
@@ -218,9 +227,12 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
                 }
             }
 
-            displayFollowAndFocus()
+            if (mHasToken) {
+                displayFollowAndFocus()
+                attachFocusListener()
+            }
+
             displayFollowCount()
-            attachFocusListener()
 
             img?.forEach { img ->
                 val imgContainer = ImageView(applicationContext)

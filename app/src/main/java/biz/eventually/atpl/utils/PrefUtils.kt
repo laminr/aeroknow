@@ -12,12 +12,12 @@ val PREF_TOKEN : String = "prefs.api.token"
 
 
 
-fun getString(context: Context, key: String, defValue: String): String {
+fun PrefsGetString(context: Context, key: String, defValue: String? = null) : String? {
     val pref = PreferenceManager.getDefaultSharedPreferences(context)
     return pref.getString(key, defValue)
 }
 
-fun putString(context: Context, key: String, value: String) {
+fun PrefsPutString(context: Context, key: String, value: String) {
     val pref = PreferenceManager.getDefaultSharedPreferences(context)
     val editor = pref.edit()
     editor.putString(key, value)

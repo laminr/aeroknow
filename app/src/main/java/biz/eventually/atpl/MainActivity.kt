@@ -1,8 +1,6 @@
 package biz.eventually.atpl
 
 import android.content.Intent
-import android.graphics.Bitmap
-import android.net.Uri
 import android.os.Bundle
 import biz.eventually.atpl.common.IntentIdentifier
 import biz.eventually.atpl.data.model.Source
@@ -50,7 +48,7 @@ class MainActivity : BaseActivity<SourceManager>() {
             val token = appLinkData.lastPathSegment
 
             token?.let {
-                putString(this@MainActivity,PREF_TOKEN, token)
+                PrefsPutString(this@MainActivity,PREF_TOKEN, token)
 
                 SweetAlertDialog(this, SweetAlertDialog.CUSTOM_IMAGE_TYPE)
                         .setTitleText(getString(R.string.dialog_title_ok))

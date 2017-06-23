@@ -37,6 +37,7 @@ class SubjectViewHolder(itemView: View, val itemClick: (TopicDto) -> Unit) : Rec
 
                     itemView.topic_done_ico.visibility = View.GONE
                     itemView.topic_done_nbr.visibility = View.GONE
+                    
                 } else if (follow == questions) {
 
                     itemView.topic_item_questions_ico.visibility = View.GONE

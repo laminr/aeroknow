@@ -52,38 +52,3 @@ fun List<Question>.orderByFollowAndFocus(): MutableList<Question> {
 
     return data
 }
-
-//
-//fun orderByFollowAndFocus( questions: List<Question>): MutableList<Question> {
-//
-//    var care : List<Question> = arrayListOf()
-//    var dontCare : List<Question> = arrayListOf()
-//    var others : List<Question> = arrayListOf()
-//    var data  : MutableList<Question> = mutableListOf()
-//
-//    val focusPrimary = Focus().queryAll()
-//    val care = mutableMapOf<Int, Focus>()
-//
-//    focusPrimary.forEach { f ->
-//        care[f.questionId] = f
-//    }
-//
-//    questions.forEach { question ->
-//        val hasFocus = care[question.id]
-//
-//        if (hasFocus != null) {
-//            when (hasFocus.care) {
-//                true -> care += question
-//                false -> dontCare += question
-//            }
-//        } else {
-//            others += question
-//        }
-//    }
-//
-//    data.addAll(care)
-//    data.addAll(others)
-//    data.addAll(dontCare)
-//
-//    return data
-//}
