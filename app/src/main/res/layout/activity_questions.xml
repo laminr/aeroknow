@@ -287,7 +287,9 @@
                 app:layout_constraintLeft_toLeftOf="@+id/question_answer_4"
                 app:layout_constraintTop_toBottomOf="@+id/question_answer_4"
                 app:layout_constraintHorizontal_chainStyle="packed"
-                android:layout_marginTop="16dp" />
+                android:layout_marginTop="16dp"
+                android:visibility="gone"
+                />
 
             <TextView
                 android:id="@+id/question_wrong_value"
@@ -313,6 +315,7 @@
                 app:layout_constraintRight_toRightOf="@+id/question_answer_4"
                 app:layout_constraintTop_toBottomOf="@+id/question_answer_4"
                 app:layout_constraintLeft_toRightOf="@+id/question_good_img"
+                android:visibility="gone"
                 />
 
             <TextView

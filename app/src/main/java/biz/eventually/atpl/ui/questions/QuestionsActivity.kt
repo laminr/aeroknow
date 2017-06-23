@@ -315,7 +315,7 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
 
     private fun onSavinError() {
         Alerter.create(this)
-                .setTitle(getString(R.string.error_dialog_title))
+                .setTitle(getString(R.string.dialog_title_error))
                 .setText(getString(R.string.question_focus_error))
                 .setBackgroundColor(R.color.colorAccent)
                 .show()

@@ -19,13 +19,26 @@
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:scheme="http"
+                    android:host="www.aeroknow.xyz"
+                    android:pathPattern="/token/.*" />
             </intent-filter>
         </activity>
         <activity
             android:name=".ui.source.SourceActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden" />
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            />
+
         <activity
             android:name=".ui.subject.SubjectActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
