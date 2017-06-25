@@ -8,8 +8,8 @@ apply plugin: 'io.fabric'
 
 ext {
     majorVersion = "0"
-    minorVersion = "14"
-    patchVersion = "3"
+    minorVersion = "15"
+    patchVersion = "1"
 }
 
 // Load keystore
@@ -27,7 +27,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 25
 
-        versionCode 14
+        versionCode 15
         versionName "${majorVersion}.${minorVersion}.${patchVersion} build " + getDate()
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
