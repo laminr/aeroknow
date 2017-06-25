@@ -26,6 +26,9 @@ import com.tapadoo.alerter.Alerter
 import kotlinx.android.synthetic.main.activity_questions.*
 import android.app.Activity
 import android.content.Intent
+import com.github.pwittchen.swipe.library.Swipe
+import android.view.MotionEvent
+import com.github.pwittchen.swipe.library.SwipeListener
 
 
 class QuestionsActivity : BaseActivity<QuestionsManager>() {
@@ -45,6 +48,8 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
     private var mHasToken = true
 
     private var mTimeLength: Long = 1000
+
+    private var mSwipe : Swipe? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -118,6 +123,45 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
             }
         }
 
+        mSwipe = Swipe()
+        mSwipe?.setListener(object : SwipeListener {
+            override fun onSwipingLeft(event: MotionEvent) {
+                question_range.text = "onSwipingLeft"
+                question_next.performClick()
+            }
+
+            override fun onSwipedLeft(event: MotionEvent) {
+                question_range.text = "onSwipedLeft"
+                question_next.performClick()
+            }
+
+            override fun onSwipingRight(event: MotionEvent) {
+                question_range.text = "onSwipingRight"
+                question_previous.performClick()
+            }
+
+            override fun onSwipedRight(event: MotionEvent) {
+                question_range.text = "onSwipedRight"
+                question_previous.performClick()
+            }
+
+            override fun onSwipingUp(event: MotionEvent) {
+                question_range.text = "onSwipingUp"
+            }
+
+            override fun onSwipedUp(event: MotionEvent) {
+                question_range.text = "onSwipingUp"
+            }
+
+            override fun onSwipingDown(event: MotionEvent) {
+                question_range.text = "onSwipingUp"
+            }
+
+            override fun onSwipedDown(event: MotionEvent) {
+                question_range.text = "onSwipingUp"
+            }
+        })
+
         question_label.setBackgroundColor(Color.TRANSPARENT)
 
         question_follow.setOnCheckedChangeListener { _, isChecked ->
@@ -147,8 +191,6 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
             else -> return super.onOptionsItemSelected(item)
         }
     }
-
-
 
     override fun onSaveInstanceState(outState: Bundle?) {
         super.onSaveInstanceState(outState)

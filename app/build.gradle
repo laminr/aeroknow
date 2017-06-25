@@ -124,6 +124,9 @@ dependencies {
     // Alerter
     compile 'com.tapadoo.android:alerter:1.0.8'
 
+    // Swipe
+    compile 'com.github.pwittchen:swipe:0.1.0'
+
     //RxJava dependencies
     compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
     compile 'io.reactivex.rxjava2:rxjava:2.0.7'
