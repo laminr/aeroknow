@@ -23,8 +23,8 @@ class QuestionsManager @Inject constructor (private val dataProvider: DataProvid
         val TAG = "QuestionsManager"
     }
 
-    fun getQuestions(topicId: Int, display: (t: Topic) -> Unit, error: () -> Unit) {
-        dataProvider.dataGetTopicQuestions(topicId)?.subscribeOn(Schedulers.io())?.observeOn(AndroidSchedulers.mainThread())?.subscribe({ s ->
+    fun getQuestions(topicId: Int, starFist: Boolean, display: (t: Topic) -> Unit, error: () -> Unit) {
+        dataProvider.dataGetTopicQuestions(topicId, starFist)?.subscribeOn(Schedulers.io())?.observeOn(AndroidSchedulers.mainThread())?.subscribe({ s ->
             display(s)
         }, { error ->
             error()

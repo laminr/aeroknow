@@ -9,7 +9,7 @@ import kotlinx.android.synthetic.main.item_subject_row.view.*
 /**
  * Created by Thibault de Lambilly on 29/03/2017.
  */
-class SubjectViewHolder(itemView: View, val itemClick: (TopicDto) -> Unit) : RecyclerView.ViewHolder(itemView) {
+class SubjectViewHolder(itemView: View, val itemClick: (TopicDto, Boolean) -> Unit) : RecyclerView.ViewHolder(itemView) {
 
     fun bind(topic: TopicDto) {
 
@@ -58,7 +58,9 @@ class SubjectViewHolder(itemView: View, val itemClick: (TopicDto) -> Unit) : Rec
                 itemView.topic_care_nbr.visibility = if (focus == 0) View.GONE else View.VISIBLE
             }
 
-            itemView.setOnClickListener { itemClick(this) }
+            itemView.setOnClickListener { itemClick(this, false) }
+            itemView.topic_care_ico.setOnClickListener { itemClick(this, true) }
+            itemView.topic_care_nbr.setOnClickListener { itemClick(this, true) }
         }
     }
 }

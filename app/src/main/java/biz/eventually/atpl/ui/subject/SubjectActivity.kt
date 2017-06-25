@@ -64,11 +64,13 @@ class SubjectActivity : BaseActivity<SubjectManager>() {
         }
     }
 
-    private fun onItemClick(dto: TopicDto): Unit {
+    private fun onItemClick(dto: TopicDto, startFirst: Boolean = false): Unit {
 
         val intent = Intent(this, QuestionsActivity::class.java)
         val topic = Topic(dto.id, dto.name, listOf(), 0, 0)
         intent.putExtra(IntentIdentifier.TOPIC, topic)
+        intent.putExtra(IntentIdentifier.TOPIC_STARRED, startFirst)
+
         startActivityForResult(intent, REFRESH_SUBJECT)
 
     }

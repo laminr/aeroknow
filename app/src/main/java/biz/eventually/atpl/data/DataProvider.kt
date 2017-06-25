@@ -28,9 +28,14 @@ class DataProvider @Inject constructor(private val sourceService: SourceService,
         return sourceService.loadSubjects(sourceId, token).map { api -> toAppSubjects(api.data) }
     }
 
-    fun dataGetTopicQuestions(topicId: Int) : Observable<Topic>? {
+    fun dataGetTopicQuestions(topicId: Int, startFirst: Boolean) : Observable<Topic>? {
         val token = PrefsGetString(context , PREF_TOKEN) ?: ""
-        return sourceService.loadQuestions(topicId, token).map { response ->
+        val questions = when (startFirst) {
+            true -> sourceService.loadQuestionsStarred(topicId, token)
+            false -> sourceService.loadQuestions(topicId, token)
+        }
+
+        return questions.map { response ->
             response.data?.let(::toAppTopic)
         }
     }

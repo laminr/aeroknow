@@ -20,6 +20,9 @@ interface SourceService {
     @GET("topic/{id}/full")
     fun loadQuestions(@Path("id") topicId: Int, @Query("token") token: String): Observable<ApiSingleResponse<TopicNetwork>>
 
+    @GET("topic/{id}/star")
+    fun loadQuestionsStarred(@Path("id") topicId: Int, @Query("token") token: String): Observable<ApiSingleResponse<TopicNetwork>>
+
     @GET("question/{id}/focus/{care}")
     fun updateFocus(@Path("id") questionId: Int, @Path("care") care: Int, @Query("token") token: String): Observable<ApiSingleResponse<FocusStateNetwork>>
 

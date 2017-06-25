@@ -17,7 +17,7 @@ import biz.eventually.atpl.ui.questions.QuestionsActivity
 /**
  * Created by laminr on 29/03/2017.
  */
-class SubjectAdapter(val onClick: (dto: TopicDto) -> Unit) : RecyclerView.Adapter<SubjectViewHolder>() {
+class SubjectAdapter(val onClick: (dto: TopicDto, startFirst: Boolean) -> Unit) : RecyclerView.Adapter<SubjectViewHolder>() {
 
     var name: TextView? = null
     private var mTopics = mutableListOf<TopicDto>()

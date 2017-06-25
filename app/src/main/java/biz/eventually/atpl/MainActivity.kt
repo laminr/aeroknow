@@ -54,17 +54,13 @@ class MainActivity : BaseActivity<SourceManager>() {
                         .setTitleText(getString(R.string.dialog_title_ok))
                         .setContentText(getString(R.string.settings_api_saved))
                         .setCustomImage(R.drawable.ic_check)
-                        .setConfirmClickListener({s ->
-                            start()
-                        })
+                        .setConfirmClickListener({ start() })
                         .show()
             } ?: kotlin.run {
                 SweetAlertDialog(this@MainActivity, SweetAlertDialog.ERROR_TYPE)
                         .setTitleText(getString(R.string.dialog_title_error))
                         .setContentText(getString(R.string.settings_api_error))
-                        .setConfirmClickListener({s ->
-                            start()
-                        })
+                        .setConfirmClickListener({ start() })
                         .show()
             }
 

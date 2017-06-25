@@ -64,9 +64,11 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
         } ?: kotlin.run { mHasToken = false }
 
         mTopic = intent.extras.getParcelable<Topic>(IntentIdentifier.TOPIC)
+        val startFirst = intent.extras.getBoolean(IntentIdentifier.TOPIC_STARRED, false)
+
         mTopic?.apply {
             rotateloading.start()
-            manager.getQuestions(id, { t -> questionsLoaded(t) }, { loadError() })
+            manager.getQuestions(id, startFirst, { t -> questionsLoaded(t) }, { loadError() })
 
             supportActionBar?.title = name
         }
@@ -216,6 +218,7 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
 
         mQuestions[mCurrentQuestion].apply {
             question_label.setBackgroundColor(transparentColor)
+            question_label.loadData("<div>Loading....</div>", "text/html; charset=utf-8", "UTF-8")
             question_label.loadData(label, "text/html; charset=utf-8", "UTF-8")
 
             for (i in 0..answers.count() - 1) {
