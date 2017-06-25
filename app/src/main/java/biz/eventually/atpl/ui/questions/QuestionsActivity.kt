@@ -125,41 +125,20 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
 
         mSwipe = Swipe()
         mSwipe?.setListener(object : SwipeListener {
-            override fun onSwipingLeft(event: MotionEvent) {
-                question_range.text = "onSwipingLeft"
-                question_next.performClick()
-            }
-
             override fun onSwipedLeft(event: MotionEvent) {
-                question_range.text = "onSwipedLeft"
                 question_next.performClick()
-            }
-
-            override fun onSwipingRight(event: MotionEvent) {
-                question_range.text = "onSwipingRight"
-                question_previous.performClick()
             }
 
             override fun onSwipedRight(event: MotionEvent) {
-                question_range.text = "onSwipedRight"
                 question_previous.performClick()
             }
 
-            override fun onSwipingUp(event: MotionEvent) {
-                question_range.text = "onSwipingUp"
-            }
-
-            override fun onSwipedUp(event: MotionEvent) {
-                question_range.text = "onSwipingUp"
-            }
-
-            override fun onSwipingDown(event: MotionEvent) {
-                question_range.text = "onSwipingUp"
-            }
-
-            override fun onSwipedDown(event: MotionEvent) {
-                question_range.text = "onSwipingUp"
-            }
+            override fun onSwipingLeft(event: MotionEvent) {}
+            override fun onSwipingRight(event: MotionEvent) {}
+            override fun onSwipingUp(event: MotionEvent) {}
+            override fun onSwipedUp(event: MotionEvent) {}
+            override fun onSwipingDown(event: MotionEvent) {}
+            override fun onSwipedDown(event: MotionEvent) {}
         })
 
         question_label.setBackgroundColor(Color.TRANSPARENT)
@@ -168,6 +147,11 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
             question_last.visibility = if (isChecked && mCurrentQuestion == mQuestions.size - 1) View.VISIBLE else View.GONE
         }
 
+    }
+
+    override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
+        mSwipe?.dispatchTouchEvent(ev)
+        return super.dispatchTouchEvent(ev)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
