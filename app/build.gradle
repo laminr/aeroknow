@@ -27,8 +27,8 @@ android {
         minSdkVersion 16
         targetSdkVersion 25
 
-        versionCode 15
-        versionName "${majorVersion}.${minorVersion}.${patchVersion} build " + getDate()
+        versionCode (getDate() as Integer)
+        versionName "${majorVersion}.${minorVersion}.${patchVersion} build ${versionCode}"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
