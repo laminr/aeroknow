@@ -13,8 +13,22 @@ class SubjectViewHolder(itemView: View, val itemClick: (TopicDto, Boolean) -> Un
 
     fun bind(topic: TopicDto) {
 
+        itemView.subject_title.visibility = View.VISIBLE
+        itemView.topic_card.visibility = View.VISIBLE
+
+        itemView.topic_done_ico.visibility = View.VISIBLE
+        itemView.topic_done_nbr.visibility = View.VISIBLE
+
+        itemView.topic_care_ico.visibility = View.VISIBLE
+        itemView.topic_care_nbr.visibility = View.VISIBLE
+
+        itemView.topic_item_questions_ico.visibility = View.VISIBLE
+        itemView.topic_item_questions.visibility = View.VISIBLE
+
+
         with(topic) {
             itemView.subject_title.text = "processing...."
+            // Title
             if (id == -1) {
                 itemView.subject_title.text = name
 
@@ -25,12 +39,17 @@ class SubjectViewHolder(itemView: View, val itemClick: (TopicDto, Boolean) -> Un
                 itemView.topic_done_nbr.visibility = View.GONE
                 itemView.topic_care_ico.visibility = View.GONE
                 itemView.topic_care_nbr.visibility = View.GONE
-            } else {
+            }
+            // Value Card
+            else {
+                // Hide title
+                itemView.subject_title.visibility = View.GONE
+                // Show card
+                itemView.topic_card.visibility = View.VISIBLE
+
                 itemView.topic_item_name.text = name
                 itemView.topic_item_questions.text = questions.toString()
-
-                itemView.subject_title.visibility = View.GONE
-                itemView.topic_card.visibility = View.VISIBLE
+                itemView.topic_done_nbr.text = follow.toString()
 
                 // follow
                 if (follow == 0) {
@@ -41,14 +60,14 @@ class SubjectViewHolder(itemView: View, val itemClick: (TopicDto, Boolean) -> Un
                 } else if (follow == questions) {
 
                     itemView.topic_item_questions_ico.visibility = View.GONE
-                    itemView.topic_done_nbr.visibility = View.GONE
-                } else {
+                    itemView.topic_item_questions.visibility = View.GONE
 
-                    itemView.topic_done_nbr.text = follow.toString()
-
-                    itemView.topic_done_ico.visibility = View.VISIBLE
-                    itemView.topic_done_nbr.visibility = View.VISIBLE
                 }
+//                else {
+//
+//                    itemView.topic_done_ico.visibility = View.VISIBLE
+//                    itemView.topic_done_nbr.visibility = View.VISIBLE
+//                }
 
                 // care
                 if (focus > 0) {

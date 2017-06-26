@@ -51,6 +51,9 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
 
     private var mSwipe : Swipe? = null
 
+    private val mMime = "text/html"
+    private val mEncoding = "utf-8"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -147,6 +150,7 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
             question_last.visibility = if (isChecked && mCurrentQuestion == mQuestions.size - 1) View.VISIBLE else View.GONE
         }
 
+        question_label.settings.javaScriptEnabled = false
     }
 
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
@@ -244,8 +248,8 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
 
         mQuestions[mCurrentQuestion].apply {
             question_label.setBackgroundColor(transparentColor)
-            question_label.loadData("<div>Loading....</div>", "text/html; charset=utf-8", "UTF-8")
-            question_label.loadData(label, "text/html; charset=utf-8", "UTF-8")
+            question_label.loadDataWithBaseURL(null, label, mMime, mEncoding, null)
+            println(label)
 
             for (i in 0..answers.count() - 1) {
                 when (i) {
