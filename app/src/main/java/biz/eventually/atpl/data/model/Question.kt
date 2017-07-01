@@ -10,7 +10,7 @@ import biz.eventually.atpl.data.model.Follow
 data class Question(
         val id: Int,
         val label: String,
-        val answers: List<Answer>,
+        var answers: List<Answer>,
         val img: List<String>?,
         var focus: Boolean?,
         var follow: Follow

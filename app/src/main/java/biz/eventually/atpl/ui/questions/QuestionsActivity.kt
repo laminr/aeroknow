@@ -218,6 +218,12 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
 
         mTopic = topic
         mQuestions = topic.questions.toMutableList()
+
+        // shuffle answer
+        mQuestions.forEach { q ->
+            q.answers = shuffle(q.answers.toMutableList())
+        }
+
         rotateloading.stop()
 
         if (mQuestions.size > 0) {
@@ -316,7 +322,11 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
 
         question_care.setOnClickListener {
             mHadChange = true
-            it.visibility = View.GONE
+
+            question_care.isEnabled = false
+            question_care.setImageDrawable(ContextCompat.getDrawable(this@QuestionsActivity, R.drawable.ic_cached_black))
+            question_care.setColorFilter(ContextCompat.getColor(applicationContext, R.color.colorGrey))
+
             manager.updateFocus(mQuestions[mCurrentQuestion].id, true, this::onFocusSaves, this::onSavinError)
 
 /*            when (mQuestions[mCurrentQuestion].focus) {
@@ -346,7 +356,11 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
 
         question_dontcare.setOnClickListener {
             mHadChange = true
-            it.visibility = View.GONE
+
+            question_dontcare.isEnabled = false
+            question_dontcare.setImageDrawable(ContextCompat.getDrawable(this@QuestionsActivity, R.drawable.ic_cached_black))
+            question_dontcare.setColorFilter(ContextCompat.getColor(applicationContext, R.color.colorGrey))
+
             manager.updateFocus(mQuestions[mCurrentQuestion].id, false, this::onFocusSaves, this::onSavinError)
 
             displayFollowAndFocus()
@@ -355,6 +369,13 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
 
     private fun onFocusSaves(state: Boolean?) {
         mQuestions[mCurrentQuestion].focus = state
+
+        question_care.isEnabled = true
+        question_care.setImageDrawable(ContextCompat.getDrawable(this@QuestionsActivity, R.drawable.ic_star))
+
+        question_dontcare.isEnabled = true
+        question_dontcare.setImageDrawable(ContextCompat.getDrawable(this@QuestionsActivity, R.drawable.ic_visibility_off))
+
         displayFollowAndFocus()
     }
 

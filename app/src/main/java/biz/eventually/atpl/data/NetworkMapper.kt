@@ -20,7 +20,7 @@ fun toAppTopic(from: TopicNetwork) = Topic(from.id, from.name, toAppQuestions(fr
 fun toAppTopics(from: List<TopicNetwork>?) = from?.map(::toAppTopic) ?: listOf()
 
 
-fun toAppAnswers(from: List<AnswerNetwork>?) = from?.map({ Answer(it.id, it.value, it.good) }) ?: listOf()
+fun toAppAnswers(from: List<AnswerNetwork>?) = from?.map({ Answer(it.id, it.value, it.good) }) ?: mutableListOf()
 
 fun toAppFollow(from: FollowNetwork?) = Follow(from?.good ?: 0, from?.wrong ?: 0)
 
