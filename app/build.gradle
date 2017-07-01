@@ -9,7 +9,7 @@ apply plugin: 'io.fabric'
 ext {
     majorVersion = "0"
     minorVersion = "15"
-    patchVersion = "1"
+    patchVersion = "4"
 }
 
 // Load keystore
@@ -33,6 +33,8 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         vectorDrawables.useSupportLibrary = true
+
+        buildConfigField 'String', 'VERSION_APP', "\"${majorVersion}.${minorVersion}.${patchVersion}\""
     }
 
     signingConfigs {
@@ -54,7 +56,6 @@ android {
 
             buildConfigField 'String', 'API_ATPL_ENDPOINT', "\"http://atpl.eventually.biz/api/\""
             buildConfigField 'String', 'API_ATPL_ENDPOINT_MOCK', "\"http://${getIP()}/~laminr/atpl/webapp/web/api/\""
-
             buildConfigField 'String', 'API_ATPL_IMG', "\"http://atpl.eventually.biz/img/questions/\""
         }
         release {

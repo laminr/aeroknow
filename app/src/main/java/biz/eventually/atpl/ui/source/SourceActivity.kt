@@ -2,17 +2,15 @@ package biz.eventually.atpl.ui.source
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.view.View
 import android.view.View.GONE
-import android.view.View.VISIBLE
 import android.widget.AdapterView
 import biz.eventually.atpl.AtplApplication
+import biz.eventually.atpl.BuildConfig
 import biz.eventually.atpl.R
 import biz.eventually.atpl.common.IntentIdentifier
 import biz.eventually.atpl.common.StateIdentifier
 import biz.eventually.atpl.data.model.Source
-import biz.eventually.atpl.data.model.Subject
 import biz.eventually.atpl.ui.BaseActivity
 import biz.eventually.atpl.ui.subject.SubjectActivity
 import kotlinx.android.synthetic.main.activity_source.*
@@ -28,8 +26,10 @@ class SourceActivity : BaseActivity<SourceManager>() {
         AtplApplication.component.inject(this)
         setContentView(R.layout.activity_source)
 
+        app_version.text = "v${BuildConfig.VERSION_APP}"
+
         savedInstanceState?.let {
-            mSourceList = it.getParcelableArrayList<Source>(StateIdentifier.SOURCE_LIST)
+            mSourceList = it.getParcelableArrayList<Source>(StateIdentifier.SOURCE_LIST).toList()
         }
 
         mSourceList = mSourceList ?: intent.getParcelableArrayListExtra<Source>(IntentIdentifier.SOURCE_LIST)

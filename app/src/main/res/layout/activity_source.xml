@@ -18,15 +18,28 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
         android:layout_marginRight="16dp"
         android:layout_marginEnd="16dp"
         android:text="@string/app_name"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textColor="@color/colorSecondary"
-        app:layout_constraintBottom_toBottomOf="@+id/main_background"
+        app:layout_constraintBottom_toTopOf="@+id/app_version"
         app:layout_constraintRight_toRightOf="@+id/main_background"
-        tools:text="ATPL Questions" />
+        tools:text="Aero Know" />
+
+	<TextView
+		android:id="@+id/app_version"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginBottom="8dp"
+		android:layout_marginRight="16dp"
+		android:layout_marginEnd="16dp"
+		android:textAppearance="@style/TextAppearance.AppCompat.Small"
+		android:textColor="@color/colorAccent"
+		app:layout_constraintBottom_toBottomOf="@+id/main_background"
+		app:layout_constraintRight_toRightOf="@+id/main_background"
+		tools:text="v1.0.0"
+		/>
 
     <RelativeLayout
         android:layout_width="0dp"

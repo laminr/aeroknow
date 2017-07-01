@@ -12,9 +12,9 @@ import biz.eventually.atpl.data.network.*
  * Created by thibault on 21/03/17.
  */
 
-fun toAppSources(from: List<SourceNetwork>?) = from?.map({Source(it.id, it.name) })
+fun toAppSources(from: List<SourceNetwork>?) = from?.map({Source(it.id, it.name) }) ?: listOf()
 
-fun toAppSubjects(from: List<SubjectNetwork>?) = from?.map({Subject(it.id, it.name, toAppTopicDtos(it.topics))})
+fun toAppSubjects(from: List<SubjectNetwork>?) = from?.map({Subject(it.id, it.name, toAppTopicDtos(it.topics))}) ?: listOf()
 
 fun toAppTopic(from: TopicNetwork) = Topic(from.id, from.name, toAppQuestions(from.questions), from.follow, from.focus)
 fun toAppTopics(from: List<TopicNetwork>?) = from?.map(::toAppTopic) ?: listOf()

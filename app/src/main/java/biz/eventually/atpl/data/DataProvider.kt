@@ -1,9 +1,11 @@
 package biz.eventually.atpl.data
 
 import android.content.Context
+import biz.eventually.atpl.data.model.Follow
 import biz.eventually.atpl.data.model.Source
 import biz.eventually.atpl.data.model.Subject
 import biz.eventually.atpl.data.model.Topic
+import biz.eventually.atpl.data.network.Answer
 import biz.eventually.atpl.data.network.Question
 import biz.eventually.atpl.data.service.SourceService
 import biz.eventually.atpl.utils.PREF_TOKEN
@@ -19,16 +21,16 @@ import javax.inject.Singleton
 @Singleton
 class DataProvider @Inject constructor(private val sourceService: SourceService, val context: Context) {
 
-    fun dataGetSources() : Observable<List<Source>?>? {
+    fun dataGetSources() : Observable<List<Source>?> {
         return sourceService.loadSources().map { api -> toAppSources(api.data) }
     }
 
-    fun dataGetSubjects(sourceId: Int) : Observable<List<Subject>?>? {
+    fun dataGetSubjects(sourceId: Int) : Observable<List<Subject>?> {
         val token = PrefsGetString(context , PREF_TOKEN) ?: ""
         return sourceService.loadSubjects(sourceId, token).map { api -> toAppSubjects(api.data) }
     }
 
-    fun dataGetTopicQuestions(topicId: Int, startFirst: Boolean) : Observable<Topic>? {
+    fun dataGetTopicQuestions(topicId: Int, startFirst: Boolean) : Observable<Topic?> {
         val token = PrefsGetString(context , PREF_TOKEN) ?: ""
         val questions = when (startFirst) {
             true -> sourceService.loadQuestionsStarred(topicId, token)
@@ -36,19 +38,19 @@ class DataProvider @Inject constructor(private val sourceService: SourceService,
         }
 
         return questions.map { response ->
-            response.data?.let(::toAppTopic)
+            response.data?.let(::toAppTopic) ?: Topic(-1, "", listOf<Question>(), null, null )
         }
     }
 
-    fun updateFollow(questionId: Int, good: Boolean) : Observable<Question>? {
+    fun updateFollow(questionId: Int, good: Boolean) : Observable<Question?> {
         val isGood = if (good) 1 else 0
         val token = PrefsGetString(context , PREF_TOKEN) ?: ""
         return sourceService.updateFollow(questionId, isGood , token).map { response ->
-            response.data?.let(::toAppQuestion)
+            response.data?.let(::toAppQuestion) ?: Question(-1, "", listOf<Answer>(), null, null, Follow() )
         }
     }
 
-    fun updateFocus(questionId: Int, care: Boolean) : Observable<Int>? {
+    fun updateFocus(questionId: Int, care: Boolean) : Observable<Int> {
         val doCare = if (care) 1 else 0
         val token = PrefsGetString(context , PREF_TOKEN) ?: ""
         return sourceService.updateFocus(questionId, doCare , token).map { response ->
