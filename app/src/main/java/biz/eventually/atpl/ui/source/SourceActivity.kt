@@ -1,6 +1,7 @@
 package biz.eventually.atpl.ui.source
 
 import android.content.Intent
+import android.graphics.Typeface
 import android.os.Bundle
 import android.view.View
 import android.view.View.GONE
@@ -28,6 +29,9 @@ class SourceActivity : BaseActivity<SourceManager>() {
 
         app_version.text = "v${BuildConfig.VERSION_APP}"
 
+        // font for the title
+        setWelcomeFont()
+
         savedInstanceState?.let {
             mSourceList = it.getParcelableArrayList<Source>(StateIdentifier.SOURCE_LIST).toList()
         }
@@ -51,6 +55,11 @@ class SourceActivity : BaseActivity<SourceManager>() {
         source_refresh.setOnClickListener {
             loadData()
         }
+    }
+
+    private fun setWelcomeFont() {
+        val tangerine = Typeface.createFromAsset(assets, "fonts/Tangerine.ttf")
+        source_welcome.typeface = tangerine
     }
 
     override fun onPause() {

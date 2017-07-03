@@ -16,4 +16,6 @@
 	<string name="dialog_title_ok">Sweet!</string>
 	<string name="settings_api_saved">Your API key has been saved</string>
 	<string name="settings_api_error">Your API key has not been recognised</string>
+	<string name="welcome">Welcome</string>
+	<string name="welcom_message">Pick up under the subject you like to work</string>
 </resources>
