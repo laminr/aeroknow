@@ -5,7 +5,7 @@
 	<string name="sum_symbol">Σ</string>
 	<string name="question_back">back</string>
 	<string name="question_next">next</string>
-	<string name="network_error_message">An error has occured, Sorry!</string>
+	<string name="network_error_message">An error has occurred, Sorry!</string>
 	<string name="error_dialog_message">Network Error: Something went wrong!</string>
 	<string name="action_shuffle">shuffle</string>
     <string name="try_again">Try again</string>
@@ -18,4 +18,5 @@
 	<string name="settings_api_error">Your API key has not been recognised</string>
 	<string name="welcome">Welcome</string>
 	<string name="welcom_message">Pick up under the subject you like to work</string>
+    <string name="subject_mean_value">[μ:%d]</string>
 </resources>

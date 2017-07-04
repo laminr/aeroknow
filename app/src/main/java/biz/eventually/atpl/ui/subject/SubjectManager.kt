@@ -21,7 +21,7 @@ import javax.inject.Singleton
     }
 
     fun getSubjects(sourceId: Int, display: (List<Subject>?) -> Unit, error: () -> Unit) {
-        dataProvider.dataGetSubjects(sourceId)?.subscribeOn(Schedulers.io())?.observeOn(AndroidSchedulers.mainThread())?.subscribe({ s ->
+        dataProvider.dataGetSubjects(sourceId).subscribeOn(Schedulers.io())?.observeOn(AndroidSchedulers.mainThread())?.subscribe({ s ->
             display(s)
         }, {
             Log.d(TAG, TAG+".getSubjects: "+error)

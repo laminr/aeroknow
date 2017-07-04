@@ -3,6 +3,7 @@ package biz.eventually.atpl.ui.subject
 import android.icu.util.ValueIterator
 import android.support.v7.widget.RecyclerView
 import android.view.View
+import biz.eventually.atpl.R
 import biz.eventually.atpl.data.model.dto.TopicDto
 import kotlinx.android.synthetic.main.item_subject_row.view.*
 
@@ -14,6 +15,8 @@ class SubjectViewHolder(itemView: View, val itemClick: (TopicDto, Boolean) -> Un
     fun bind(topic: TopicDto) {
 
         itemView.subject_title.visibility = View.VISIBLE
+
+        itemView.topic_mean_nbr.visibility = View.VISIBLE
         itemView.topic_card.visibility = View.VISIBLE
 
         itemView.topic_done_ico.visibility = View.VISIBLE
@@ -51,6 +54,13 @@ class SubjectViewHolder(itemView: View, val itemClick: (TopicDto, Boolean) -> Un
                 itemView.topic_item_questions.text = questions.toString()
                 itemView.topic_done_nbr.text = follow.toString()
 
+                if (mean > 0) {
+                    itemView.topic_mean_nbr.visibility = View.VISIBLE
+                    itemView.topic_mean_nbr.text = itemView.context.getString(R.string.subject_mean_value, mean)
+                } else {
+                    itemView.topic_mean_nbr.visibility = View.GONE
+                }
+
                 // follow
                 if (follow == 0) {
 
@@ -63,11 +73,6 @@ class SubjectViewHolder(itemView: View, val itemClick: (TopicDto, Boolean) -> Un
                     itemView.topic_item_questions.visibility = View.GONE
 
                 }
-//                else {
-//
-//                    itemView.topic_done_ico.visibility = View.VISIBLE
-//                    itemView.topic_done_nbr.visibility = View.VISIBLE
-//                }
 
                 // care
                 if (focus > 0) {
