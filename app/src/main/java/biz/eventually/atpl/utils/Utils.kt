@@ -11,11 +11,15 @@ import java.util.*
 
 fun <T:Comparable<T>>shuffle(items:MutableList<T>):List<T>{
     val rg : Random = Random()
-    for (i in 0..items.size - 1) {
-        val randomPosition = rg.nextInt(items.size)
-        val tmp : T = items[i]
-        items[i] = items[randomPosition]
-        items[randomPosition] = tmp
+    val times = if (items.size < 5)  4 else 2
+
+    for (j in 0..times) {
+        for (i in 0..items.size - 1) {
+            val randomPosition = rg.nextInt(items.size)
+            val tmp : T = items[i]
+            items[i] = items[randomPosition]
+            items[randomPosition] = tmp
+        }
     }
     return items
 }

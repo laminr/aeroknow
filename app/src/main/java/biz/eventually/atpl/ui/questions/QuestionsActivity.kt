@@ -252,37 +252,40 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
         mShowAnswer = false
         resetCheckbox()
 
-        mQuestions[mCurrentQuestion].apply {
-            question_label.setBackgroundColor(transparentColor)
-            question_label.loadDataWithBaseURL(null, label, mMime, mEncoding, null)
-            println(label)
+        // check following crash report ???
+        if (mQuestions.size > 0 && mCurrentQuestion >= 0 && mCurrentQuestion <= mQuestions.size) {
+            mQuestions[mCurrentQuestion].apply {
+                question_label.setBackgroundColor(transparentColor)
+                question_label.loadDataWithBaseURL(null, label, mMime, mEncoding, null)
+                println(label)
 
-            for (i in 0..answers.count() - 1) {
-                when (i) {
-                    0 -> question_answer_1_text.text = answers[i].value
-                    1 -> question_answer_2_text.text = answers[i].value
-                    2 -> question_answer_3_text.text = answers[i].value
-                    3 -> question_answer_4_text.text = answers[i].value
+                for (i in 0..answers.count() - 1) {
+                    when (i) {
+                        0 -> question_answer_1_text.text = answers[i].value
+                        1 -> question_answer_2_text.text = answers[i].value
+                        2 -> question_answer_3_text.text = answers[i].value
+                        3 -> question_answer_4_text.text = answers[i].value
+                    }
                 }
+
+                if (mHasToken) {
+                    displayFollowAndFocus()
+                    attachFocusListener()
+                }
+
+                displayFollowCount()
+
+                img?.forEach { img ->
+                    val imgContainer = ImageView(applicationContext)
+                    Picasso.with(applicationContext)
+                            .load(BuildConfig.API_ATPL_IMG + img)
+                            .into(imgContainer)
+
+                    question_imgs.addView(imgContainer)
+                }
+
+                launchCountDown()
             }
-
-            if (mHasToken) {
-                displayFollowAndFocus()
-                attachFocusListener()
-            }
-
-            displayFollowCount()
-
-            img?.forEach { img ->
-                val imgContainer = ImageView(applicationContext)
-                Picasso.with(applicationContext)
-                        .load(BuildConfig.API_ATPL_IMG + img)
-                        .into(imgContainer)
-
-                question_imgs.addView(imgContainer)
-            }
-
-            launchCountDown()
         }
 
         mQuestions.isNotEmpty().apply {

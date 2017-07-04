@@ -9,7 +9,7 @@ apply plugin: 'io.fabric'
 ext {
     majorVersion = "0"
     minorVersion = "15"
-    patchVersion = "4"
+    patchVersion = "5"
 }
 
 // Load keystore
@@ -193,6 +193,6 @@ def getIP() {
 
 def getDate() {
     def date = new Date()
-    def formattedDate = date.format('yyMMdd')
+    def formattedDate = date.format('yyMMddhh')
     return formattedDate.toLong()
 }
