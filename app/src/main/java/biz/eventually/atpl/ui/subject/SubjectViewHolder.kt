@@ -1,6 +1,5 @@
 package biz.eventually.atpl.ui.subject
 
-import android.icu.util.ValueIterator
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import biz.eventually.atpl.R
@@ -28,9 +27,8 @@ class SubjectViewHolder(itemView: View, val itemClick: (TopicDto, Boolean) -> Un
         itemView.topic_item_questions_ico.visibility = View.VISIBLE
         itemView.topic_item_questions.visibility = View.VISIBLE
 
-
         with(topic) {
-            itemView.subject_title.text = "processing...."
+            itemView.subject_title.text = itemView.context.getString(R.string.msg_processing)
             // Title
             if (id == -1) {
                 itemView.subject_title.text = name
@@ -66,7 +64,7 @@ class SubjectViewHolder(itemView: View, val itemClick: (TopicDto, Boolean) -> Un
 
                     itemView.topic_done_ico.visibility = View.GONE
                     itemView.topic_done_nbr.visibility = View.GONE
-                    
+
                 } else if (follow == questions) {
 
                     itemView.topic_item_questions_ico.visibility = View.GONE
@@ -80,11 +78,12 @@ class SubjectViewHolder(itemView: View, val itemClick: (TopicDto, Boolean) -> Un
                 }
                 itemView.topic_care_ico.visibility = if (focus == 0) View.GONE else View.VISIBLE
                 itemView.topic_care_nbr.visibility = if (focus == 0) View.GONE else View.VISIBLE
-            }
 
-            itemView.setOnClickListener { itemClick(this, false) }
-            itemView.topic_care_ico.setOnClickListener { itemClick(this, true) }
-            itemView.topic_care_nbr.setOnClickListener { itemClick(this, true) }
+                // only for topic lines
+                itemView.setOnClickListener { itemClick(this, false) }
+                itemView.topic_care_ico.setOnClickListener { itemClick(this, true) }
+                itemView.topic_care_nbr.setOnClickListener { itemClick(this, true) }
+            }
         }
     }
 }

@@ -86,6 +86,11 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
         question_answer_3.setOnClickListener { onAnswerClick(it, 2) }
         question_answer_4.setOnClickListener { onAnswerClick(it, 3) }
 
+        question_answer_1_rdo.setOnClickListener { onAnswerClick(question_answer_1, 0) }
+        question_answer_2_rdo.setOnClickListener { onAnswerClick(question_answer_2, 1) }
+        question_answer_3_rdo.setOnClickListener { onAnswerClick(question_answer_3, 2) }
+        question_answer_4_rdo.setOnClickListener { onAnswerClick(question_answer_4, 3) }
+
         question_previous.setOnClickListener {
             if (question_follow.isChecked && mIndexTick > -1) {
                 mHadChange = true
@@ -123,6 +128,7 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
                 )
 
                 it.visibility = View.GONE
+                finish()
             }
         }
 
@@ -250,6 +256,8 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
         }
 
         mShowAnswer = false
+
+        initAnswerCardDisplay()
         resetCheckbox()
 
         // check following crash report ???
@@ -298,8 +306,6 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
             question_next.visibility = if (mCurrentQuestion < it.count() - 1) View.VISIBLE else View.GONE
             question_last.visibility = if (question_follow.isChecked && mCurrentQuestion == it.count() - 1) View.VISIBLE else View.GONE
         }
-
-        initCheckboxes()
     }
 
     private fun launchCountDown() {
@@ -446,7 +452,7 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
         }
     }
 
-    private fun initCheckboxes() {
+    private fun initAnswerCardDisplay() {
         question_answer_1.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.cardview_light_background))
         question_answer_2.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.cardview_light_background))
         question_answer_3.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.cardview_light_background))
@@ -464,7 +470,7 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
             showAnswer()
             mTimer?.cancel()
         } else {
-            initCheckboxes()
+            initAnswerCardDisplay()
             resetCheckbox()
         }
 

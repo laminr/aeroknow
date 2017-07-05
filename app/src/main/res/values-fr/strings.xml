@@ -17,5 +17,6 @@
 	<string name="settings_api_error">Votre clé d\'accès n\'a pas été reconnue</string>
 	<string name="welcome">Bienvenue</string>
 	<string name="welcom_message">Selectionnez le sujet à travailler</string>
+	<string name="msg_processing">en cours…</string>
 	<string name="subject_mean_value">[μ:%d]</string>
 </resources>

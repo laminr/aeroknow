@@ -112,6 +112,7 @@
                     android:orientation="horizontal">
 
                     <CheckBox
+						android:id="@+id/question_answer_1_rdo"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -150,6 +151,7 @@
                     android:orientation="horizontal">
 
                     <CheckBox
+						android:id="@+id/question_answer_2_rdo"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -188,6 +190,7 @@
                     android:orientation="horizontal">
 
                     <CheckBox
+						android:id="@+id/question_answer_3_rdo"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -226,6 +229,7 @@
                     android:orientation="horizontal">
 
                     <CheckBox
+						android:id="@+id/question_answer_4_rdo"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"

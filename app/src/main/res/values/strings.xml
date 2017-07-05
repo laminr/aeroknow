@@ -18,5 +18,6 @@
 	<string name="settings_api_error">Your API key has not been recognised</string>
 	<string name="welcome">Welcome</string>
 	<string name="welcom_message">Pick up under the subject you like to work</string>
+	<string name="msg_processing">processing…</string>
     <string name="subject_mean_value">[μ:%d]</string>
 </resources>
