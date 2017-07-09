@@ -90,6 +90,19 @@
                 android:layout_marginStart="@dimen/margin_large"
                 android:layout_marginEnd="@dimen/margin_large" />
 
+            <TextView
+                android:id="@+id/question_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/font_size_caption"
+                android:textColor="@color/red_btn_bg_color"
+                app:layout_constraintBottom_toBottomOf="@+id/question_label"
+                app:layout_constraintRight_toRightOf="@+id/question_label"
+                android:layout_marginRight="4dp"
+                android:layout_marginEnd="4dp"
+                tools:text="0:58"
+                />
+
             <android.support.v7.widget.CardView
                 android:id="@+id/question_answer_1"
                 android:layout_width="0dp"

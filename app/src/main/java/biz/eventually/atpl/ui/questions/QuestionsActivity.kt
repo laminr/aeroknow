@@ -310,16 +310,28 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
 
     private fun launchCountDown() {
 
+        question_time.setTextColor(ContextCompat.getColor(applicationContext, R.color.colorGrey))
+
         mTimer = object : CountDownTimer(60000, mTimeLength) {
             override fun onFinish() {
+                question_time.text = ""
                 question_label.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.colorAccent))
             }
 
             override fun onTick(millisUntilFinished: Long) {
+
+                question_time.text = "${millisUntilFinished / 1000}"
+
                 if (millisUntilFinished < 10000) {
                     when (isLight) {
-                        true -> question_label.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.colorGreyLight))
-                        false -> question_label.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.colorLight))
+                        true -> {
+                            question_label.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.colorGreyLight))
+                            question_time.setTextColor(ContextCompat.getColor(applicationContext, R.color.colorPrimaryDark))
+                        }
+                        false -> {
+                            question_label.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.colorLight))
+                            question_time.setTextColor(ContextCompat.getColor(applicationContext, R.color.colorAccent))
+                        }
                     }
                     isLight = !isLight
                 }
