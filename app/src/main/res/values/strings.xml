@@ -20,7 +20,7 @@
 	<string name="welcome_message">Pick up under the subject you like to work</string>
 	<string name="msg_processing">processing…</string>
     <string name="subject_mean_value">[μ:%.1f]</string>
-	<string name="result_title_good">Great result</string>
+	<string name="result_title_good">Great job!</string>
 	<string name="result_title_warning">Done! but it could be better</string>
 	<string name="result_title_bad">Not good man, back to work</string>
 	<string name="result_value">Your score is: %d%%</string>

@@ -197,6 +197,6 @@ def getIP() {
 
 def getDate() {
     def date = new Date()
-    def formattedDate = date.format('yyMMddhh')
+    def formattedDate = date.format('yyMMddHH')
     return formattedDate.toLong()
 }

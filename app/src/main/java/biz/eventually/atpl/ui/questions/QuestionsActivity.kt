@@ -229,7 +229,7 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
         val result = mStatistic.entries.filter { it.value > 0 }.sumBy { it.value }.toDouble()
         val percent = if (result == 0.0) 0 else ((result / mStatistic.size.toDouble()) * 100).toInt()
 
-        var title = getString(R.string.result_title_bad)
+        var title = getString(R.string.result_title_good)
         val message = getString(R.string.result_value, percent)
         var warningType = SweetAlertDialog.SUCCESS_TYPE
 

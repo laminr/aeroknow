@@ -21,6 +21,6 @@
 	<string name="subject_mean_value">[μ:%.1f]</string>
 	<string name="result_title_good">Bon boulot</string>
 	<string name="result_title_warning">Mouaih bof</string>
-	<string name="result_title_bad">Null mon gars, au boulot</string>
+	<string name="result_title_bad">Nul mon gars, au boulot</string>
 	<string name="result_value">Votre résultat est de: %d%%</string>
 </resources>
