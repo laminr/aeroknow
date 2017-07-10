@@ -100,7 +100,7 @@ class SubjectActivity : BaseActivity<SubjectManager>() {
 
             it.forEach { (_, name, topic) ->
                 // header
-                topics.add(TopicDto(-1, name, 0, 0, 0, 0))
+                topics.add(TopicDto(-1, name, 0, 0, 0, 0.0))
 
                 //topic.forEach { t ->
                     //val focus = Focus().query { query -> query.equalTo("topicId", t.id).equalTo("care", true) }.count()

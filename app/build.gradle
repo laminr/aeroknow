@@ -8,8 +8,8 @@ apply plugin: 'io.fabric'
 
 ext {
     majorVersion = "0"
-    minorVersion = "15"
-    patchVersion = "6"
+    minorVersion = "16"
+    patchVersion = "1"
 }
 
 // Load keystore
@@ -98,6 +98,7 @@ ext {
     retrofitVersion = '2.2.0'
     butterknifeVersion = '8.5.1'
     okhttpVersion = '3.6.0'
+    daggerVersion = '2.11'
 }
 
 dependencies {
@@ -145,9 +146,12 @@ dependencies {
     // LOADER
     compile 'com.victor:lib:1.0.4'
 
+    // about
+//    compile 'com.github.medyo:android-about-page:1.2.1'
+
     // DAGGER
-    compile 'com.google.dagger:dagger:2.9'
-    kapt 'com.google.dagger:dagger-compiler:2.9'
+    compile "com.google.dagger:dagger:$daggerVersion"
+    kapt "com.google.dagger:dagger-compiler:$daggerVersion"
 
     provided 'org.glassfish:javax.annotation:10.0-b28'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
@@ -165,7 +169,7 @@ dependencies {
     releaseCompile "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanary"
     testCompile "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanary"
 
-    compile 'com.google.firebase:firebase-core:11.0.0'
+    compile 'com.google.firebase:firebase-core:11.0.2'
 }
 
 // should be at the bottom

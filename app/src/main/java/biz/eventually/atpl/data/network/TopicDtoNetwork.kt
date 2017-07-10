@@ -9,5 +9,5 @@ data class TopicDtoNetwork(
         val questions: Int = 0,
         val follow: Int?,
         val focus: Int?,
-        val mean:Int?
+        val mean:Double?
 )

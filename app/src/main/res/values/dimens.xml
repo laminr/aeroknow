@@ -4,6 +4,7 @@
     <dimen name="text_margin">16dp</dimen>
 
     <dimen name="font_size_headline">24sp</dimen>
+    <dimen name="font_size_caption">12sp</dimen>
 
     <dimen name="padding_thinner">4dp</dimen>
     <dimen name="padding_thin">8dp</dimen>

@@ -1,14 +1,13 @@
 package biz.eventually.atpl.ui.questions
 
+import android.app.Activity
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.CardView
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.CheckBox
 import android.widget.ImageView
 import biz.eventually.atpl.AtplApplication
@@ -21,14 +20,12 @@ import biz.eventually.atpl.data.network.Question
 import biz.eventually.atpl.ui.BaseActivity
 import biz.eventually.atpl.ui.source.QuestionsManager
 import biz.eventually.atpl.utils.*
+import cn.pedant.SweetAlert.SweetAlertDialog
+import com.github.pwittchen.swipe.library.Swipe
+import com.github.pwittchen.swipe.library.SwipeListener
 import com.squareup.picasso.Picasso
 import com.tapadoo.alerter.Alerter
 import kotlinx.android.synthetic.main.activity_questions.*
-import android.app.Activity
-import android.content.Intent
-import com.github.pwittchen.swipe.library.Swipe
-import android.view.MotionEvent
-import com.github.pwittchen.swipe.library.SwipeListener
 
 
 class QuestionsActivity : BaseActivity<QuestionsManager>() {
@@ -38,7 +35,7 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
 
     private var mCurrentQuestion: Int = 0
     private var mShowAnswer = false
-    private var mIndexTick = -1
+    private var mAnswerIndexTick = -1
 
     private var transparentColor: Int = 0x00000000
     private var mTimer: CountDownTimer? = null
@@ -50,6 +47,9 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
     private var mTimeLength: Long = 1000
 
     private var mSwipe : Swipe? = null
+
+    // answer ticked results for stat
+    private val mStatistic = mutableMapOf<Int, Int>()
 
     private val mMime = "text/html"
     private val mEncoding = "utf-8"
@@ -92,12 +92,15 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
         question_answer_4_rdo.setOnClickListener { onAnswerClick(question_answer_4, 3) }
 
         question_previous.setOnClickListener {
-            if (question_follow.isChecked && mIndexTick > -1) {
+            val isGood = mQuestions[mCurrentQuestion].answers[mAnswerIndexTick].good
+
+            // local stats
+            mStatistic.put(mQuestions[mCurrentQuestion].id, if (isGood) 1 else 0)
+
+            // server following
+            if (question_follow.isChecked && mAnswerIndexTick > -1) {
                 mHadChange = true
-                manager.updateFollow(
-                        mQuestions[mCurrentQuestion].id,
-                        mQuestions[mCurrentQuestion].answers[mIndexTick].good
-                )
+                manager.updateFollow(mQuestions[mCurrentQuestion].id, isGood)
             }
 
             if (mCurrentQuestion >= 1) mCurrentQuestion -= 1
@@ -106,12 +109,13 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
 
         question_next.setOnClickListener {
             mTopic?.questions?.let {
-                if (question_follow.isChecked && mIndexTick > -1) {
+                val isGood = mQuestions[mCurrentQuestion].answers[mAnswerIndexTick].good
+                // local stats
+                mStatistic.put(mQuestions[mCurrentQuestion].id, if (isGood) 1 else 0)
+
+                if (question_follow.isChecked && mAnswerIndexTick > -1) {
                     mHadChange = true
-                    manager.updateFollow(
-                            mQuestions[mCurrentQuestion].id,
-                            mQuestions[mCurrentQuestion].answers[mIndexTick].good
-                    )
+                    manager.updateFollow(mQuestions[mCurrentQuestion].id, isGood)
                 }
 
                 if (mCurrentQuestion < it.count() - 1) mCurrentQuestion += 1
@@ -120,16 +124,22 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
         }
 
         question_last.setOnClickListener {
-            if (mIndexTick > -1) {
-                mHadChange = true
-                manager.updateFollow(
-                        mQuestions[mCurrentQuestion].id,
-                        mQuestions[mCurrentQuestion].answers[mIndexTick].good
-                )
+            if (mAnswerIndexTick > -1) {
+                val isGood = mQuestions[mCurrentQuestion].answers[mAnswerIndexTick].good
+                // local stats
+                mStatistic.put(mQuestions[mCurrentQuestion].id, if (isGood) 1 else 0)
+
+                // if follow request
+                if (question_follow.isChecked) {
+                    mHadChange = true
+                    manager.updateFollow(mQuestions[mCurrentQuestion].id, isGood)
+                }
 
                 it.visibility = View.GONE
-                finish()
+                // show stats of result
             }
+
+            showLocalStats()
         }
 
         mSwipe = Swipe()
@@ -214,6 +224,34 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
         super.onBackPressed()
     }
 
+    private fun showLocalStats() {
+
+        val result = mStatistic.entries.filter { it.value > 0 }.sumBy { it.value }.toDouble()
+        val percent = if (result == 0.0) 0 else ((result / mStatistic.size.toDouble()) * 100).toInt()
+
+        var title = getString(R.string.result_title_bad)
+        val message = getString(R.string.result_value, percent)
+        var warningType = SweetAlertDialog.SUCCESS_TYPE
+
+        when {
+            percent < 75 -> {
+                title = getString(R.string.result_title_bad)
+                warningType = SweetAlertDialog.ERROR_TYPE
+            }
+            percent < 85 -> {
+                title = getString(R.string.result_title_warning)
+                warningType = SweetAlertDialog.WARNING_TYPE
+            }
+            else -> SweetAlertDialog.SUCCESS_TYPE
+        }
+
+        SweetAlertDialog(this, warningType)
+                .setTitleText(title)
+                .setContentText(message)
+                .setConfirmClickListener({ finish() })
+                .show()
+    }
+
     fun shuffleQuestions() {
         mQuestions = shuffle(mQuestions) as MutableList<Question>
         mCurrentQuestion = 0
@@ -249,7 +287,7 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
         }
 */
         mTimer?.cancel()
-        mIndexTick = -1
+        mAnswerIndexTick = -1
 
         if (question_imgs.childCount > 0) {
             question_imgs.removeAllViews()
@@ -304,7 +342,7 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
 
         mTopic?.questions?.let {
             question_next.visibility = if (mCurrentQuestion < it.count() - 1) View.VISIBLE else View.GONE
-            question_last.visibility = if (question_follow.isChecked && mCurrentQuestion == it.count() - 1) View.VISIBLE else View.GONE
+            question_last.visibility = if (mCurrentQuestion == it.count() - 1) View.VISIBLE else View.GONE
         }
     }
 
@@ -474,7 +512,7 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
     private fun onAnswerClick(view: View, index: Int) {
 
         mShowAnswer = !mShowAnswer
-        mIndexTick = if (mShowAnswer) index else -1
+        mAnswerIndexTick = if (mShowAnswer) index else -1
 
         if (mShowAnswer) {
             resetCheckbox()

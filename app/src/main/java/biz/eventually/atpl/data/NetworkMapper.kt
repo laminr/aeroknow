@@ -28,7 +28,7 @@ fun toAppQuestion(from: QuestionNetwork) = Question(from.id, from.label, toAppAn
 fun toAppQuestions(from: List<QuestionNetwork>?): List<Question> = from?.map(::toAppQuestion)?.toList() ?: listOf<Question>()
 
 // DTO
-fun toAppTopicDto(from: TopicDtoNetwork) = TopicDto(from.id, from.name, from.questions, from.follow ?: 0, from.focus ?: 0, from.mean ?: 0)
+fun toAppTopicDto(from: TopicDtoNetwork) = TopicDto(from.id, from.name, from.questions, from.follow ?: 0, from.focus ?: 0, from.mean ?: 0.0)
 fun toAppTopicDtos(from: List<TopicDtoNetwork>?) = from?.map(::toAppTopicDto) ?: listOf()
 
 fun explodeImgRaw(raw: String?): List<String> = raw?.split("|")?.toList() ?: listOf()

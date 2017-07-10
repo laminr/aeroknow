@@ -74,7 +74,7 @@
 
 	<TextView
 		android:id="@+id/source_welcome_message"
-		android:text="@string/welcom_message"
+		android:text="@string/welcome_message"
 		android:layout_width="0dp"
 		android:layout_height="wrap_content"
 		android:layout_marginLeft="8dp"
