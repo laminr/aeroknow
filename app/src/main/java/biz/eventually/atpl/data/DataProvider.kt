@@ -1,16 +1,17 @@
 package biz.eventually.atpl.data
 
 import android.content.Context
+import biz.eventually.atpl.data.db.LastCall
+import biz.eventually.atpl.data.db.Source
 import biz.eventually.atpl.data.model.Follow
-import biz.eventually.atpl.data.model.Source
 import biz.eventually.atpl.data.model.Subject
-import biz.eventually.atpl.data.model.Topic
-import biz.eventually.atpl.data.network.Answer
-import biz.eventually.atpl.data.network.Question
+import biz.eventually.atpl.data.model.Question
 import biz.eventually.atpl.data.service.SourceService
 import biz.eventually.atpl.utils.PREF_TOKEN
 import biz.eventually.atpl.utils.PrefsGetString
+import com.vicpin.krealmextensions.queryFirst
 import io.reactivex.Observable
+import io.realm.RealmList
 
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -22,23 +23,27 @@ import javax.inject.Singleton
 class DataProvider @Inject constructor(private val sourceService: SourceService, val context: Context) {
 
     fun dataGetSources() : Observable<List<Source>?> {
-        return sourceService.loadSources().map { api -> toAppSources(api.data) }
+        val lastCall = LastCall().queryFirst({ query -> query.equalTo("id", LastCall.TYPE_SOURCE) })?.updated
+        return sourceService.loadSources(lastCall ?: 0).map { api -> toAppSources(api.data) }
     }
 
     fun dataGetSubjects(sourceId: Int) : Observable<List<Subject>?> {
+        val lastCall = LastCall().queryFirst({ query -> query.equalTo("id", LastCall.TYPE_SUBJECT) })?.updated
         val token = PrefsGetString(context , PREF_TOKEN) ?: ""
-        return sourceService.loadSubjects(sourceId, token).map { api -> toAppSubjects(api.data) }
+        return sourceService.loadSubjects(sourceId, lastCall ?: 0, token).map { api -> toAppSubjects(sourceId, api.data) }
     }
 
-    fun dataGetTopicQuestions(topicId: Int, startFirst: Boolean) : Observable<Topic?> {
+    fun dataGetTopicQuestions(topicId: Int, startFirst: Boolean) : Observable<List<Question>?> {
+        val lastCall = LastCall().queryFirst({ query -> query.equalTo("id", LastCall.TYPE_TOPIC) })?.updated
         val token = PrefsGetString(context , PREF_TOKEN) ?: ""
         val questions = when (startFirst) {
-            true -> sourceService.loadQuestionsStarred(topicId, token)
-            false -> sourceService.loadQuestions(topicId, token)
+            true -> sourceService.loadQuestionsStarred(topicId, lastCall ?: 0, token)
+            false -> sourceService.loadQuestions(topicId, lastCall ?: 0, token)
         }
 
         return questions.map { response ->
-            response.data?.let(::toAppTopic) ?: Topic(-1, "", listOf<Question>(), null, null )
+            //response.data?.let(::toAppTopic) ?: Topic(-1, "", 0, null, null )
+            response.data?.questions?.let(::toAppQuestions) ?: listOf()
         }
     }
 
@@ -46,7 +51,7 @@ class DataProvider @Inject constructor(private val sourceService: SourceService,
         val isGood = if (good) 1 else 0
         val token = PrefsGetString(context , PREF_TOKEN) ?: ""
         return sourceService.updateFollow(questionId, isGood , token).map { response ->
-            response.data?.let(::toAppQuestion) ?: Question(-1, "", listOf<Answer>(), null, null, Follow() )
+            response.data?.let(::toAppQuestion) ?: Question(-1, "", RealmList(), null, null, Follow() )
         }
     }
 

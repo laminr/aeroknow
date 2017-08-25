@@ -9,8 +9,7 @@ import android.preference.PreferenceManager
 
 val PREF_TIMER : String = "prefs.question.timer"
 val PREF_TOKEN : String = "prefs.api.token"
-
-
+val PREF_LAST_DATA : String = "prefs.api.last.call"
 
 fun PrefsGetString(context: Context, key: String, defValue: String? = null) : String? {
     val pref = PreferenceManager.getDefaultSharedPreferences(context)

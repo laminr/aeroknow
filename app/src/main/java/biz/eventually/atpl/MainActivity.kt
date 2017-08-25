@@ -3,7 +3,7 @@ package biz.eventually.atpl
 import android.content.Intent
 import android.os.Bundle
 import biz.eventually.atpl.common.IntentIdentifier
-import biz.eventually.atpl.data.model.Source
+import biz.eventually.atpl.data.db.Source
 import biz.eventually.atpl.ui.BaseActivity
 import biz.eventually.atpl.ui.source.SourceActivity
 import biz.eventually.atpl.ui.source.SourceManager
@@ -39,7 +39,7 @@ class MainActivity : BaseActivity<SourceManager>() {
 
     private fun start() {
         rotateloading.start()
-        manager.getSources({ s -> openSourceActivity(s)}, { openSourceActivity(null)})
+        manager.getSources({ s -> openSourceActivity(s) }, { openSourceActivity(null) })
     }
 
     private fun handleIntent(intent: Intent) {
@@ -49,7 +49,7 @@ class MainActivity : BaseActivity<SourceManager>() {
             val token = appLinkData.lastPathSegment
 
             token?.let {
-                PrefsPutString(this@MainActivity,PREF_TOKEN, token)
+                PrefsPutString(this@MainActivity, PREF_TOKEN, token)
 
                 SweetAlertDialog(this, SweetAlertDialog.CUSTOM_IMAGE_TYPE)
                         .setTitleText(getString(R.string.dialog_title_ok))
@@ -79,6 +79,11 @@ class MainActivity : BaseActivity<SourceManager>() {
             null -> startActivity<SourceActivity>(IntentIdentifier.NETWORK_ERROR to true)
             else -> startActivity<SourceActivity>(IntentIdentifier.SOURCE_LIST to (sources as ArrayList<Source>))
         }
+
+//        when (sources) {
+//            null -> intent.putExtra(IntentIdentifier.NETWORK_ERROR, true)
+//            else -> intent.putParcelableArrayListExtra(IntentIdentifier.SOURCE_LIST, sources as ArrayList<Source>)
+//        }
 
         finish()
     }

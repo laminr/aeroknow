@@ -62,12 +62,11 @@ android {
             buildConfigField 'String', 'API_ATPL_ENDPOINT', "\"http://atpl.eventually.biz/api/\""
             buildConfigField 'String', 'API_ATPL_ENDPOINT_MOCK', "\"http://${getIP()}/~laminr/atpl/webapp/web/api/\""
             buildConfigField 'String', 'API_ATPL_IMG', "\"http://atpl.eventually.biz/img/questions/\""
-
         }
         release {
 
-            buildConfigField 'String', 'API_ATPL_ENDPOINT', "\"http://www.aeroknow.xyz/api/\""
-            buildConfigField 'String', 'API_ATPL_IMG', "\"http://www.aeroknow.xyz/img/questions/\""
+            buildConfigField 'String', 'API_ATPL_ENDPOINT', "\"https://www.aeroknow.xyz/api/\""
+            buildConfigField 'String', 'API_ATPL_IMG', "\"https://www.aeroknow.xyz/img/questions/\""
 
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             proguardFiles fileTree(dir: 'proguard/', include: ['*.pro']).asList().toArray()
@@ -167,7 +166,7 @@ dependencies {
 
     provided 'org.glassfish:javax.annotation:10.0-b28'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-
+    
     // KOTLIN
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 

@@ -6,7 +6,8 @@ package biz.eventually.atpl.data.network
 data class TopicNetwork(
         val id: Int,
         val name: String,
-        val questions: List<QuestionNetwork>?,
+        val questions: Int = 0,
         val follow: Int?,
-        val focus: Int?
+        val focus: Int?,
+        val mean:Double?
 )

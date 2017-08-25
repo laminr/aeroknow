@@ -2,28 +2,51 @@ package biz.eventually.atpl.data.model
 
 import android.os.Parcel
 import android.os.Parcelable
+import io.realm.RealmObject
+import io.realm.annotations.PrimaryKey
+import io.realm.annotations.Required
+import java.util.*
 
 /**
  * Created by Thibault de Lambilly on 18/06/2017.
  */
-data class Follow(var good: Int = 0, var wrong: Int = 0) : Parcelable {
+open class Follow() : RealmObject(), Parcelable {
 
-    companion object {
-        @JvmField val CREATOR: Parcelable.Creator<Follow> = object : Parcelable.Creator<Follow> {
-            override fun createFromParcel(source: Parcel): Follow = Follow(source)
-            override fun newArray(size: Int): Array<Follow?> = arrayOfNulls(size)
-        }
+    @PrimaryKey
+    @Required
+    var id : String = UUID.randomUUID().toString()
+
+    var good: Int = 0
+    var wrong: Int = 0
+
+    constructor(good: Int = 0, wrong: Int = 0): this() {
+        this.good = good
+        this.wrong = wrong
     }
 
-    constructor(source: Parcel) : this(
-            source.readInt(),
-            source.readInt()
-    )
+    constructor(parcel: Parcel) : this() {
+        id = parcel.readString()
+        good = parcel.readInt()
+        wrong = parcel.readInt()
+    }
 
-    override fun describeContents() = 0
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeString(id)
+        parcel.writeInt(good)
+        parcel.writeInt(wrong)
+    }
 
-    override fun writeToParcel(dest: Parcel, flags: Int) {
-        dest.writeInt(good)
-        dest.writeInt(wrong)
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<Follow> {
+        override fun createFromParcel(parcel: Parcel): Follow {
+            return Follow(parcel)
+        }
+
+        override fun newArray(size: Int): Array<Follow?> {
+            return arrayOfNulls(size)
+        }
     }
 }

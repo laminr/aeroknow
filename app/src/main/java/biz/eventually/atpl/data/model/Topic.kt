@@ -1,35 +1,48 @@
 package biz.eventually.atpl.data.model
 
-import android.os.Parcel
-import android.os.Parcelable
-import biz.eventually.atpl.data.network.Question
+import io.realm.RealmObject
+import io.realm.annotations.Ignore
+import io.realm.annotations.PrimaryKey
+import io.realm.annotations.Required
+import java.util.*
 
 /**
  * Created by thibault on 20/03/17.
  */
-data class Topic(val id: Int, val name: String, val questions: List<Question>, val follow: Int?, val focus: Int?) : Parcelable {
-    companion object {
-        @JvmField val CREATOR: Parcelable.Creator<Topic> = object : Parcelable.Creator<Topic> {
-            override fun createFromParcel(source: Parcel): Topic = Topic(source)
-            override fun newArray(size: Int): Array<Topic?> = arrayOfNulls(size)
-        }
+open class Topic() : RealmObject() {
+
+    @PrimaryKey
+    @Required
+    var id : String = UUID.randomUUID().toString()
+
+    var idWeb: Int = -1
+
+    var name: String = ""
+
+    var questions: Int = 0
+
+    var follow: Int = 0
+
+    var focus: Int = 0
+
+    @Ignore
+    var mean: Double = 0.0
+
+    constructor(idWeb: Int, name: String): this() {
+        this.idWeb = idWeb
+        this.name = name
     }
 
-    constructor(source: Parcel) : this(
-            source.readInt(),
-            source.readString(),
-            source.createTypedArrayList(Question.CREATOR),
-            source.readValue(Int::class.java.classLoader) as Int?,
-            source.readValue(Int::class.java.classLoader) as Int?
-    )
+    constructor(idWeb: Int, name: String, questions: Int?, follow: Int?, focus: Int?): this() {
+        this.idWeb = idWeb
+        this.name = name
+        this.questions = questions ?: 0
+        this.follow = follow ?: 0
+        this.focus = focus ?: 0
+    }
 
-    override fun describeContents() = 0
-
-    override fun writeToParcel(dest: Parcel, flags: Int) {
-        dest.writeInt(id)
-        dest.writeString(name)
-        dest.writeTypedList(questions)
-        dest.writeValue(follow)
-        dest.writeValue(focus)
+    constructor(idWeb: Int, name: String, questions: Int?, follow: Int?, focus: Int?, mean: Double?)
+            : this(idWeb, name, questions, follow, focus) {
+        this.mean = mean ?: 0.0
     }
 }

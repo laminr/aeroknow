@@ -14,9 +14,8 @@ import biz.eventually.atpl.AtplApplication
 import biz.eventually.atpl.BuildConfig
 import biz.eventually.atpl.R
 import biz.eventually.atpl.common.IntentIdentifier
-import biz.eventually.atpl.common.StateIdentifier
+import biz.eventually.atpl.data.model.Question
 import biz.eventually.atpl.data.model.Topic
-import biz.eventually.atpl.data.network.Question
 import biz.eventually.atpl.ui.BaseActivity
 import biz.eventually.atpl.ui.source.QuestionsManager
 import biz.eventually.atpl.utils.*
@@ -25,6 +24,7 @@ import com.github.pwittchen.swipe.library.Swipe
 import com.github.pwittchen.swipe.library.SwipeListener
 import com.squareup.picasso.Picasso
 import com.tapadoo.alerter.Alerter
+import com.vicpin.krealmextensions.queryFirst
 import kotlinx.android.synthetic.main.activity_questions.*
 import org.jetbrains.anko.share
 
@@ -50,7 +50,7 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
     private var mMenuShuffle: MenuItem? = null
     private var mMenuShare: MenuItem? = null
 
-    private var mSwipe: Swipe? = null
+    private var mSwipe : Swipe? = null
 
     // answer ticked results for stat
     private val mStatistic = mutableMapOf<Int, Int>()
@@ -75,12 +75,14 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
             question_follow_label.visibility = View.VISIBLE
         } ?: kotlin.run { mHasToken = false }
 
-        mTopic = intent.extras.getParcelable<Topic>(IntentIdentifier.TOPIC)
+        val topicId = intent.extras.getString(IntentIdentifier.TOPIC)
         val startFirst = intent.extras.getBoolean(IntentIdentifier.TOPIC_STARRED, false)
+
+        mTopic = Topic().queryFirst({ query -> query.equalTo("id", topicId)})
 
         mTopic?.apply {
             rotateloading.start()
-            manager.getQuestions(id, startFirst, { t -> questionsLoaded(t) }, { loadError() })
+            manager.getQuestions(idWeb, startFirst, { t -> questionsLoaded(t) }, { loadError() })
 
             supportActionBar?.title = name
         }
@@ -105,18 +107,16 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
         question_answer_4_rdo.setOnClickListener { onAnswerClick(question_answer_4, 3) }
 
         question_previous.setOnClickListener {
-            mMenuShare?.isVisible = false
-
-            if (mAnswerIndexTick > -1 && mCurrentQuestion < mQuestions.size) {
+mMenuShare?.isVisible = false            if (mAnswerIndexTick > -1 ) {
                 val isGood = mQuestions[mCurrentQuestion].answers[mAnswerIndexTick].good
 
                 // local stats
-                mStatistic.put(mQuestions[mCurrentQuestion].id, if (isGood) 1 else 0)
+                mStatistic.put(mQuestions[mCurrentQuestion].idWeb, if (isGood) 1 else 0)
 
                 // server following
                 if (question_follow.isChecked) {
                     mHadChange = true
-                    manager.updateFollow(mQuestions[mCurrentQuestion].id, isGood)
+                    manager.updateFollow(mQuestions[mCurrentQuestion].idWeb, isGood)
                 }
             }
 
@@ -130,16 +130,18 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
             if (mAnswerIndexTick > -1 && mCurrentQuestion < mQuestions.size) {
                 val isGood = mQuestions[mCurrentQuestion].answers[mAnswerIndexTick].good
                 // local stats
-                mStatistic.put(mQuestions[mCurrentQuestion].id, if (isGood) 1 else 0)
+                mStatistic.put(mQuestions[mCurrentQuestion].idWeb, if (isGood) 1 else 0)
 
-                if (question_follow.isChecked) {
-                    mHadChange = true
-                    manager.updateFollow(mQuestions[mCurrentQuestion].id, isGood)
+                    if (question_follow.isChecked) {
+                        mHadChange = true
+                        manager.updateFollow(mQuestions[mCurrentQuestion].idWeb, isGood)
+                    }
                 }
             }
 
-            if (mCurrentQuestion < mQuestions.size - 1) mCurrentQuestion += 1
-            displayQuestion()
+                if (mCurrentQuestion < mQuestions.size - 1) mCurrentQuestion += 1
+                displayQuestion()
+
         }
 
         question_last.setOnClickListener {
@@ -148,12 +150,12 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
             if (mAnswerIndexTick > -1) {
                 val isGood = mQuestions[mCurrentQuestion].answers[mAnswerIndexTick].good
                 // local stats
-                mStatistic.put(mQuestions[mCurrentQuestion].id, if (isGood) 1 else 0)
+                mStatistic.put(mQuestions[mCurrentQuestion].idWeb, if (isGood) 1 else 0)
 
                 // if follow request
                 if (question_follow.isChecked) {
                     mHadChange = true
-                    manager.updateFollow(mQuestions[mCurrentQuestion].id, isGood)
+                    manager.updateFollow(mQuestions[mCurrentQuestion].idWeb, isGood)
                 }
             }
 
@@ -250,22 +252,22 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
         return txt.toString()
     }
 
-    override fun onSaveInstanceState(outState: Bundle?) {
-        super.onSaveInstanceState(outState)
-        outState?.let {
-            it.putParcelable(StateIdentifier.TOPIC, mTopic)
-            it.putInt(StateIdentifier.QUEST_CURRENT, mCurrentQuestion)
-        }
-    }
+//    override fun onSaveInstanceState(outState: Bundle?) {
+//        super.onSaveInstanceState(outState)
+//        outState?.let {
+//            it.putParcelable(StateIdentifier.TOPIC, mTopic)
+//            it.putInt(StateIdentifier.QUEST_CURRENT, mCurrentQuestion)
+//        }
+//    }
 
-    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
-        super.onRestoreInstanceState(savedInstanceState)
-        savedInstanceState?.let {
-            mTopic = it.getParcelable(StateIdentifier.TOPIC)
-            mQuestions = mTopic?.questions as MutableList<Question>
-            mCurrentQuestion = it.getInt(StateIdentifier.QUEST_CURRENT)
-        }
-    }
+//    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
+//        super.onRestoreInstanceState(savedInstanceState)
+//        savedInstanceState?.let {
+//            mTopic = it.getParcelable(StateIdentifier.TOPIC)
+//            mQuestions = mTopic?.questions as MutableList<Question>
+//            mCurrentQuestion = it.getInt(StateIdentifier.QUEST_CURRENT)
+//        }
+//    }
 
     override fun onBackPressed() {
 
@@ -312,15 +314,14 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
         displayQuestion()
     }
 
-    private fun questionsLoaded(topic: Topic): Unit {
+    private fun questionsLoaded(questions: List<Question>): Unit {
 
-        mTopic = topic
-        mQuestions = topic.questions.toMutableList()
+        mQuestions = questions.toMutableList()
 
         // shuffle answer
-        mQuestions.forEach { q ->
-            q.answers = shuffle(q.answers.toMutableList())
-        }
+//        mQuestions.forEach { q ->
+//            Collections.shuffle(q.answers)
+//        }
 
         rotateloading.stop()
 
@@ -372,7 +373,7 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
 
                 displayFollowCount()
 
-                img?.forEach { img ->
+                imgList.forEach { img ->
                     val imgContainer = ImageView(applicationContext)
                     Picasso.with(applicationContext)
                             .load(BuildConfig.API_ATPL_IMG + img)
@@ -391,7 +392,7 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
 
         question_previous.visibility = if (mCurrentQuestion > 0) View.VISIBLE else View.GONE
 
-        mTopic?.questions?.let {
+        mQuestions.let {
             question_next.visibility = if (mCurrentQuestion < it.count() - 1) View.VISIBLE else View.GONE
             question_last.visibility = if (mCurrentQuestion == it.count() - 1) View.VISIBLE else View.GONE
         }
@@ -439,7 +440,7 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
             question_care.setImageDrawable(ContextCompat.getDrawable(this@QuestionsActivity, R.drawable.ic_cached_black))
             question_care.setColorFilter(ContextCompat.getColor(applicationContext, R.color.colorGrey))
 
-            manager.updateFocus(mQuestions[mCurrentQuestion].id, true, this::onFocusSaves, this::onSavinError)
+            manager.updateFocus(mQuestions[mCurrentQuestion].idWeb, true, this::onFocusSaves, this::onSavinError)
 
             displayFollowAndFocus()
         }
@@ -451,7 +452,7 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
             question_dontcare.setImageDrawable(ContextCompat.getDrawable(this@QuestionsActivity, R.drawable.ic_cached_black))
             question_dontcare.setColorFilter(ContextCompat.getColor(applicationContext, R.color.colorGrey))
 
-            manager.updateFocus(mQuestions[mCurrentQuestion].id, false, this::onFocusSaves, this::onSavinError)
+            manager.updateFocus(mQuestions[mCurrentQuestion].idWeb, false, this::onFocusSaves, this::onSavinError)
 
             displayFollowAndFocus()
         }
@@ -502,8 +503,8 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
 
     private fun displayFollowCount() {
 
-        val good = mQuestions[mCurrentQuestion].follow.good
-        val wrong = mQuestions[mCurrentQuestion].follow.wrong
+        val good = mQuestions[mCurrentQuestion].follow?.good ?: 0
+        val wrong = mQuestions[mCurrentQuestion].follow?.wrong ?: 0
 
         if (good == 0 && wrong == 0) {
             question_good_img.visibility = View.GONE

@@ -1,33 +1,61 @@
-package biz.eventually.atpl.data.network
+package biz.eventually.atpl.data.model
 
 import android.os.Parcel
 import android.os.Parcelable
+import io.realm.RealmObject
+import io.realm.annotations.PrimaryKey
+import io.realm.annotations.Required
+import java.util.*
 
 /**
  * Created by thibault on 21/03/17.
  */
-data class Answer(val id: Int, val value: String, val good: Boolean) : Comparable<Answer>, Parcelable {
+open class Answer() : RealmObject(), Comparable<Answer>, Parcelable {
+
+    @PrimaryKey
+    @Required
+    var id: String = UUID.randomUUID().toString()
+
+    var idWeb: Int = -1
+
+    var value: String = ""
+
+    var good: Boolean = false
+
     override fun compareTo(other: Answer) = kotlin.comparisons.compareValuesBy(this, other, { it.value })
 
-    constructor(source: Parcel) : this(
-            source.readInt(),
-            source.readString(),
-            1 == source.readInt()
-    )
+    constructor(idWeb: Int, value: String, good: Boolean) : this() {
+        this.idWeb = idWeb
+        this.value = value
+        this.good = good
 
-    override fun describeContents() = 0
-
-    override fun writeToParcel(dest: Parcel, flags: Int) = with(dest) {
-        writeInt(id)
-        writeString(value)
-        writeInt((if (good) 1 else 0))
     }
 
-    companion object {
-        @JvmField
-        val CREATOR: Parcelable.Creator<Answer> = object : Parcelable.Creator<Answer> {
-            override fun createFromParcel(source: Parcel): Answer = Answer(source)
-            override fun newArray(size: Int): Array<Answer?> = arrayOfNulls(size)
+    constructor(parcel: Parcel) : this() {
+        id = parcel.readString()
+        idWeb = parcel.readInt()
+        value = parcel.readString()
+        good = parcel.readByte() != 0.toByte()
+    }
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeString(id)
+        parcel.writeInt(idWeb)
+        parcel.writeString(value)
+        parcel.writeByte(if (good) 1 else 0)
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<Answer> {
+        override fun createFromParcel(parcel: Parcel): Answer {
+            return Answer(parcel)
+        }
+
+        override fun newArray(size: Int): Array<Answer?> {
+            return arrayOfNulls(size)
         }
     }
 }

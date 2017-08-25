@@ -3,15 +3,15 @@ package biz.eventually.atpl.ui.subject
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import biz.eventually.atpl.R
-import biz.eventually.atpl.data.model.dto.TopicDto
+import biz.eventually.atpl.data.model.Topic
 import kotlinx.android.synthetic.main.item_subject_row.view.*
 
 /**
  * Created by Thibault de Lambilly on 29/03/2017.
  */
-class SubjectViewHolder(itemView: View, val itemClick: (TopicDto, Boolean) -> Unit) : RecyclerView.ViewHolder(itemView) {
+class SubjectViewHolder(itemView: View, val itemClick: (Topic, Boolean) -> Unit) : RecyclerView.ViewHolder(itemView) {
 
-    fun bind(topic: TopicDto) {
+    fun bind(topic: Topic) {
 
         itemView.subject_title.visibility = View.VISIBLE
 
@@ -30,7 +30,7 @@ class SubjectViewHolder(itemView: View, val itemClick: (TopicDto, Boolean) -> Un
         with(topic) {
             itemView.subject_title.text = itemView.context.getString(R.string.msg_processing)
             // Title
-            if (id == -1) {
+            if (idWeb == -1) {
                 itemView.subject_title.text = name
 
                 itemView.subject_title.visibility = View.VISIBLE

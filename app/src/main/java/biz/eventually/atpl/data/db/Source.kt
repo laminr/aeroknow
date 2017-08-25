@@ -1,6 +1,5 @@
-package biz.eventually.atpl.data.model
+package biz.eventually.atpl.data.db
 
-import io.realm.RealmList
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
 import io.realm.annotations.Required
@@ -9,25 +8,18 @@ import java.util.*
 /**
  * Created by thibault on 20/03/17.
  */
-open class Subject() : RealmObject() {
+open class Source() : RealmObject() {
 
     @PrimaryKey
     @Required
     var id : String = UUID.randomUUID().toString()
 
-    var sourceId: Int = -1
-
     var idWeb: Int = -1
 
     var name: String = ""
 
-    var topics: RealmList<Topic> = RealmList()
-
-    constructor(sourceId: Int, idWeb: Int, name: String, topics: RealmList<Topic>): this() {
-        this.sourceId = sourceId
+    constructor(idWeb: Int, name: String) : this() {
         this.idWeb = idWeb
         this.name = name
-        this.topics = topics
     }
 }
-

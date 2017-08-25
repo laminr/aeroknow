@@ -5,16 +5,16 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
 import biz.eventually.atpl.R
-import biz.eventually.atpl.data.model.dto.TopicDto
+import biz.eventually.atpl.data.model.Topic
 
 
 /**
  * Created by laminr on 29/03/2017.
  */
-class SubjectAdapter(val onClick: (dto: TopicDto, startFirst: Boolean) -> Unit) : RecyclerView.Adapter<SubjectViewHolder>() {
+class SubjectAdapter(val onClick: (dto: Topic, startFirst: Boolean) -> Unit) : RecyclerView.Adapter<SubjectViewHolder>() {
 
     var name: TextView? = null
-    private var mTopics = mutableListOf<TopicDto>()
+    private var mTopics = mutableListOf<Topic>()
     private var mParent: ViewGroup? = null
 
     override fun onBindViewHolder(holder: SubjectViewHolder?, position: Int) {
@@ -33,7 +33,7 @@ class SubjectAdapter(val onClick: (dto: TopicDto, startFirst: Boolean) -> Unit) 
         return SubjectViewHolder(view, onClick)
     }
 
-    fun bind(topics: List<TopicDto>): Unit {
+    fun bind(topics: List<Topic>): Unit {
         mTopics = mutableListOf()
         mTopics.addAll(topics)
     }

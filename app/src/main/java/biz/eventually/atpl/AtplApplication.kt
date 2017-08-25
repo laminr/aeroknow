@@ -1,6 +1,7 @@
 package biz.eventually.atpl
 
 import android.app.Application
+import android.content.Context
 import android.graphics.Typeface
 import android.support.multidex.MultiDex
 import biz.eventually.atpl.data.db.checkRealmVersion
@@ -19,6 +20,7 @@ class AtplApplication : Application() {
 
     companion object {
         lateinit var component: AppComponent
+        lateinit var context: Context
         lateinit var tangerine : Typeface
     }
 
@@ -26,6 +28,9 @@ class AtplApplication : Application() {
         super.onCreate()
 
         component = AppComponent.Initializer.init(this)
+        context = this.applicationContext
+
+        println("AtplApplication")
         tangerine = Typeface.createFromAsset(assets, "fonts/Tangerine.ttf")
 
         // Firebase Analytics

@@ -13,14 +13,12 @@ import biz.eventually.atpl.common.IntentIdentifier
 import biz.eventually.atpl.common.IntentIdentifier.Companion.REFRESH_SUBJECT
 import biz.eventually.atpl.data.model.Subject
 import biz.eventually.atpl.data.model.Topic
-import biz.eventually.atpl.data.model.dto.TopicDto
 import biz.eventually.atpl.ui.BaseActivity
 import biz.eventually.atpl.ui.questions.QuestionsActivity
 import com.crashlytics.android.answers.Answers
 import com.crashlytics.android.answers.ContentViewEvent
 import com.google.firebase.perf.metrics.AddTrace
 import kotlinx.android.synthetic.main.activity_subject.*
-
 
 class SubjectActivity : BaseActivity<SubjectManager>() {
 
@@ -31,7 +29,7 @@ class SubjectActivity : BaseActivity<SubjectManager>() {
     private var mSourceId: Int = 0
     private var mSubjectList: List<Subject>? = null
 
-    private var mAdapter: SubjectAdapter? = null
+    private var mAdapter: SubjectAdapter = SubjectAdapter(this::onItemClick)
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -55,7 +53,6 @@ class SubjectActivity : BaseActivity<SubjectManager>() {
         }
 
         val mLayoutManager = LinearLayoutManager(applicationContext)
-        mAdapter = SubjectAdapter(this::onItemClick)
         subject_subject_list.layoutManager = mLayoutManager
         subject_subject_list.itemAnimator = DefaultItemAnimator()
         subject_subject_list.adapter = mAdapter
@@ -65,19 +62,19 @@ class SubjectActivity : BaseActivity<SubjectManager>() {
         }
     }
 
-    private fun onItemClick(dto: TopicDto, startFirst: Boolean = false): Unit {
+    private fun onItemClick(topic: Topic, startFirst: Boolean = false): Unit {
 
         // Fabric Answer
         Answers.getInstance().logContentView(ContentViewEvent()
                 .putContentName("Subject")
                 .putContentType("Questions")
-                .putContentId("Source_${mSourceId}_subject_${dto.id}")
-                .putCustomAttribute("Subject Name", "${dto.id}: ${dto.name}")
+                .putContentId("Source_${mSourceId}_subject_${topic.id}")
+                .putCustomAttribute("Subject Name", "${topic.id}: ${topic.name}")
         )
 
         val intent = Intent(this, QuestionsActivity::class.java)
-        val topic = Topic(dto.id, dto.name, listOf(), 0, 0)
-        intent.putExtra(IntentIdentifier.TOPIC, topic)
+
+        intent.putExtra(IntentIdentifier.TOPIC, topic.id)
         intent.putExtra(IntentIdentifier.TOPIC_STARRED, startFirst)
 
         startActivityForResult(intent, REFRESH_SUBJECT)
@@ -105,18 +102,18 @@ class SubjectActivity : BaseActivity<SubjectManager>() {
     private fun displaySubjects(subjects: List<Subject>?) : Unit {
         mSubjectList = subjects
         mSubjectList?.let {
-            val topics = mutableListOf<TopicDto>()
+            val topics = mutableListOf<Topic>()
 
-            it.forEach { (_, name, topic) ->
+            it.forEach { t ->
                 // header
-                topics.add(TopicDto(-1, name, 0, 0, 0, 0.0))
+                topics.add(Topic(-1, t.name))
 
                 // line of topics
-                topics.addAll(topic)
+                topics.addAll(t.topics)
             }
 
-            mAdapter?.bind(topics)
-            mAdapter?.notifyDataSetChanged()
+            mAdapter.bind(topics)
+            mAdapter.notifyDataSetChanged()
             rotateloading.stop()
         }
     }

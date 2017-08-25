@@ -9,12 +9,12 @@ import biz.eventually.atpl.AtplApplication
 import biz.eventually.atpl.BuildConfig
 import biz.eventually.atpl.R
 import biz.eventually.atpl.common.IntentIdentifier
-import biz.eventually.atpl.common.StateIdentifier
-import biz.eventually.atpl.data.model.Source
+import biz.eventually.atpl.data.db.Source
 import biz.eventually.atpl.data.model.Subject
 import biz.eventually.atpl.ui.BaseActivity
 import biz.eventually.atpl.ui.about.AboutActivity
 import biz.eventually.atpl.ui.subject.SubjectActivity
+import com.vicpin.krealmextensions.queryAll
 import com.yalantis.guillotine.animation.GuillotineAnimation
 import kotlinx.android.synthetic.main.activity_source.*
 import kotlinx.android.synthetic.main.guillotine.*
@@ -39,11 +39,11 @@ class SourceActivity : BaseActivity<SourceManager>() {
         source_welcome.typeface = AtplApplication.tangerine
         settingGuillotineMenu()
 
-        savedInstanceState?.let {
-            mSourceList = it.getParcelableArrayList<Source>(StateIdentifier.SOURCE_LIST).toList()
-        }
+//        savedInstanceState?.let {
+//            mSourceList = it.getParcelableArrayList<Source>(StateIdentifier.SOURCE_LIST).toList()
+//        }
 
-        mSourceList = mSourceList ?: intent.getParcelableArrayListExtra<Source>(IntentIdentifier.SOURCE_LIST)
+        mSourceList = Source().queryAll()
 
         when (intent.getBooleanExtra(IntentIdentifier.NETWORK_ERROR, false)) {
             true -> {
@@ -115,7 +115,7 @@ class SourceActivity : BaseActivity<SourceManager>() {
             source_listview.adapter = mAdapter
             source_listview.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
                 startActivity<SubjectActivity>(
-                        IntentIdentifier.SOURCE_ID to get(position).id,
+                        IntentIdentifier.SOURCE_ID to get(position).idWeb,
                         IntentIdentifier.SOURCE_NAME to get(position).name
                 )
 

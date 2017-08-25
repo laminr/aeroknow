@@ -1,46 +1,86 @@
-package biz.eventually.atpl.data.network
+package biz.eventually.atpl.data.model
 
 import android.os.Parcel
 import android.os.Parcelable
-import biz.eventually.atpl.data.model.Follow
+import io.realm.RealmList
+import io.realm.RealmObject
+import io.realm.annotations.PrimaryKey
+import io.realm.annotations.Required
+import java.util.*
 
 /**
  * Created by thibault on 20/03/17.
  */
-data class Question(
-        val id: Int,
-        val label: String,
-        var answers: List<Answer>,
-        val img: List<String>?,
-        var focus: Boolean?,
-        var follow: Follow
-) : Comparable<Question>, Parcelable {
+
+open class Question() : RealmObject(), Comparable<Question>, Parcelable {
+
+    @PrimaryKey
+    @Required
+    var id: String = UUID.randomUUID().toString()
+
+    var topicId: Int = -1
+
+    var idWeb: Int = -1
+
+    var label: String = ""
+
+    var answers: RealmList<Answer> = RealmList()
+
+    var img: String = ""
+
+    val imgList : List<String>
+        get() = explodeImgRaw(img)
+
+    var focus: Boolean? = null
+
+    var follow: Follow? = null
+
     override fun compareTo(other: Question) = compareValuesBy(this, other, { it.label })
 
-    companion object {
-        @JvmField val CREATOR: Parcelable.Creator<Question> = object : Parcelable.Creator<Question> {
-            override fun createFromParcel(source: Parcel): Question = Question(source)
-            override fun newArray(size: Int): Array<Question?> = arrayOfNulls(size)
+    constructor(idWeb: Int, label: String, answers: RealmList<Answer>, img: String?, focus: Boolean?, follow: Follow?) : this() {
+
+        this.idWeb = idWeb
+        this.label = label
+        this.answers = answers
+        this.img = img ?: ""
+        this.focus = focus
+        this.follow = follow
+
+    }
+
+    constructor(parcel: Parcel) : this() {
+        id = parcel.readString()
+        topicId = parcel.readInt()
+        idWeb = parcel.readInt()
+        label = parcel.readString()
+        img = parcel.readString()
+        focus = parcel.readValue(Boolean::class.java.classLoader) as? Boolean
+        follow = parcel.readParcelable(Follow::class.java.classLoader)
+    }
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeString(id)
+        parcel.writeInt(topicId)
+        parcel.writeInt(idWeb)
+        parcel.writeString(label)
+        parcel.writeString(img)
+        parcel.writeValue(focus)
+        parcel.writeParcelable(follow, flags)
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<Question> {
+        override fun createFromParcel(parcel: Parcel): Question {
+            return Question(parcel)
+        }
+
+        override fun newArray(size: Int): Array<Question?> {
+            return arrayOfNulls(size)
         }
     }
 
-    constructor(source: Parcel) : this(
-    source.readInt(),
-    source.readString(),
-    source.createTypedArrayList(Answer.CREATOR),
-    source.createStringArrayList(),
-    source.readValue(Boolean::class.java.classLoader) as Boolean?,
-    source.readParcelable<Follow>(Follow::class.java.classLoader)
-    )
-
-    override fun describeContents() = 0
-
-    override fun writeToParcel(dest: Parcel, flags: Int) {
-        dest.writeInt(id)
-        dest.writeString(label)
-        dest.writeTypedList(answers)
-        dest.writeStringList(img)
-        dest.writeValue(focus)
-        dest.writeParcelable(follow, 0)
-    }
+    fun explodeImgRaw(raw: String?): List<String> = raw?.split("|")?.toList() ?: listOf()
 }
