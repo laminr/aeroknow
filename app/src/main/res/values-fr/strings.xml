@@ -1,5 +1,4 @@
 <resources>
-	<string name="app_name">Aero Know</string>
 	<string name="action_settings">Paramètres</string>
 	<string name="title_activity_subject">Sujets</string>
 	<string name="sum_symbol">Σ</string>
@@ -23,4 +22,8 @@
 	<string name="result_title_warning">Mouaih bof</string>
 	<string name="result_title_bad">Nul mon gars, au boulot</string>
 	<string name="result_value">Votre résultat est de: %d%%</string>
+
+	<string name="developed_by">developpé par</string>
+	<string name="action_about">A propos</string>
+	<string name="by_company">par eventually business</string>
 </resources>

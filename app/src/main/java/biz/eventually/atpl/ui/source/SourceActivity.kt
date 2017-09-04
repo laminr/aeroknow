@@ -13,6 +13,7 @@ import biz.eventually.atpl.common.IntentIdentifier
 import biz.eventually.atpl.common.StateIdentifier
 import biz.eventually.atpl.data.model.Source
 import biz.eventually.atpl.ui.BaseActivity
+import biz.eventually.atpl.ui.about.AboutActivity
 import biz.eventually.atpl.ui.subject.SubjectActivity
 import kotlinx.android.synthetic.main.activity_source.*
 
@@ -52,8 +53,10 @@ class SourceActivity : BaseActivity<SourceManager>() {
             }
         }
 
-        source_refresh.setOnClickListener {
-            loadData()
+        source_refresh.setOnClickListener { loadData() }
+        source_about.setOnClickListener { _ ->
+            val intent = Intent(this, AboutActivity::class.java)
+            startActivity(intent)
         }
     }
 

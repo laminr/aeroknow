@@ -27,7 +27,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 25
 
-        versionCode (getDate() as Integer)
+        versionCode(getDate() as Integer)
         versionName "${majorVersion}.${minorVersion}.${patchVersion} build ${versionCode}"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -155,7 +155,7 @@ dependencies {
 
     provided 'org.glassfish:javax.annotation:10.0-b28'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    
+
     // KOTLIN
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 
@@ -169,7 +169,7 @@ dependencies {
     releaseCompile "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanary"
     testCompile "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanary"
 
-    compile 'com.google.firebase:firebase-core:11.0.2'
+    compile 'com.google.firebase:firebase-core:11.2.0'
 }
 
 // should be at the bottom
