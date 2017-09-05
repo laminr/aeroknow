@@ -25,10 +25,11 @@
 	<string name="result_title_bad">Not good man, back to work</string>
 	<string name="result_value">Your score is: %d%%</string>
 
-	<string name="developed_by">developed by</string>
+	<string name="developed_by">developer</string>
 	<string name="dev_name" translatable="false">Thibault de Lambilly</string>
 	<string name="action_about">About</string>
 	<string name="title_activity_about">AboutActivity</string>
 	<string name="developers" translatable="false">Thibault de Lambilly</string>
-	<string name="by_company">by eventually business</string>
+	<string name="by_company" translatable="false">eventually business</string>
+	<string name="about_by">by</string>
 </resources>

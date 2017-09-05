@@ -58,6 +58,7 @@ class SourceActivity : BaseActivity<SourceManager>() {
             val intent = Intent(this, AboutActivity::class.java)
             startActivity(intent)
         }
+
     }
 
     private fun setWelcomeFont() {

@@ -23,7 +23,7 @@
 	<string name="result_title_bad">Nul mon gars, au boulot</string>
 	<string name="result_value">Votre résultat est de: %d%%</string>
 
-	<string name="developed_by">developpé par</string>
+	<string name="developed_by">developpeur</string>
 	<string name="action_about">A propos</string>
-	<string name="by_company">par eventually business</string>
+	<string name="about_by">par</string>
 </resources>
