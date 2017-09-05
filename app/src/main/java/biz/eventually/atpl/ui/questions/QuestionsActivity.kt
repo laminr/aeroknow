@@ -46,7 +46,7 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
 
     private var mTimeLength: Long = 1000
 
-    private var mSwipe : Swipe? = null
+    private var mSwipe: Swipe? = null
 
     // answer ticked results for stat
     private val mStatistic = mutableMapOf<Int, Int>()
@@ -92,15 +92,17 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
         question_answer_4_rdo.setOnClickListener { onAnswerClick(question_answer_4, 3) }
 
         question_previous.setOnClickListener {
-            val isGood = mQuestions[mCurrentQuestion].answers[mAnswerIndexTick].good
+            if (mAnswerIndexTick > -1 && mCurrentQuestion < mQuestions.size) {
+                val isGood = mQuestions[mCurrentQuestion].answers[mAnswerIndexTick].good
 
-            // local stats
-            mStatistic.put(mQuestions[mCurrentQuestion].id, if (isGood) 1 else 0)
+                // local stats
+                mStatistic.put(mQuestions[mCurrentQuestion].id, if (isGood) 1 else 0)
 
-            // server following
-            if (question_follow.isChecked && mAnswerIndexTick > -1) {
-                mHadChange = true
-                manager.updateFollow(mQuestions[mCurrentQuestion].id, isGood)
+                // server following
+                if (question_follow.isChecked) {
+                    mHadChange = true
+                    manager.updateFollow(mQuestions[mCurrentQuestion].id, isGood)
+                }
             }
 
             if (mCurrentQuestion >= 1) mCurrentQuestion -= 1
@@ -108,19 +110,19 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
         }
 
         question_next.setOnClickListener {
-            mTopic?.questions?.let {
+            if (mAnswerIndexTick > -1 && mCurrentQuestion < mQuestions.size) {
                 val isGood = mQuestions[mCurrentQuestion].answers[mAnswerIndexTick].good
                 // local stats
                 mStatistic.put(mQuestions[mCurrentQuestion].id, if (isGood) 1 else 0)
 
-                if (question_follow.isChecked && mAnswerIndexTick > -1) {
+                if (question_follow.isChecked) {
                     mHadChange = true
                     manager.updateFollow(mQuestions[mCurrentQuestion].id, isGood)
                 }
-
-                if (mCurrentQuestion < it.count() - 1) mCurrentQuestion += 1
-                displayQuestion()
             }
+
+            if (mCurrentQuestion < mQuestions.size - 1) mCurrentQuestion += 1
+            displayQuestion()
         }
 
         question_last.setOnClickListener {
@@ -134,10 +136,10 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
                     mHadChange = true
                     manager.updateFollow(mQuestions[mCurrentQuestion].id, isGood)
                 }
-
-                it.visibility = View.GONE
-                // show stats of result
             }
+
+            it.visibility = View.GONE
+            // show stats of result
 
             showLocalStats()
         }
