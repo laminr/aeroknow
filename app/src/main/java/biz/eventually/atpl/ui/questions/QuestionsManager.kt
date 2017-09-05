@@ -6,6 +6,7 @@ import biz.eventually.atpl.data.DataProvider
 import biz.eventually.atpl.data.model.Source
 import biz.eventually.atpl.data.model.Topic
 import biz.eventually.atpl.data.network.Question
+import com.google.firebase.perf.metrics.AddTrace
 
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -23,6 +24,7 @@ class QuestionsManager @Inject constructor (private val dataProvider: DataProvid
         val TAG = "QuestionsManager"
     }
 
+    @AddTrace(name = "getQuestions", enabled = true)
     fun getQuestions(topicId: Int, starFist: Boolean, display: (t: Topic) -> Unit, error: () -> Unit) {
         dataProvider.dataGetTopicQuestions(topicId, starFist).subscribeOn(Schedulers.io())?.observeOn(AndroidSchedulers.mainThread())?.subscribe({ s ->
             display(s)

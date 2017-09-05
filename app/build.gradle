@@ -3,6 +3,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'realm-android'
+apply plugin: 'com.google.firebase.firebase-perf'
 
 apply plugin: 'io.fabric'
 
@@ -54,9 +55,12 @@ android {
             debuggable true
             minifyEnabled false
 
-            buildConfigField 'String', 'API_ATPL_ENDPOINT', "\"http://atpl.eventually.biz/api/\""
-            buildConfigField 'String', 'API_ATPL_ENDPOINT_MOCK', "\"http://${getIP()}/~laminr/atpl/webapp/web/api/\""
-            buildConfigField 'String', 'API_ATPL_IMG', "\"http://atpl.eventually.biz/img/questions/\""
+//            buildConfigField 'String', 'API_ATPL_ENDPOINT', "\"http://atpl.eventually.biz/api/\""
+//            buildConfigField 'String', 'API_ATPL_ENDPOINT_MOCK', "\"http://${getIP()}/~laminr/atpl/webapp/web/api/\""
+//            buildConfigField 'String', 'API_ATPL_IMG', "\"http://atpl.eventually.biz/img/questions/\""
+
+            buildConfigField 'String', 'API_ATPL_ENDPOINT', "\"http://www.aeroknow.xyz/api/\""
+            buildConfigField 'String', 'API_ATPL_IMG', "\"http://www.aeroknow.xyz/img/questions/\""
         }
         release {
 
@@ -99,6 +103,7 @@ ext {
     butterknifeVersion = '8.5.1'
     okhttpVersion = '3.6.0'
     daggerVersion = '2.11'
+    firebaseVersion = '11.2.0'
 }
 
 dependencies {
@@ -169,7 +174,8 @@ dependencies {
     releaseCompile "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanary"
     testCompile "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanary"
 
-    compile 'com.google.firebase:firebase-core:11.2.0'
+    compile "com.google.firebase:firebase-core:$firebaseVersion"
+    compile "com.google.firebase:firebase-perf:$firebaseVersion"
 }
 
 // should be at the bottom
