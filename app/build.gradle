@@ -9,8 +9,8 @@ apply plugin: 'io.fabric'
 
 ext {
     majorVersion = "0"
-    minorVersion = "16"
-    patchVersion = "1"
+    minorVersion = "17"
+    patchVersion = "0"
 }
 
 // Load keystore
@@ -55,12 +55,10 @@ android {
             debuggable true
             minifyEnabled false
 
-//            buildConfigField 'String', 'API_ATPL_ENDPOINT', "\"http://atpl.eventually.biz/api/\""
-//            buildConfigField 'String', 'API_ATPL_ENDPOINT_MOCK', "\"http://${getIP()}/~laminr/atpl/webapp/web/api/\""
-//            buildConfigField 'String', 'API_ATPL_IMG', "\"http://atpl.eventually.biz/img/questions/\""
+            buildConfigField 'String', 'API_ATPL_ENDPOINT', "\"http://atpl.eventually.biz/api/\""
+            buildConfigField 'String', 'API_ATPL_ENDPOINT_MOCK', "\"http://${getIP()}/~laminr/atpl/webapp/web/api/\""
+            buildConfigField 'String', 'API_ATPL_IMG', "\"http://atpl.eventually.biz/img/questions/\""
 
-            buildConfigField 'String', 'API_ATPL_ENDPOINT', "\"http://www.aeroknow.xyz/api/\""
-            buildConfigField 'String', 'API_ATPL_IMG', "\"http://www.aeroknow.xyz/img/questions/\""
         }
         release {
 
