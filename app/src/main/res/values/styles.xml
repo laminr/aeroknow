@@ -40,4 +40,29 @@
 
 	<style name="AppTheme.NoActionBar.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+	<style name="LinearLayout" />
+	<style name="LinearLayout.GuillotineItem">
+		<item name="android:layout_width">wrap_content</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:orientation">horizontal</item>
+		<item name="android:textColor">@color/colorPrimaryDark</item>
+		<item name="android:padding">8dp</item>
+		<item name="android:layout_marginTop">@dimen/guillotine_small_margin</item>
+	</style>
+
+	<style name="LinearLayout.GuillotineText">
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:layout_width">wrap_content</item>
+		<item name="android:layout_gravity">center_vertical</item>
+		<item name="android:layout_marginLeft">12dp</item>
+		<item name="android:textSize">24sp</item>
+	</style>
+
+	<style name="LinearLayout.GuillotineIcon">
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:layout_width">wrap_content</item>
+		<item name="android:layout_gravity">center_vertical</item>
+		<item name="android:layout_marginTop">2dp</item>
+	</style>
+
 </resources>

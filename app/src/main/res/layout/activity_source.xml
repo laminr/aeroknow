@@ -2,6 +2,7 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+	android:id="@+id/source_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="biz.eventually.atpl.ui.source.SourceActivity">
@@ -152,6 +153,8 @@
 		android:layout_marginTop="8dp"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintTop_toTopOf="parent"
-		app:srcCompat="@drawable/ic_settings_black" />
+		app:srcCompat="@drawable/ic_menu_white_24dp" />
+
+	<include layout="@layout/guillotine" />
 
 </android.support.constraint.ConstraintLayout>

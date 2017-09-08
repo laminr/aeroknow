@@ -27,8 +27,10 @@
 
 	<string name="developed_by">developer</string>
 	<string name="dev_name" translatable="false">Thibault de Lambilly</string>
-	<string name="action_about">About</string>
 	<string name="developers" translatable="false">Thibault de Lambilly</string>
 	<string name="by_company" translatable="false">eventually business</string>
 	<string name="about_by">by</string>
+
+	<string name="menu_about">about</string>
+	<string name="menu_settings">settings</string>
 </resources>

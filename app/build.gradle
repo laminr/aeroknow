@@ -7,10 +7,12 @@ apply plugin: 'com.google.firebase.firebase-perf'
 
 apply plugin: 'io.fabric'
 
+//Check dependencies to update --> ./gradlew dependencyUpdates
+
 ext {
     majorVersion = "0"
     minorVersion = "17"
-    patchVersion = "0"
+    patchVersion = "1"
 }
 
 // Load keystore
@@ -151,6 +153,8 @@ dependencies {
 
     // about
 //    compile 'com.github.medyo:android-about-page:1.2.1'
+    // Menu
+    compile 'com.github.Yalantis:GuillotineMenu-Android:1.2'
 
     // DAGGER
     compile "com.google.dagger:dagger:$daggerVersion"

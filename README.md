@@ -1,7 +1,8 @@
-# AeroKnow
+# ![Aero Know Google Play Icon](https://raw.githubusercontent.com/laminr/aeroknow/master/app/src/main/res/mipmap-xhdpi/ic_launcher.png) AeroKnow
 
-AeroKnow is small Android App to practice Airline Pilot theorical questions.
+AeroKnow is small Android App to practice Airline Pilot theoretical questions.
 The project has been started as Proof-Of-Concept to test development with Jetbrain Koltin language for Android.
+
 It includes:
   - Kotlin 1.1
   - [Dagger 2][dagger] for Depedencies injection
@@ -11,23 +12,28 @@ It includes:
   - [Square Picasso][picassoLink] for Image display
   - [Realm][realmLink] to store user progression
   - [Realm Extension][realmExtLink] extension by Víctor Manuel Pineda Murcia to help with Realm
+  - [GuillotineMenu-Android][GuillotineLink] by Yalantis for a "guillotine" style screen appearance
 
 # Current
   - 1st screen : Source list
   - 2nd screen : Subject and Topic for a source
-  - 3rd screen : Questions campain screen for a topic
+  - 3rd screen : Questions campaign screen for a topic
 
-Realm is used to store important or disinterest in question. Question are then sorted by important question, then usual one and eventually the none important ones
+# Get the app at Google Play
+[Aero Know at Google Play](https://play.google.com/store/apps/details?id=biz.eventually.atpl.release)
 
 # To compile
 You need to create your keystore.properties at the root of the project. A file keystore.properties.temp is present to get the requested format
 
 A fabric.properties file must be as well created at the root of APP folder. A file fabric.properties.temp is present to get the requested format
 
-Continious work in progress ;-)
+Continuous work in progress ;-)
+
+# Under work
+Offline version with use of Realm
 
 # Known bug
-After having shuffled the questions, the answers are not synchronize anymore (wtf)
+... (none reported yet, yahooo)
 
 License
 ----
@@ -45,4 +51,5 @@ MIT
    [picassoLink]: <https://github.com/square/picasso>
    [realmLink]: <https://realm.io/>
    [realmExtLink]: <https://github.com/vicpinm/Kotlin-Realm-Extensions>
+   [GuillotineLink]: <https://github.com/Yalantis/GuillotineMenu-Android>
 

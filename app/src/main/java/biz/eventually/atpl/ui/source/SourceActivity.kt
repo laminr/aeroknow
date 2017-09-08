@@ -1,11 +1,11 @@
 package biz.eventually.atpl.ui.source
 
 import android.content.Intent
-import android.graphics.Typeface
 import android.os.Bundle
 import android.view.View
 import android.view.View.GONE
 import android.widget.AdapterView
+import android.widget.Toast
 import biz.eventually.atpl.AtplApplication
 import biz.eventually.atpl.BuildConfig
 import biz.eventually.atpl.R
@@ -15,12 +15,15 @@ import biz.eventually.atpl.data.model.Source
 import biz.eventually.atpl.ui.BaseActivity
 import biz.eventually.atpl.ui.about.AboutActivity
 import biz.eventually.atpl.ui.subject.SubjectActivity
+import com.yalantis.guillotine.animation.GuillotineAnimation
 import kotlinx.android.synthetic.main.activity_source.*
+import kotlinx.android.synthetic.main.guillotine.*
 
 class SourceActivity : BaseActivity<SourceManager>() {
 
     private var mAdapter: SourceAdapter? = null
     private var mSourceList: List<Source>? = null
+    private val RIPPLE_DURATION: Long = 250
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,7 +34,8 @@ class SourceActivity : BaseActivity<SourceManager>() {
         app_version.text = "v${BuildConfig.VERSION_APP}"
 
         // font for the title
-        setWelcomeFont()
+        source_welcome.typeface = AtplApplication.tangerine
+        settingGuillotineMenu()
 
         savedInstanceState?.let {
             mSourceList = it.getParcelableArrayList<Source>(StateIdentifier.SOURCE_LIST).toList()
@@ -39,7 +43,7 @@ class SourceActivity : BaseActivity<SourceManager>() {
 
         mSourceList = mSourceList ?: intent.getParcelableArrayListExtra<Source>(IntentIdentifier.SOURCE_LIST)
 
-        when(intent.getBooleanExtra(IntentIdentifier.NETWORK_ERROR, false)) {
+        when (intent.getBooleanExtra(IntentIdentifier.NETWORK_ERROR, false)) {
             true -> {
                 source_error.visibility = GONE
                 onError()
@@ -54,16 +58,29 @@ class SourceActivity : BaseActivity<SourceManager>() {
         }
 
         source_refresh.setOnClickListener { loadData() }
-        source_about.setOnClickListener { _ ->
+    }
+
+    private fun settingGuillotineMenu() {
+
+        guillotine_container.bringToFront()
+        GuillotineAnimation.GuillotineBuilder(guillotine_container, guillotine_hamburger, source_about)
+                .setStartDelay(RIPPLE_DURATION)
+                .setActionBarViewForAnimation(source_container)
+                .setClosedOnStart(true)
+                .build()
+
+        about_group.setOnClickListener { _ ->
+            guillotine_hamburger.performClick()
             val intent = Intent(this, AboutActivity::class.java)
             startActivity(intent)
         }
+        about_back.setOnClickListener { about_group.performClick() }
 
-    }
+        settings_group.setOnClickListener {
+            Toast.makeText(this, "to come", Toast.LENGTH_SHORT).show()
+        }
 
-    private fun setWelcomeFont() {
-        val tangerine = Typeface.createFromAsset(assets, "fonts/Tangerine.ttf")
-        source_welcome.typeface = tangerine
+        settings_back.setOnClickListener { settings_group.performClick() }
     }
 
     override fun onPause() {

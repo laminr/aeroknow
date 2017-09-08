@@ -1,6 +1,7 @@
 package biz.eventually.atpl
 
 import android.app.Application
+import android.graphics.Typeface
 import biz.eventually.atpl.data.db.checkRealmVersion
 import biz.eventually.atpl.di.AppComponent
 import com.google.firebase.analytics.FirebaseAnalytics
@@ -17,12 +18,14 @@ class AtplApplication : Application() {
 
     companion object {
         lateinit var component: AppComponent
+        lateinit var tangerine : Typeface
     }
 
     override fun onCreate() {
         super.onCreate()
+
         component = AppComponent.Initializer.init(this)
-        println("AtplApplication")
+        tangerine = Typeface.createFromAsset(assets, "fonts/Tangerine.ttf")
 
         // Firebase Analytics
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this)

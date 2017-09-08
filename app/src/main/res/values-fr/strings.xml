@@ -24,6 +24,7 @@
 	<string name="result_value">Votre résultat est de: %d%%</string>
 
 	<string name="developed_by">developpeur</string>
-	<string name="action_about">A propos</string>
 	<string name="about_by">par</string>
+	<string name="menu_about">a propos</string>
+	<string name="menu_settings">paramètres</string>
 </resources>
