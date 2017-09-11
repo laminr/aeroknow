@@ -47,6 +47,9 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
 
     private var mTimeLength: Long = 1000
 
+    private var mMenuShuffle: MenuItem? = null
+    private var mMenuShare: MenuItem? = null
+
     private var mSwipe: Swipe? = null
 
     // answer ticked results for stat
@@ -82,6 +85,15 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
             supportActionBar?.title = name
         }
 
+        // Listeners
+        initListeners()
+
+        question_label.setBackgroundColor(Color.TRANSPARENT)
+        question_label.settings.javaScriptEnabled = false
+    }
+
+    private fun initListeners() {
+
         question_answer_1.setOnClickListener { onAnswerClick(it, 0) }
         question_answer_2.setOnClickListener { onAnswerClick(it, 1) }
         question_answer_3.setOnClickListener { onAnswerClick(it, 2) }
@@ -93,6 +105,8 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
         question_answer_4_rdo.setOnClickListener { onAnswerClick(question_answer_4, 3) }
 
         question_previous.setOnClickListener {
+            mMenuShare?.isVisible = false
+
             if (mAnswerIndexTick > -1 && mCurrentQuestion < mQuestions.size) {
                 val isGood = mQuestions[mCurrentQuestion].answers[mAnswerIndexTick].good
 
@@ -111,6 +125,8 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
         }
 
         question_next.setOnClickListener {
+            mMenuShare?.isVisible = false
+
             if (mAnswerIndexTick > -1 && mCurrentQuestion < mQuestions.size) {
                 val isGood = mQuestions[mCurrentQuestion].answers[mAnswerIndexTick].good
                 // local stats
@@ -127,6 +143,8 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
         }
 
         question_last.setOnClickListener {
+            mMenuShare?.isVisible = false
+
             if (mAnswerIndexTick > -1) {
                 val isGood = mQuestions[mCurrentQuestion].answers[mAnswerIndexTick].good
                 // local stats
@@ -143,6 +161,10 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
             // show stats of result
 
             showLocalStats()
+        }
+
+        question_follow.setOnCheckedChangeListener { _, isChecked ->
+            question_last.visibility = if (isChecked && mCurrentQuestion == mQuestions.size - 1) View.VISIBLE else View.GONE
         }
 
         mSwipe = Swipe()
@@ -162,14 +184,6 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
             override fun onSwipingDown(event: MotionEvent) {}
             override fun onSwipedDown(event: MotionEvent) {}
         })
-
-        question_label.setBackgroundColor(Color.TRANSPARENT)
-
-        question_follow.setOnCheckedChangeListener { _, isChecked ->
-            question_last.visibility = if (isChecked && mCurrentQuestion == mQuestions.size - 1) View.VISIBLE else View.GONE
-        }
-
-        question_label.settings.javaScriptEnabled = false
     }
 
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
@@ -180,6 +194,12 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater = menuInflater
         inflater.inflate(R.menu.menu_shuffle, menu)
+
+        mMenuShuffle = menu?.findItem(R.id.action_shuffle)
+        mMenuShare = menu?.findItem(R.id.action_share)
+
+        mMenuShuffle?.isVisible = false
+        mMenuShare?.isVisible = false
 
         return super.onCreateOptionsMenu(menu)
     }
@@ -195,7 +215,11 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
                 true
             }
             R.id.action_share -> {
-                share(constructShareText(), mTopic?.name ?: "")
+                val shareTxt = constructShareText()
+                if (!shareTxt.isEmpty()) {
+                    share(shareTxt, mTopic?.name ?: "")
+                }
+
                 true
             }
 
@@ -203,16 +227,24 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
         }
     }
 
-    private fun constructShareText() : String {
-        val txt = StringBuilder()
-                .append(mQuestions[mCurrentQuestion].label)
-                .append("\n")
-                .append("\n")
+    private fun constructShareText(): String {
 
-        mQuestions[mCurrentQuestion].answers.forEach { q ->
-            val line = if (q.good) "+" else "-"
-            txt.append("$line ${q.value}")
-            txt.append("\n")
+        val txt = StringBuilder()
+
+        when (mCurrentQuestion) {
+            in 0 until mQuestions.size -> {
+                txt.append(mQuestions[mCurrentQuestion].label)
+                        .append("\n")
+                        .append("\n")
+
+                mQuestions[mCurrentQuestion].answers.forEach { (_, value, good) ->
+                    val line = if (good) "+" else "-"
+                    txt.append("$line ${value}")
+                    txt.append("\n")
+                }
+            }
+            else -> {
+            }
         }
 
         return txt.toString()
@@ -274,7 +306,7 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
                 .show()
     }
 
-    fun shuffleQuestions() {
+    private fun shuffleQuestions() {
         mQuestions = shuffle(mQuestions) as MutableList<Question>
         mCurrentQuestion = 0
         displayQuestion()
@@ -293,15 +325,17 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
         rotateloading.stop()
 
         if (mQuestions.size > 0) {
+            mMenuShuffle?.isVisible = true
             displayQuestion()
         }
+
     }
 
     private fun loadError() {
         rotateloading.stop()
     }
 
-    fun displayQuestion() {
+    private fun displayQuestion() {
 
         mTimer?.cancel()
         mAnswerIndexTick = -1
@@ -361,6 +395,8 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
             question_next.visibility = if (mCurrentQuestion < it.count() - 1) View.VISIBLE else View.GONE
             question_last.visibility = if (mCurrentQuestion == it.count() - 1) View.VISIBLE else View.GONE
         }
+
+        mMenuShare?.isVisible = true
     }
 
     private fun launchCountDown() {

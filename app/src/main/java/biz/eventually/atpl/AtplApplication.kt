@@ -2,6 +2,7 @@ package biz.eventually.atpl
 
 import android.app.Application
 import android.graphics.Typeface
+import android.support.multidex.MultiDex
 import biz.eventually.atpl.data.db.checkRealmVersion
 import biz.eventually.atpl.di.AppComponent
 import com.google.firebase.analytics.FirebaseAnalytics
@@ -33,6 +34,8 @@ class AtplApplication : Application() {
         // Initialize Realm
         Realm.init(this)
         checkRealmVersion()
+
+        MultiDex.install(this)
 
         /*
         if (LeakCanary.isInAnalyzerProcess(this)) {

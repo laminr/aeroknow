@@ -12,7 +12,7 @@ apply plugin: 'io.fabric'
 ext {
     majorVersion = "0"
     minorVersion = "17"
-    patchVersion = "1"
+    patchVersion = "2"
 }
 
 // Load keystore
@@ -38,6 +38,8 @@ android {
         vectorDrawables.useSupportLibrary = true
 
         buildConfigField 'String', 'VERSION_APP', "\"${majorVersion}.${minorVersion}.${patchVersion}\""
+
+        multiDexEnabled true
     }
 
     signingConfigs {
@@ -109,7 +111,7 @@ ext {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:support-v4:25.4.0'
+    //compile 'com.android.support:support-v4:25.4.0'
     compile 'com.android.support:support-vector-drawable:25.4.0'
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
@@ -122,6 +124,8 @@ dependencies {
 
     compile "com.android.support:support-v4:$supportVersion"
     compile "com.android.support:support-vector-drawable:$supportVersion"
+
+    compile 'com.android.support:multidex:1.0.1'
 
     compile "com.jakewharton:butterknife:$butterknifeVersion"
     compile "com.squareup.retrofit2:retrofit:$retrofitVersion"
