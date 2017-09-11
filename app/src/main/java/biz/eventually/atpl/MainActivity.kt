@@ -14,6 +14,7 @@ import kotlinx.android.synthetic.main.activity_splash.*
 import com.crashlytics.android.Crashlytics
 import io.fabric.sdk.android.Fabric
 import cn.pedant.SweetAlert.SweetAlertDialog
+import org.jetbrains.anko.startActivity
 
 // https://www.bignerdranch.com/blog/splash-screens-the-right-way/
 class MainActivity : BaseActivity<SourceManager>() {
@@ -70,17 +71,15 @@ class MainActivity : BaseActivity<SourceManager>() {
     }
 
 
-    fun openSourceActivity(sources: List<Source>?) {
+    private fun openSourceActivity(sources: List<Source>?) {
 
         rotateloading.stop()
-        val intent = Intent(this, SourceActivity::class.java)
 
         when(sources) {
-            null -> intent.putExtra(IntentIdentifier.NETWORK_ERROR, true)
-            else -> intent.putParcelableArrayListExtra(IntentIdentifier.SOURCE_LIST, sources as ArrayList<Source>)
+            null -> startActivity<SourceActivity>(IntentIdentifier.NETWORK_ERROR to true)
+            else -> startActivity<SourceActivity>(IntentIdentifier.SOURCE_LIST to (sources as ArrayList<Source>))
         }
 
-        startActivity(intent)
         finish()
     }
 

@@ -26,6 +26,7 @@ import com.github.pwittchen.swipe.library.SwipeListener
 import com.squareup.picasso.Picasso
 import com.tapadoo.alerter.Alerter
 import kotlinx.android.synthetic.main.activity_questions.*
+import org.jetbrains.anko.share
 
 
 class QuestionsActivity : BaseActivity<QuestionsManager>() {
@@ -184,18 +185,37 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
+        return when (item.itemId) {
             android.R.id.home -> {
                 onBackPressed()
-                return true
+                true
             }
             R.id.action_shuffle -> {
                 shuffleQuestions()
-                return true
+                true
+            }
+            R.id.action_share -> {
+                share(constructShareText(), mTopic?.name ?: "")
+                true
             }
 
-            else -> return super.onOptionsItemSelected(item)
+            else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    private fun constructShareText() : String {
+        val txt = StringBuilder()
+                .append(mQuestions[mCurrentQuestion].label)
+                .append("\n")
+                .append("\n")
+
+        mQuestions[mCurrentQuestion].answers.forEach { q ->
+            val line = if (q.good) "+" else "-"
+            txt.append("$line ${q.value}")
+            txt.append("\n")
+        }
+
+        return txt.toString()
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
@@ -282,12 +302,7 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
     }
 
     fun displayQuestion() {
-/*
-        mQuestions[mCurrentQuestion].let {
-            mFocus = Focus().queryFirst { query -> query.equalTo("questionId", it.id) }
-            mFollow = FollowDb().queryFirst { query -> query.equalTo("questionId", it.id) }
-        }
-*/
+
         mTimer?.cancel()
         mAnswerIndexTick = -1
 
@@ -390,28 +405,6 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
 
             manager.updateFocus(mQuestions[mCurrentQuestion].id, true, this::onFocusSaves, this::onSavinError)
 
-/*            when (mQuestions[mCurrentQuestion].focus) {
-                true -> mQuestions[mCurrentQuestion].focus = null
-                else -> mQuestions[mCurrentQuestion].focus = true
-            }*/
-
-            /*
-            if (mFocus == null) {
-                mFocus = Focus(-1, mTopic?.id ?: 0, mQuestions[mCurrentQuestion].id, true)
-                mFocus?.save()
-            } else {
-                when(mFocus?.care) {
-                    true -> {
-                        mFocus = null
-                        Focus().delete { query -> query.equalTo("questionId", mQuestions[mCurrentQuestion].id) }
-                    }
-                    false -> {
-                        mFocus?.care = true
-                        mFocus?.save()
-                    }
-                }
-            }
-            */
             displayFollowAndFocus()
         }
 

@@ -104,10 +104,13 @@ ext {
     okhttpVersion = '3.6.0'
     daggerVersion = '2.11'
     firebaseVersion = '11.2.0'
+    anko_version = '0.10.1'
 }
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile 'com.android.support:support-v4:25.4.0'
+    compile 'com.android.support:support-vector-drawable:25.4.0'
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
@@ -124,6 +127,8 @@ dependencies {
     compile "com.squareup.retrofit2:retrofit:$retrofitVersion"
     compile "com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion"
     compile "com.squareup.retrofit2:converter-moshi:$retrofitVersion"
+
+    compile "org.jetbrains.anko:anko-commons:$anko_version"
 
     // Sweat Alert
     compile 'cn.pedant.sweetalert:library:1.3'
@@ -151,8 +156,6 @@ dependencies {
     // LOADER
     compile 'com.victor:lib:1.0.4'
 
-    // about
-//    compile 'com.github.medyo:android-about-page:1.2.1'
     // Menu
     compile 'com.github.Yalantis:GuillotineMenu-Android:1.2'
 

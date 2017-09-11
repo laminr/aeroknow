@@ -1,23 +1,25 @@
 package biz.eventually.atpl.ui.source
 
-import android.content.Intent
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.view.View
 import android.view.View.GONE
 import android.widget.AdapterView
-import android.widget.Toast
 import biz.eventually.atpl.AtplApplication
 import biz.eventually.atpl.BuildConfig
 import biz.eventually.atpl.R
 import biz.eventually.atpl.common.IntentIdentifier
 import biz.eventually.atpl.common.StateIdentifier
 import biz.eventually.atpl.data.model.Source
+import biz.eventually.atpl.data.model.Subject
 import biz.eventually.atpl.ui.BaseActivity
 import biz.eventually.atpl.ui.about.AboutActivity
 import biz.eventually.atpl.ui.subject.SubjectActivity
 import com.yalantis.guillotine.animation.GuillotineAnimation
 import kotlinx.android.synthetic.main.activity_source.*
 import kotlinx.android.synthetic.main.guillotine.*
+import org.jetbrains.anko.longToast
+import org.jetbrains.anko.startActivity
 
 class SourceActivity : BaseActivity<SourceManager>() {
 
@@ -71,13 +73,13 @@ class SourceActivity : BaseActivity<SourceManager>() {
 
         about_group.setOnClickListener { _ ->
             guillotine_hamburger.performClick()
-            val intent = Intent(this, AboutActivity::class.java)
-            startActivity(intent)
+            startActivity<AboutActivity>()
         }
         about_back.setOnClickListener { about_group.performClick() }
 
         settings_group.setOnClickListener {
-            Toast.makeText(this, "to come", Toast.LENGTH_SHORT).show()
+            guillotine_hamburger.performClick()
+            longToast("To come")
         }
 
         settings_back.setOnClickListener { settings_group.performClick() }
@@ -87,16 +89,15 @@ class SourceActivity : BaseActivity<SourceManager>() {
         super.onPause()
     }
 
-    /*
+
     override fun onSaveInstanceState(outState: Bundle?, outPersistentState: PersistableBundle?) {
         mSourceList?.let {
             outState?.putParcelableArrayList(StateIdentifier.SOURCE_LIST, it as? ArrayList<Subject>)
         }
 
         super.onSaveInstanceState(outState, outPersistentState)
-    }*/
+    }
 
-    /*
     override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
         super.onRestoreInstanceState(savedInstanceState)
 
@@ -105,7 +106,6 @@ class SourceActivity : BaseActivity<SourceManager>() {
             displayData(mSourceList)
         }
     }
-    */
 
     private fun displayData(sources: List<Source>?): Unit {
 
@@ -114,11 +114,11 @@ class SourceActivity : BaseActivity<SourceManager>() {
 
             source_listview.adapter = mAdapter
             source_listview.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
+                startActivity<SubjectActivity>(
+                        IntentIdentifier.SOURCE_ID to get(position).id,
+                        IntentIdentifier.SOURCE_NAME to get(position).name
+                )
 
-                val intent = Intent(this@SourceActivity, SubjectActivity::class.java)
-                intent.putExtra(IntentIdentifier.SOURCE_ID, get(position).id)
-                intent.putExtra(IntentIdentifier.SOURCE_NAME, get(position).name)
-                startActivity(intent)
             }
             rotateloading.stop()
         }
