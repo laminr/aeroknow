@@ -581,7 +581,7 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
 
     private fun showAnswer() {
         mQuestions[mCurrentQuestion].answers.let {
-            for (i in 0..it.count() - 1) {
+            for (i in 0 until it.count()) {
                 if (it[i].good) {
                     val bckg = if (it[i].good) ContextCompat.getDrawable(applicationContext, R.drawable.answer_right) else ContextCompat.getDrawable(applicationContext, R.drawable.answer_wrong)
                     when (i) {

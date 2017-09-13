@@ -8,10 +8,6 @@ import android.widget.ArrayAdapter
 import android.widget.TextView
 import biz.eventually.atpl.R
 import biz.eventually.atpl.data.model.Source
-import butterknife.BindView
-import butterknife.ButterKnife
-
-import kotlinx.android.synthetic.main.item_source.*
 
 /**
  * Created by thibault on 20/03/17.
