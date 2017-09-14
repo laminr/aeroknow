@@ -59,9 +59,9 @@ android {
             debuggable true
             minifyEnabled false
 
-            buildConfigField 'String', 'API_ATPL_ENDPOINT', "\"http://atpl.eventually.biz/api/\""
+            buildConfigField 'String', 'API_ATPL_ENDPOINT', "\"http://www.etchebiscaye.com/api/\""
             buildConfigField 'String', 'API_ATPL_ENDPOINT_MOCK', "\"http://${getIP()}/~laminr/atpl/webapp/web/api/\""
-            buildConfigField 'String', 'API_ATPL_IMG', "\"http://atpl.eventually.biz/img/questions/\""
+            buildConfigField 'String', 'API_ATPL_IMG', "\"http://www.etchebiscaye.com/img/questions/\""
         }
         release {
 

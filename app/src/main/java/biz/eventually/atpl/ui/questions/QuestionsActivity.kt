@@ -28,7 +28,6 @@ import com.vicpin.krealmextensions.queryFirst
 import kotlinx.android.synthetic.main.activity_questions.*
 import org.jetbrains.anko.share
 
-
 class QuestionsActivity : BaseActivity<QuestionsManager>() {
 
     private var mTopic: Topic? = null
@@ -50,7 +49,7 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
     private var mMenuShuffle: MenuItem? = null
     private var mMenuShare: MenuItem? = null
 
-    private var mSwipe : Swipe? = null
+    private var mSwipe: Swipe? = null
 
     // answer ticked results for stat
     private val mStatistic = mutableMapOf<Int, Int>()
@@ -78,7 +77,7 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
         val topicId = intent.extras.getString(IntentIdentifier.TOPIC)
         val startFirst = intent.extras.getBoolean(IntentIdentifier.TOPIC_STARRED, false)
 
-        mTopic = Topic().queryFirst({ query -> query.equalTo("id", topicId)})
+        mTopic = Topic().queryFirst({ query -> query.equalTo("id", topicId) })
 
         mTopic?.apply {
             rotateloading.start()
@@ -107,7 +106,8 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
         question_answer_4_rdo.setOnClickListener { onAnswerClick(question_answer_4, 3) }
 
         question_previous.setOnClickListener {
-mMenuShare?.isVisible = false            if (mAnswerIndexTick > -1 ) {
+            mMenuShare?.isVisible = false
+            if (mAnswerIndexTick > -1) {
                 val isGood = mQuestions[mCurrentQuestion].answers[mAnswerIndexTick].good
 
                 // local stats
@@ -132,15 +132,14 @@ mMenuShare?.isVisible = false            if (mAnswerIndexTick > -1 ) {
                 // local stats
                 mStatistic.put(mQuestions[mCurrentQuestion].idWeb, if (isGood) 1 else 0)
 
-                    if (question_follow.isChecked) {
-                        mHadChange = true
-                        manager.updateFollow(mQuestions[mCurrentQuestion].idWeb, isGood)
-                    }
+                if (question_follow.isChecked) {
+                    mHadChange = true
+                    manager.updateFollow(mQuestions[mCurrentQuestion].idWeb, isGood)
                 }
             }
 
-                if (mCurrentQuestion < mQuestions.size - 1) mCurrentQuestion += 1
-                displayQuestion()
+            if (mCurrentQuestion < mQuestions.size - 1) mCurrentQuestion += 1
+            displayQuestion()
 
         }
 
@@ -170,22 +169,23 @@ mMenuShare?.isVisible = false            if (mAnswerIndexTick > -1 ) {
         }
 
         mSwipe = Swipe()
-        mSwipe?.setListener(object : SwipeListener {
-            override fun onSwipedLeft(event: MotionEvent) {
-                question_next.performClick()
-            }
+        mSwipe?.setListener(
+                object : SwipeListener {
+                    override fun onSwipedLeft(event: MotionEvent) {
+                        question_next.performClick()
+                    }
 
-            override fun onSwipedRight(event: MotionEvent) {
-                question_previous.performClick()
-            }
+                    override fun onSwipedRight(event: MotionEvent) {
+                        question_previous.performClick()
+                    }
 
-            override fun onSwipingLeft(event: MotionEvent) {}
-            override fun onSwipingRight(event: MotionEvent) {}
-            override fun onSwipingUp(event: MotionEvent) {}
-            override fun onSwipedUp(event: MotionEvent) {}
-            override fun onSwipingDown(event: MotionEvent) {}
-            override fun onSwipedDown(event: MotionEvent) {}
-        })
+                    override fun onSwipingLeft(event: MotionEvent) {}
+                    override fun onSwipingRight(event: MotionEvent) {}
+                    override fun onSwipingUp(event: MotionEvent) {}
+                    override fun onSwipedUp(event: MotionEvent) {}
+                    override fun onSwipingDown(event: MotionEvent) {}
+                    override fun onSwipedDown(event: MotionEvent) {}
+                })
     }
 
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
@@ -239,9 +239,9 @@ mMenuShare?.isVisible = false            if (mAnswerIndexTick > -1 ) {
                         .append("\n")
                         .append("\n")
 
-                mQuestions[mCurrentQuestion].answers.forEach { (_, value, good) ->
-                    val line = if (good) "+" else "-"
-                    txt.append("$line ${value}")
+                mQuestions[mCurrentQuestion].answers.forEach { answer ->
+                    val line = if (answer.good) "+" else "-"
+                    txt.append("$line ${answer.value}")
                     txt.append("\n")
                 }
             }

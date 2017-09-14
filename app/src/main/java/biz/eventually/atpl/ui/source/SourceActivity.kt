@@ -9,6 +9,7 @@ import biz.eventually.atpl.AtplApplication
 import biz.eventually.atpl.BuildConfig
 import biz.eventually.atpl.R
 import biz.eventually.atpl.common.IntentIdentifier
+import biz.eventually.atpl.common.StateIdentifier
 import biz.eventually.atpl.data.db.Source
 import biz.eventually.atpl.data.model.Subject
 import biz.eventually.atpl.ui.BaseActivity
@@ -92,7 +93,7 @@ class SourceActivity : BaseActivity<SourceManager>() {
 
     override fun onSaveInstanceState(outState: Bundle?, outPersistentState: PersistableBundle?) {
         mSourceList?.let {
-            outState?.putParcelableArrayList(StateIdentifier.SOURCE_LIST, it as? ArrayList<Subject>)
+//            outState?.putParcelableArrayList(StateIdentifier.SOURCE_LIST, it as? ArrayList<Subject>)
         }
 
         super.onSaveInstanceState(outState, outPersistentState)
@@ -102,8 +103,8 @@ class SourceActivity : BaseActivity<SourceManager>() {
         super.onRestoreInstanceState(savedInstanceState)
 
         savedInstanceState?.let {
-            mSourceList = it.getParcelableArrayList(StateIdentifier.SOURCE_LIST)
-            displayData(mSourceList)
+//            mSourceList = it.getParcelableArrayList(StateIdentifier.SOURCE_LIST)
+//            displayData(mSourceList)
         }
     }
 

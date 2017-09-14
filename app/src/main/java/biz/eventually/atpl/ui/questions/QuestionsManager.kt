@@ -85,8 +85,6 @@ class QuestionsManager @Inject constructor(private val dataProvider: DataProvide
                             it.follow = qWeb.follow
 
                             it.save()
-
-                            questionsDb.add(it)
                         }
             }
             // New

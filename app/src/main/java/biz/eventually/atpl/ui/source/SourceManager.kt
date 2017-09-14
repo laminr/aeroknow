@@ -29,7 +29,7 @@ class SourceManager @Inject constructor(private val dataProvider: DataProvider) 
     @AddTrace(name = "getSources", enabled = true)
     fun getSources(display: (List<Source>?) -> Unit, error: () -> Unit) {
 
-        var sourcesDb = Source().queryAll().toMutableList()
+        val sourcesDb: MutableList<Source> = Source().queryAll().toMutableList()
 
         if (hasInternetConnection()) {
             dataProvider.dataGetSources().subscribeOn(Schedulers.io())?.observeOn(AndroidSchedulers.mainThread())?.subscribe({ sWeb ->
@@ -42,7 +42,11 @@ class SourceManager @Inject constructor(private val dataProvider: DataProvider) 
                 error()
             })
         } else {
-            display(sourcesDb)
+            if (sourcesDb.size > 0) {
+                display(sourcesDb.toList())
+            } else {
+                error()
+            }
         }
     }
 
@@ -53,12 +57,11 @@ class SourceManager @Inject constructor(private val dataProvider: DataProvider) 
         sWeb.forEach { s ->
             // Update
             if (s.idWeb in sourceIds) {
+                // updating value
                 val source = Source().queryFirst { query -> query.equalTo("idWeb", s.idWeb) }
                 source?.let {
                     it.name = s.name
                     it.save()
-
-                    sourcesDb.add(it)
                 }
             }
             // New
