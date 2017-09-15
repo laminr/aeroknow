@@ -5,7 +5,8 @@
 	<string name="question_back">Préc.</string>
 	<string name="question_next">Suiv.</string>
 	<string name="network_error_message">Désolé une erreur c\'est produite!</string>
-	<string name="error_dialog_message">Erreur réseaux: Quelque chose c\'est mal passé!</string>
+	<string name="error_network_error">Erreur réseaux: Quelque chose c\'est mal passé!</string>
+	<string name="error_no_network">Vous êtes sans connection et sans donnée sauvegardée</string>
 	<string name="action_shuffle">Mélanger</string>
     <string name="try_again">Rééssayer</string>
     <string name="question_focus_error">La demande n\'a pas été sauvegardée</string>

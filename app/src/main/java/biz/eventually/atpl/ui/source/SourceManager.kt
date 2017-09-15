@@ -1,6 +1,7 @@
 package biz.eventually.atpl.ui.source
 
 import android.util.Log
+import biz.eventually.atpl.R
 import biz.eventually.atpl.common.RxBaseManager
 import biz.eventually.atpl.data.DataProvider
 import biz.eventually.atpl.data.db.LastCall
@@ -27,13 +28,17 @@ class SourceManager @Inject constructor(private val dataProvider: DataProvider) 
     }
 
     @AddTrace(name = "getSources", enabled = true)
-    fun getSources(fromDb: Boolean, display: (List<Source>?) -> Unit, error: () -> Unit) {
+    fun getSources(fromDb: Boolean, display: (List<Source>?) -> Unit, error: (Int) -> Unit) {
 
         if (fromDb) {
             val sourcesDb: MutableList<Source> = Source().queryAll().toMutableList()
-            display(sourcesDb)
+            if (sourcesDb.size > 0) {
+                display(sourcesDb)
+            } else {
+                error(R.string.error_no_network)
+            }
         } else {
-            getData()?.let(display) ?: kotlin.run(error)
+            getData()?.let(display) ?: kotlin.run({ error(R.string.error_network_error) })
         }
     }
 

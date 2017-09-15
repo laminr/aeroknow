@@ -6,7 +6,8 @@
 	<string name="question_back">back</string>
 	<string name="question_next">next</string>
 	<string name="network_error_message">An error has occurred, Sorry!</string>
-	<string name="error_dialog_message">Network Error: Something went wrong!</string>
+	<string name="error_network_error">Network Error: Something went wrong!</string>
+	<string name="error_no_network">Your are offline w/ no data saved</string>
 	<string name="action_shuffle">shuffle</string>
 	<string name="try_again">Try again</string>
 	<string name="question_focus_error">the focus request has not been saved</string>

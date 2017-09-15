@@ -2,6 +2,7 @@ package biz.eventually.atpl.ui.source
 
 import android.os.Bundle
 import android.os.PersistableBundle
+import android.support.annotation.StringRes
 import android.view.View
 import android.view.View.GONE
 import android.widget.AdapterView
@@ -9,13 +10,10 @@ import biz.eventually.atpl.AtplApplication
 import biz.eventually.atpl.BuildConfig
 import biz.eventually.atpl.R
 import biz.eventually.atpl.common.IntentIdentifier
-import biz.eventually.atpl.common.StateIdentifier
 import biz.eventually.atpl.data.db.Source
-import biz.eventually.atpl.data.model.Subject
 import biz.eventually.atpl.ui.BaseActivity
 import biz.eventually.atpl.ui.about.AboutActivity
 import biz.eventually.atpl.ui.subject.SubjectActivity
-import com.vicpin.krealmextensions.queryAll
 import com.yalantis.guillotine.animation.GuillotineAnimation
 import kotlinx.android.synthetic.main.activity_source.*
 import kotlinx.android.synthetic.main.guillotine.*
@@ -43,7 +41,7 @@ class SourceActivity : BaseActivity<SourceManager>() {
         when (intent.getBooleanExtra(IntentIdentifier.NETWORK_ERROR, false)) {
             true -> {
                 source_error.visibility = GONE
-                onError()
+                onError(R.string.error_network_error)
             }
             false -> {
                 loadData(intent.getBooleanExtra(IntentIdentifier.DATA_FROM_DB, false))
@@ -126,8 +124,9 @@ class SourceActivity : BaseActivity<SourceManager>() {
         source_refresh.visibility = show
     }
 
-    private fun onError(): Unit {
+    private fun onError(@StringRes messageId: Int): Unit {
         rotateloading.stop()
         showHideError(View.VISIBLE)
+        source_error.text = getString(messageId)
     }
 }
