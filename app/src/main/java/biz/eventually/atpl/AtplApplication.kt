@@ -7,7 +7,6 @@ import android.support.multidex.MultiDex
 import biz.eventually.atpl.data.db.checkRealmVersion
 import biz.eventually.atpl.di.AppComponent
 import com.google.firebase.analytics.FirebaseAnalytics
-import com.squareup.leakcanary.LeakCanary
 import io.realm.Realm
 
 /**
@@ -20,15 +19,19 @@ class AtplApplication : Application() {
 
     companion object {
         lateinit var component: AppComponent
-        lateinit var context: Context
+        lateinit var instance: AtplApplication
         lateinit var tangerine : Typeface
+
+        fun get(): Application {
+            return  instance
+        }
     }
 
     override fun onCreate() {
         super.onCreate()
 
         component = AppComponent.Initializer.init(this)
-        context = this.applicationContext
+        instance = this
 
         println("AtplApplication")
         tangerine = Typeface.createFromAsset(assets, "fonts/Tangerine.ttf")

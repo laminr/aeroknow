@@ -62,7 +62,7 @@ fun List<Question>.orderByFollowAndFocus(): MutableList<Question> {
 }
 
 fun hasInternetConnection(): Boolean {
-    val cm = AtplApplication.context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    val cm = AtplApplication.get().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
     val activeNetwork = cm.activeNetworkInfo
     return activeNetwork != null && activeNetwork.isConnectedOrConnecting
