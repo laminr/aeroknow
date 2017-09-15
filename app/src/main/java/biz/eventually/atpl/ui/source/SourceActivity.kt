@@ -40,22 +40,15 @@ class SourceActivity : BaseActivity<SourceManager>() {
         source_welcome.typeface = AtplApplication.tangerine
         settingGuillotineMenu()
 
-//        savedInstanceState?.let {
-//            mSourceList = it.getParcelableArrayList<Source>(StateIdentifier.SOURCE_LIST).toList()
-//        }
-
-        mSourceList = Source().queryAll()
-
         when (intent.getBooleanExtra(IntentIdentifier.NETWORK_ERROR, false)) {
             true -> {
                 source_error.visibility = GONE
                 onError()
             }
             false -> {
-                mSourceList?.let {
-                    displayData(it)
-                } ?: run {
-                    loadData()
+                when (intent.getBooleanExtra(IntentIdentifier.DATA_FROM_DB, false)) {
+                    true -> mSourceList = Source().queryAll()
+                    false -> loadData()
                 }
             }
         }
@@ -93,7 +86,7 @@ class SourceActivity : BaseActivity<SourceManager>() {
 
     override fun onSaveInstanceState(outState: Bundle?, outPersistentState: PersistableBundle?) {
         mSourceList?.let {
-//            outState?.putParcelableArrayList(StateIdentifier.SOURCE_LIST, it as? ArrayList<Subject>)
+            //            outState?.putParcelableArrayList(StateIdentifier.SOURCE_LIST, it as? ArrayList<Subject>)
         }
 
         super.onSaveInstanceState(outState, outPersistentState)
@@ -103,7 +96,7 @@ class SourceActivity : BaseActivity<SourceManager>() {
         super.onRestoreInstanceState(savedInstanceState)
 
         savedInstanceState?.let {
-//            mSourceList = it.getParcelableArrayList(StateIdentifier.SOURCE_LIST)
+            //            mSourceList = it.getParcelableArrayList(StateIdentifier.SOURCE_LIST)
 //            displayData(mSourceList)
         }
     }

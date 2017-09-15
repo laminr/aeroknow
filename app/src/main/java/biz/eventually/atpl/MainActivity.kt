@@ -77,13 +77,8 @@ class MainActivity : BaseActivity<SourceManager>() {
 
         when(sources) {
             null -> startActivity<SourceActivity>(IntentIdentifier.NETWORK_ERROR to true)
-            else -> startActivity<SourceActivity>(IntentIdentifier.SOURCE_LIST to (sources as ArrayList<Source>))
+            else -> startActivity<SourceActivity>(IntentIdentifier.DATA_FROM_DB to true)
         }
-
-//        when (sources) {
-//            null -> intent.putExtra(IntentIdentifier.NETWORK_ERROR, true)
-//            else -> intent.putParcelableArrayListExtra(IntentIdentifier.SOURCE_LIST, sources as ArrayList<Source>)
-//        }
 
         finish()
     }

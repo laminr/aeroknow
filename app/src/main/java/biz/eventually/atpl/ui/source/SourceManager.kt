@@ -39,7 +39,11 @@ class SourceManager @Inject constructor(private val dataProvider: DataProvider) 
 
             }, { e ->
                 Log.d(TAG, "getSources: " + e)
-                error()
+                if (sourcesDb.size > 0) {
+                    display(sourcesDb.toList())
+                } else {
+                    error()
+                }
             })
         } else {
             if (sourcesDb.size > 0) {
