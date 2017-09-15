@@ -27,31 +27,29 @@ class SourceManager @Inject constructor(private val dataProvider: DataProvider) 
     }
 
     @AddTrace(name = "getSources", enabled = true)
-    fun getSources(display: (List<Source>?) -> Unit, error: () -> Unit) {
+    fun getSources(fromDb: Boolean, display: (List<Source>?) -> Unit, error: () -> Unit) {
+
+        if (fromDb) {
+            val sourcesDb: MutableList<Source> = Source().queryAll().toMutableList()
+            display(sourcesDb)
+        } else {
+            getData()?.let(display) ?: kotlin.run(error)
+        }
+    }
+
+    private fun getData(): List<Source>? {
 
         val sourcesDb: MutableList<Source> = Source().queryAll().toMutableList()
 
         if (hasInternetConnection()) {
-            dataProvider.dataGetSources().subscribeOn(Schedulers.io())?.observeOn(AndroidSchedulers.mainThread())?.subscribe({ sWeb ->
-
-                analyseData(sourcesDb, sWeb)
-                display(sourcesDb)
-
-            }, { e ->
-                Log.d(TAG, "getSources: " + e)
-                if (sourcesDb.size > 0) {
-                    display(sourcesDb.toList())
-                } else {
-                    error()
-                }
-            })
-        } else {
-            if (sourcesDb.size > 0) {
-                display(sourcesDb.toList())
-            } else {
-                error()
-            }
+            dataProvider
+                    .dataGetSources()
+                    .subscribeOn(Schedulers.io())
+                    ?.observeOn(AndroidSchedulers.mainThread())
+                    ?.subscribe({ sWeb -> analyseData(sourcesDb, sWeb) }, { e -> Log.d(TAG, "getSources: " + e) })
         }
+
+        return if (sourcesDb.size > 0) sourcesDb else null
     }
 
     private fun analyseData(sourcesDb: MutableList<Source>, sWeb: List<Source>) {

@@ -46,10 +46,7 @@ class SourceActivity : BaseActivity<SourceManager>() {
                 onError()
             }
             false -> {
-                when (intent.getBooleanExtra(IntentIdentifier.DATA_FROM_DB, false)) {
-                    true -> mSourceList = Source().queryAll()
-                    false -> loadData()
-                }
+                loadData(intent.getBooleanExtra(IntentIdentifier.DATA_FROM_DB, false))
             }
         }
 
@@ -118,10 +115,10 @@ class SourceActivity : BaseActivity<SourceManager>() {
         }
     }
 
-    private fun loadData() {
+    private fun loadData(fromDb: Boolean = false) {
         showHideError(View.GONE)
         rotateloading.start()
-        manager.getSources(this::displayData, this::onError)
+        manager.getSources(fromDb, this::displayData, this::onError)
     }
 
     private fun showHideError(show: Int) {

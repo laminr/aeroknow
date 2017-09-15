@@ -17,7 +17,7 @@
 	<string name="settings_api_saved">Your API key has been saved</string>
 	<string name="settings_api_error">Your API key has not been recognised</string>
 	<string name="welcome">Welcome</string>
-	<string name="welcome_message">Pick up under the subject you like to work</string>
+	<string name="welcome_message">Pick up the subject under you\'ve like to work</string>
 	<string name="msg_processing">processing…</string>
 	<string name="subject_mean_value">[μ:%.1f]</string>
 	<string name="result_title_good">Great job!</string>
@@ -26,7 +26,6 @@
 	<string name="result_value">Your score is: %d%%</string>
 
 	<string name="developed_by">developer</string>
-	<string name="dev_name" translatable="false">Thibault de Lambilly</string>
 	<string name="developers" translatable="false">Thibault de Lambilly</string>
 	<string name="by_company" translatable="false">eventually business</string>
 	<string name="about_by">by</string>

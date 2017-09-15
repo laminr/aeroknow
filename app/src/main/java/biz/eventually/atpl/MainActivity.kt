@@ -39,7 +39,7 @@ class MainActivity : BaseActivity<SourceManager>() {
 
     private fun start() {
         rotateloading.start()
-        manager.getSources({ s -> openSourceActivity(s) }, { openSourceActivity(null) })
+        manager.getSources(false, { s -> openSourceActivity(s) }, { openSourceActivity(null) })
     }
 
     private fun handleIntent(intent: Intent) {
