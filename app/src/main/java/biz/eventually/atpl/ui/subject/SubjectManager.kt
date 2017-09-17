@@ -9,11 +9,8 @@ import biz.eventually.atpl.data.model.Subject
 import biz.eventually.atpl.data.model.Topic
 import biz.eventually.atpl.ui.source.SourceManager
 import biz.eventually.atpl.utils.hasInternetConnection
-import com.vicpin.krealmextensions.query
-import com.vicpin.krealmextensions.queryAll
-import com.vicpin.krealmextensions.queryFirst
-import com.vicpin.krealmextensions.save
 import com.google.firebase.perf.metrics.AddTrace
+import com.vicpin.krealmextensions.*
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import java.util.*
@@ -34,12 +31,12 @@ class SubjectManager @Inject constructor(private val dataProvider: DataProvider)
     @AddTrace(name = "getSubjects", enabled = true)
     fun getSubjects(sourceId: Int, display: (List<Subject>?) -> Unit, error: () -> Unit) {
 
-        val subjectsDb = Subject().query({ s -> s.equalTo("sourceId", sourceId) }).toMutableList()
-
         if (hasInternetConnection()) {
             dataProvider.dataGetSubjects(sourceId).subscribeOn(Schedulers.io())?.observeOn(AndroidSchedulers.mainThread())?.subscribe({ subWeb ->
 
-                analyseData(subjectsDb, subWeb, sourceId)
+                analyseData(subWeb, sourceId)
+
+                val subjectsDb = Subject().query({ s -> s.equalTo("sourceId", sourceId) })
                 display(subjectsDb)
 
             }, { e ->
@@ -47,13 +44,14 @@ class SubjectManager @Inject constructor(private val dataProvider: DataProvider)
                 error()
             })
         } else {
+            val subjectsDb = Subject().query({ s -> s.equalTo("sourceId", sourceId) })
             display(subjectsDb)
         }
     }
 
-    private fun analyseData(subjectsDb: MutableList<Subject>, subWeb: List<Subject>, sourceId: Int) {
+    private fun analyseData(subWeb: List<Subject>, sourceId: Int) {
 
-        val subjectsIds = subjectsDb.map { it.idWeb }
+        val subjectsIds = Subject().query({ s -> s.equalTo("sourceId", sourceId) }).map { it.idWeb }
 
         subWeb.forEach { subjectWeb ->
             // Update
@@ -64,25 +62,27 @@ class SubjectManager @Inject constructor(private val dataProvider: DataProvider)
                             it.name = subjectWeb.name
 
                             // update topics
-                            val topicIds = it.topics.map { it.idWeb }
+                            val topicDbIds = it.topics.map { it.idWeb }
+                            val topicWebIds = subjectWeb.topics.map { it.idWeb }
 
-                            subjectWeb.topics.forEach { topicWeb ->
-                                if (topicWeb.idWeb in topicIds) {
-                                    val topicDb = Topic().queryFirst { query -> query.equalTo("idWeb", topicWeb.idWeb) }
-                                    topicDb?.let {
-                                        it.name = topicWeb.name
-                                        it.questions = topicWeb.questions
-                                        it.focus = topicWeb.focus
-                                        it.follow = topicWeb.follow
-
-                                        it.save()
-                                    }
-                                } else {
-                                    topicWeb.save()
-                                    it.topics.add(topicWeb)
-                                }
+                            // topics to update
+                            it.topics.filter({ t -> t.idWeb in topicWebIds }).forEach { t ->
+                                val topicWeb = subjectWeb.topics.first { tw -> tw.idWeb == t.idWeb }
+                                t.name = topicWeb.name
+                                t.questions = topicWeb.questions
+                                t.focus = topicWeb.focus
+                                t.follow = topicWeb.follow
+                                t.save()
                             }
 
+                            // new one to save
+                            for (topic in subjectWeb.topics.filter({ t -> t.idWeb !in topicDbIds })) {
+                                // must be saved before add to topics
+                                topic.save()
+                                it.topics.add(topic)
+                            }
+
+                            // update the subject
                             it.save()
                         }
             }
@@ -90,8 +90,6 @@ class SubjectManager @Inject constructor(private val dataProvider: DataProvider)
             else {
                 subjectWeb.sourceId = sourceId
                 subjectWeb.save()
-
-                subjectsDb.add(subjectWeb)
             }
         }
 

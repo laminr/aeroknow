@@ -48,7 +48,13 @@ class SubjectViewHolder(itemView: View, val itemClick: (Topic, Boolean) -> Unit)
                 // Show card
                 itemView.topic_card.visibility = View.VISIBLE
 
+                // offline
+                if (!hasOfflineData) {
+                    itemView.topic_offline.visibility = View.VISIBLE
+                }
+
                 itemView.topic_item_name.text = name
+
                 itemView.topic_item_questions.text = questions.toString()
                 itemView.topic_done_nbr.text = follow.toString()
 

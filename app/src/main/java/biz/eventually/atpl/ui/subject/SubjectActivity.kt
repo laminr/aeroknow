@@ -11,6 +11,7 @@ import biz.eventually.atpl.AtplApplication
 import biz.eventually.atpl.R
 import biz.eventually.atpl.common.IntentIdentifier
 import biz.eventually.atpl.common.IntentIdentifier.Companion.REFRESH_SUBJECT
+import biz.eventually.atpl.data.model.Question
 import biz.eventually.atpl.data.model.Subject
 import biz.eventually.atpl.data.model.Topic
 import biz.eventually.atpl.ui.BaseActivity
@@ -18,7 +19,12 @@ import biz.eventually.atpl.ui.questions.QuestionsActivity
 import com.crashlytics.android.answers.Answers
 import com.crashlytics.android.answers.ContentViewEvent
 import com.google.firebase.perf.metrics.AddTrace
+import com.vicpin.krealmextensions.query
+import com.vicpin.krealmextensions.querySorted
+import io.realm.Sort
 import kotlinx.android.synthetic.main.activity_subject.*
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 
 class SubjectActivity : BaseActivity<SubjectManager>() {
 
@@ -115,6 +121,8 @@ class SubjectActivity : BaseActivity<SubjectManager>() {
             mAdapter.bind(topics)
             mAdapter.notifyDataSetChanged()
             rotateloading.stop()
+
+            gatherWhoHasOfflineData()
         }
     }
 
@@ -125,6 +133,20 @@ class SubjectActivity : BaseActivity<SubjectManager>() {
 
         if (mSourceId > 0) {
             manager.getSubjects(mSourceId, this::displaySubjects, this::onError)
+        }
+    }
+
+    private fun gatherWhoHasOfflineData() {
+        doAsync {
+            uiThread {
+                val topicIds = Question().querySorted("topicId", Sort.ASCENDING).groupBy { it.topicId }
+                mAdapter.getBindedList().forEachIndexed { index, topic ->
+                    if (topic.idWeb !in topicIds.keys)  {
+                        topic.hasOfflineData = false
+                        mAdapter.notifyItemChanged(index)
+                    }
+                }
+            }
         }
     }
 

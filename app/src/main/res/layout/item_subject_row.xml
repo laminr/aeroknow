@@ -36,6 +36,21 @@
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
 		>
+
+			<ImageView
+				android:id="@+id/topic_offline"
+				app:srcCompat="@drawable/ic_cloud_off_black"
+				android:tint="@color/colorAccent"
+				android:layout_width="15dp"
+				android:layout_height="15dp"
+				app:layout_constraintTop_toTopOf="parent"
+				app:layout_constraintBottom_toBottomOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				android:layout_marginLeft="8dp"
+				android:layout_marginStart="8dp"
+				android:visibility="gone"
+				/>
+
 			<TextView
 				android:id="@+id/topic_item_name"
 				tools:text="One Topic"
@@ -43,26 +58,26 @@
 				android:layout_height="wrap_content"
 				app:layout_constraintTop_toTopOf="parent"
 				app:layout_constraintBottom_toBottomOf="parent"
-				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintStart_toEndOf="@+id/topic_offline"
+				app:layout_constraintEnd_toStartOf="@+id/topic_mean_nbr"
 				android:layout_marginTop="8dp"
 				android:layout_marginBottom="8dp"
 				android:layout_marginStart="8dp"
-				app:layout_constraintEnd_toStartOf="@+id/topic_mean_nbr"
-				android:layout_marginEnd="8dp" />
+				android:layout_marginEnd="8dp"
+				/>
 
 			<TextView
 				android:id="@+id/topic_mean_nbr"
-				tools:text="[μ:3]"
-				android:layout_width="wrap_content"
+				android:layout_width="0dp"
 				android:layout_height="wrap_content"
-				android:textAlignment="textEnd"
 				android:layout_gravity="end"
-				app:layout_constraintEnd_toStartOf="@+id/topic_care_ico"
 				android:layout_marginEnd="4dp"
-				android:layout_marginRight="4dp"
+				android:textAlignment="textEnd"
 				android:textColor="@color/colorGreyLight"
+				app:layout_constraintBottom_toBottomOf="@+id/topic_care_nbr"
+				app:layout_constraintEnd_toStartOf="@+id/topic_care_ico"
 				app:layout_constraintTop_toTopOf="@+id/topic_care_nbr"
-				app:layout_constraintBottom_toBottomOf="@+id/topic_care_nbr" />
+				tools:text="[μ:3]" />
 
 			<ImageView
 				android:id="@+id/topic_care_ico"
@@ -74,6 +89,7 @@
 				app:layout_constraintBottom_toBottomOf="@+id/topic_care_nbr"
 				app:layout_constraintRight_toLeftOf="@+id/topic_care_nbr"
 				android:layout_marginRight="2dp"
+				android:layout_marginEnd="2dp"
 			/>
 
 			<TextView
@@ -86,7 +102,9 @@
 				app:layout_constraintTop_toTopOf="@+id/topic_done_nbr"
 				app:layout_constraintBottom_toBottomOf="@+id/topic_done_nbr"
 				app:layout_constraintEnd_toStartOf="@+id/topic_done_ico"
-				android:layout_marginEnd="8dp" />
+				android:layout_marginRight="8dp"
+				android:layout_marginEnd="8dp"
+				/>
 
 			<ImageView
 				android:id="@+id/topic_done_ico"

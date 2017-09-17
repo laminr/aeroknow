@@ -57,6 +57,7 @@ class MainActivity : BaseActivity<SourceManager>() {
                         .setCustomImage(R.drawable.ic_check)
                         .setConfirmClickListener({ start() })
                         .show()
+
             } ?: kotlin.run {
                 SweetAlertDialog(this@MainActivity, SweetAlertDialog.ERROR_TYPE)
                         .setTitleText(getString(R.string.dialog_title_error))
