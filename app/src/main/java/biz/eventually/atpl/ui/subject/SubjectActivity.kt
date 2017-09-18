@@ -105,6 +105,11 @@ class SubjectActivity : BaseActivity<SubjectManager>() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        gatherWhoHasOfflineData()
+    }
+
     private fun displaySubjects(subjects: List<Subject>?) : Unit {
         mSubjectList = subjects
         mSubjectList?.let {
