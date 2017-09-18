@@ -30,7 +30,7 @@ class SubjectViewHolder(itemView: View, val itemClick: (Topic, Boolean) -> Unit)
         with(topic) {
             itemView.subject_title.text = itemView.context.getString(R.string.msg_processing)
             // Title
-            if (idWeb == -1) {
+            if (idWeb < 0) {
                 itemView.subject_title.text = name
 
                 itemView.subject_title.visibility = View.VISIBLE
@@ -49,9 +49,7 @@ class SubjectViewHolder(itemView: View, val itemClick: (Topic, Boolean) -> Unit)
                 itemView.topic_card.visibility = View.VISIBLE
 
                 // offline
-                if (!hasOfflineData) {
-                    itemView.topic_offline.visibility = View.VISIBLE
-                }
+                itemView.topic_offline.visibility = if (hasOfflineData) View.GONE else View.VISIBLE
 
                 itemView.topic_item_name.text = name
 

@@ -68,7 +68,7 @@ class SubjectActivity : BaseActivity<SubjectManager>() {
         }
     }
 
-    private fun onItemClick(topic: Topic, startFirst: Boolean = false): Unit {
+    private fun onItemClick(topic: Topic, startFirst: Boolean = false) {
 
         // Fabric Answer
         Answers.getInstance().logContentView(ContentViewEvent()
@@ -105,19 +105,19 @@ class SubjectActivity : BaseActivity<SubjectManager>() {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
+    override fun onRestart() {
+        super.onRestart()
         gatherWhoHasOfflineData()
     }
 
-    private fun displaySubjects(subjects: List<Subject>?) : Unit {
+    private fun displaySubjects(subjects: List<Subject>?) {
         mSubjectList = subjects
         mSubjectList?.let {
             val topics = mutableListOf<Topic>()
 
             it.forEach { t ->
                 // header
-                topics.add(Topic(-1, t.name))
+                topics.add(Topic((t.idWeb * -1), t.name))
 
                 // line of topics
                 topics.addAll(t.topics)
@@ -146,8 +146,9 @@ class SubjectActivity : BaseActivity<SubjectManager>() {
             uiThread {
                 val topicIds = Question().querySorted("topicId", Sort.ASCENDING).groupBy { it.topicId }
                 mAdapter.getBindedList().forEachIndexed { index, topic ->
-                    if (topic.idWeb !in topicIds.keys)  {
-                        topic.hasOfflineData = false
+                    val doesHasOffline = topic.idWeb in topicIds.keys
+                    if (doesHasOffline != topic.hasOfflineData)  {
+                        topic.hasOfflineData = doesHasOffline
                         mAdapter.notifyItemChanged(index)
                     }
                 }
@@ -160,7 +161,7 @@ class SubjectActivity : BaseActivity<SubjectManager>() {
         subject_refresh.visibility = show
     }
 
-    private fun onError(): Unit {
+    private fun onError() {
         rotateloading.stop()
         showHideError(View.VISIBLE)
     }
