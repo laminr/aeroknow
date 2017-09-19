@@ -7,14 +7,16 @@ import biz.eventually.atpl.data.db.Source
 import biz.eventually.atpl.ui.BaseActivity
 import biz.eventually.atpl.ui.source.SourceActivity
 import biz.eventually.atpl.ui.source.SourceManager
-import biz.eventually.atpl.utils.*
-import java.util.*
-
-import kotlinx.android.synthetic.main.activity_splash.*
+import biz.eventually.atpl.utils.PREF_TIMER
+import biz.eventually.atpl.utils.PREF_TOKEN
+import biz.eventually.atpl.utils.PrefsPutString
+import biz.eventually.atpl.utils.putLong
 import com.crashlytics.android.Crashlytics
 import io.fabric.sdk.android.Fabric
-import cn.pedant.SweetAlert.SweetAlertDialog
+import kotlinx.android.synthetic.main.activity_splash.*
+import org.jetbrains.anko.alert
 import org.jetbrains.anko.startActivity
+import org.jetbrains.anko.yesButton
 
 // https://www.bignerdranch.com/blog/splash-screens-the-right-way/
 class MainActivity : BaseActivity<SourceManager>() {
@@ -50,20 +52,28 @@ class MainActivity : BaseActivity<SourceManager>() {
 
             token?.let {
                 PrefsPutString(this@MainActivity, PREF_TOKEN, token)
-
+                /*
                 SweetAlertDialog(this, SweetAlertDialog.CUSTOM_IMAGE_TYPE)
                         .setTitleText(getString(R.string.dialog_title_ok))
                         .setContentText(getString(R.string.settings_api_saved))
                         .setCustomImage(R.drawable.ic_check)
                         .setConfirmClickListener({ start() })
                         .show()
-
+                */
+                alert(getString(R.string.settings_api_saved), getString(R.string.dialog_title_ok)) {
+                    yesButton { start() }
+                }.show()
             } ?: kotlin.run {
+                /*
                 SweetAlertDialog(this@MainActivity, SweetAlertDialog.ERROR_TYPE)
                         .setTitleText(getString(R.string.dialog_title_error))
                         .setContentText(getString(R.string.settings_api_error))
                         .setConfirmClickListener({ start() })
                         .show()
+                 */
+                alert(getString(R.string.settings_api_error), getString(R.string.dialog_title_error)) {
+                    yesButton { start() }
+                }.show()
             }
 
         } else {
