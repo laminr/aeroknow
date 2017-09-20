@@ -34,6 +34,8 @@ class SubjectViewHolder(itemView: View, val itemClick: (Topic, Boolean) -> Unit)
                 itemView.subject_title.text = name
 
                 itemView.subject_title.visibility = View.VISIBLE
+                itemView.topic_download.visibility = View.VISIBLE
+
                 itemView.topic_card.visibility = View.GONE
 
                 itemView.topic_done_ico.visibility = View.GONE
@@ -45,6 +47,8 @@ class SubjectViewHolder(itemView: View, val itemClick: (Topic, Boolean) -> Unit)
             else {
                 // Hide title
                 itemView.subject_title.visibility = View.GONE
+                itemView.topic_download.visibility = View.GONE
+
                 // Show card
                 itemView.topic_card.visibility = View.VISIBLE
 
