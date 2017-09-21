@@ -4,6 +4,8 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'realm-android'
 apply plugin: 'com.google.firebase.firebase-perf'
+// To use it : ./gradlew dependencyUpdates -Drevision=release
+apply plugin: 'com.github.ben-manes.versions'
 
 apply plugin: 'io.fabric'
 
