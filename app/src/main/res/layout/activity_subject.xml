@@ -98,7 +98,6 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:text="@string/try_again"
-			app:backgroundTint="@color/colorAccent"
 			android:layout_marginTop="8dp"
 			android:visibility="visible"
 			/>

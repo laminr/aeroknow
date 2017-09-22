@@ -3,6 +3,7 @@ package biz.eventually.atpl.ui.subject
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import biz.eventually.atpl.R
+import biz.eventually.atpl.data.dto.TopicDto
 import biz.eventually.atpl.data.model.Topic
 import kotlinx.android.synthetic.main.item_subject_row.view.*
 
@@ -11,7 +12,7 @@ import kotlinx.android.synthetic.main.item_subject_row.view.*
  */
 class SubjectViewHolder(itemView: View, val itemClick: (Topic, Boolean) -> Unit) : RecyclerView.ViewHolder(itemView) {
 
-    fun bind(topic: Topic) {
+    fun bind(dto: TopicDto) {
 
         itemView.subject_title.visibility = View.VISIBLE
 
@@ -27,7 +28,15 @@ class SubjectViewHolder(itemView: View, val itemClick: (Topic, Boolean) -> Unit)
         itemView.topic_item_questions_ico.visibility = View.VISIBLE
         itemView.topic_item_questions.visibility = View.VISIBLE
 
-        with(topic) {
+        // is sync, change icon
+        if (dto.isSync) {
+            itemView.topic_offline.setImageResource(R.drawable.ic_sync)
+            itemView.topic_offline.visibility = View.VISIBLE
+        } else {
+            itemView.topic_offline.setImageResource(R.drawable.ic_cloud_off_black)
+        }
+
+        with(dto.topic) {
             itemView.subject_title.text = itemView.context.getString(R.string.msg_processing)
             // Title
             if (idWeb < 0) {
@@ -42,6 +51,8 @@ class SubjectViewHolder(itemView: View, val itemClick: (Topic, Boolean) -> Unit)
                 itemView.topic_done_nbr.visibility = View.GONE
                 itemView.topic_care_ico.visibility = View.GONE
                 itemView.topic_care_nbr.visibility = View.GONE
+
+                itemView.topic_download.setOnClickListener { itemClick(this, true) }
             }
             // Value Card
             else {
@@ -53,7 +64,9 @@ class SubjectViewHolder(itemView: View, val itemClick: (Topic, Boolean) -> Unit)
                 itemView.topic_card.visibility = View.VISIBLE
 
                 // offline
-                itemView.topic_offline.visibility = if (hasOfflineData) View.GONE else View.VISIBLE
+                if (!dto.isSync) {
+                    itemView.topic_offline.visibility = if (dto.hasOfflineData) View.GONE else View.VISIBLE
+                }
 
                 itemView.topic_item_name.text = name
 
@@ -87,7 +100,7 @@ class SubjectViewHolder(itemView: View, val itemClick: (Topic, Boolean) -> Unit)
                 itemView.topic_care_ico.visibility = if (focus == 0) View.GONE else View.VISIBLE
                 itemView.topic_care_nbr.visibility = if (focus == 0) View.GONE else View.VISIBLE
 
-                // only for topic lines
+                // only for dto lines
                 itemView.setOnClickListener { itemClick(this, false) }
                 itemView.topic_care_ico.setOnClickListener { itemClick(this, true) }
                 itemView.topic_care_nbr.setOnClickListener { itemClick(this, true) }

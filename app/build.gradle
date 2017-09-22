@@ -41,7 +41,7 @@ android {
 
         buildConfigField 'String', 'VERSION_APP', "\"${majorVersion}.${minorVersion}.${patchVersion}\""
 
-        multiDexEnabled true
+        multiDexEnabled = true
     }
 
     signingConfigs {
@@ -95,9 +95,9 @@ android {
     }
 }
 
-kapt {
-    generateStubs = true
-}
+//kapt {
+//    generateStubs = true
+//}
 
 ext {
     supportVersion = '25.4.0'

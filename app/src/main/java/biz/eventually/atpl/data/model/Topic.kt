@@ -28,9 +28,6 @@ open class Topic() : RealmObject() {
     @Ignore
     var mean: Double = 0.0
 
-    @Ignore
-    var hasOfflineData = true
-
     constructor(idWeb: Int, name: String): this() {
         this.idWeb = idWeb
         this.name = name

@@ -1,6 +1,7 @@
 package biz.eventually.atpl.data
 
 import android.content.Context
+import biz.eventually.atpl.data.db.LastCall
 import biz.eventually.atpl.data.db.Source
 import biz.eventually.atpl.data.model.Follow
 import biz.eventually.atpl.data.model.Question
@@ -8,6 +9,7 @@ import biz.eventually.atpl.data.model.Subject
 import biz.eventually.atpl.data.service.SourceService
 import biz.eventually.atpl.utils.PREF_TOKEN
 import biz.eventually.atpl.utils.PrefsGetString
+import com.vicpin.krealmextensions.queryFirst
 import io.reactivex.Observable
 import io.realm.RealmList
 import javax.inject.Inject
@@ -31,7 +33,7 @@ class DataProvider @Inject constructor(private val sourceService: SourceService,
     }
 
     fun dataGetTopicQuestions(topicId: Int, startFirst: Boolean) : Observable<List<Question>?> {
-        val lastCall = 0L //LastCall().queryFirst({ query -> query.equalTo("id", LastCall.TYPE_TOPIC) })?.updated
+        val lastCall = 0L // LastCall().queryFirst({ query -> query.equalTo("id", "${LastCall.TYPE_TOPIC}_$topicId") })?.updated
         val token = PrefsGetString(context , PREF_TOKEN) ?: ""
         val questions = when (startFirst) {
             true -> sourceService.loadQuestionsStarred(topicId, lastCall ?: 0, token)

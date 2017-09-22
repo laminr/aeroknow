@@ -3,6 +3,7 @@ package biz.eventually.atpl.ui.source
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.support.annotation.StringRes
+import android.support.v4.content.ContextCompat
 import android.view.View
 import android.view.View.GONE
 import android.widget.AdapterView
@@ -49,6 +50,8 @@ class SourceActivity : BaseActivity<SourceManager>() {
         }
 
         source_refresh.setOnClickListener { loadData() }
+
+        source_refresh.setBackgroundColor(ContextCompat.getColor(this, R.color.colorAccent))
     }
 
     private fun settingGuillotineMenu() {

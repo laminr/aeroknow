@@ -11,26 +11,31 @@ import biz.eventually.atpl.AtplApplication
 import biz.eventually.atpl.R
 import biz.eventually.atpl.common.IntentIdentifier
 import biz.eventually.atpl.common.IntentIdentifier.Companion.REFRESH_SUBJECT
+import biz.eventually.atpl.data.dto.TopicDto
 import biz.eventually.atpl.data.model.Question
 import biz.eventually.atpl.data.model.Subject
 import biz.eventually.atpl.data.model.Topic
 import biz.eventually.atpl.ui.BaseActivity
 import biz.eventually.atpl.ui.questions.QuestionsActivity
+import biz.eventually.atpl.ui.source.QuestionsManager
 import com.crashlytics.android.answers.Answers
 import com.crashlytics.android.answers.ContentViewEvent
 import com.google.firebase.perf.metrics.AddTrace
-import com.vicpin.krealmextensions.query
 import com.vicpin.krealmextensions.querySorted
 import io.realm.Sort
 import kotlinx.android.synthetic.main.activity_subject.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
+import javax.inject.Inject
 
 class SubjectActivity : BaseActivity<SubjectManager>() {
 
     companion object {
         val TAG = "SubjectActivity"
     }
+
+    @Inject
+    lateinit var questionManager: QuestionsManager
 
     private var mSourceId: Int = 0
     private var mSubjectList: List<Subject>? = null
@@ -70,20 +75,47 @@ class SubjectActivity : BaseActivity<SubjectManager>() {
 
     private fun onItemClick(topic: Topic, startFirst: Boolean = false) {
 
-        // Fabric Answer
-        Answers.getInstance().logContentView(ContentViewEvent()
-                .putContentName("Subject")
-                .putContentType("Questions")
-                .putContentId("Source_${mSourceId}_subject_${topic.id}")
-                .putCustomAttribute("Subject Name", "${topic.id}: ${topic.name}")
-        )
+        // Subject
+        if (topic.idWeb < 0) {
+            // Fabric Answer - Download data
+            Answers.getInstance().logContentView(ContentViewEvent()
+                    .putContentName("Subject")
+                    .putContentType("Download Questions")
+                    .putContentId("Source_${mSourceId}_subject_${topic.id}")
+                    .putCustomAttribute("Download offline", "${topic.id}: ${topic.name}")
+            )
 
-        val intent = Intent(this, QuestionsActivity::class.java)
+            doAsync {
+                mSubjectList?.forEach {
+                    // here the topic is in fact a Subject, w/ idWeb = id * -1
+                    if (it.idWeb == (topic.idWeb * -1)) {
+                        it.topics.forEach { topic ->
+                            updateTopicLine(topic.idWeb, true)
+                            questionManager.getQuestions(topic.idWeb, false, fun(_: List<Question>) {
+                                updateTopicLine(topic.idWeb, hasOffline = true)
+                            }, {})
+                        }
+                    }
+                }
+            }
+        }
+        // display questions for subject
+        else {
+            // Fabric Answer
+            Answers.getInstance().logContentView(ContentViewEvent()
+                    .putContentName("Subject")
+                    .putContentType("Questions")
+                    .putContentId("Source_${mSourceId}_subject_${topic.id}")
+                    .putCustomAttribute("Subject Name", "${topic.id}: ${topic.name}")
+            )
 
-        intent.putExtra(IntentIdentifier.TOPIC, topic.id)
-        intent.putExtra(IntentIdentifier.TOPIC_STARRED, startFirst)
+            val intent = Intent(this, QuestionsActivity::class.java)
 
-        startActivityForResult(intent, REFRESH_SUBJECT)
+            intent.putExtra(IntentIdentifier.TOPIC, topic.id)
+            intent.putExtra(IntentIdentifier.TOPIC_STARRED, startFirst)
+
+            startActivityForResult(intent, REFRESH_SUBJECT)
+        }
 
     }
 
@@ -113,14 +145,15 @@ class SubjectActivity : BaseActivity<SubjectManager>() {
     private fun displaySubjects(subjects: List<Subject>?) {
         mSubjectList = subjects
         mSubjectList?.let {
-            val topics = mutableListOf<Topic>()
+            val topics = mutableListOf<TopicDto>()
 
             it.forEach { t ->
                 // header
-                topics.add(Topic((t.idWeb * -1), t.name))
+                val titleTopic = Topic((t.idWeb * -1), t.name)
+                topics.add(TopicDto(titleTopic, false, false))
 
                 // line of topics
-                topics.addAll(t.topics)
+                topics.addAll(t.topics.map { TopicDto(it, false, false) })
             }
 
             mAdapter.bind(topics)
@@ -141,14 +174,28 @@ class SubjectActivity : BaseActivity<SubjectManager>() {
         }
     }
 
+    private fun updateTopicLine(topicId: Int, isSync: Boolean = false, hasOffline: Boolean = false) {
+        doAsync {
+            uiThread {
+                mAdapter.getBindedList().forEachIndexed { index, topicDto ->
+                    if (topicDto.topic.idWeb == topicId)  {
+                        topicDto.isSync = isSync
+                        topicDto.hasOfflineData = hasOffline
+                        mAdapter.notifyItemChanged(index)
+                    }
+                }
+            }
+        }
+    }
+
     private fun gatherWhoHasOfflineData() {
         doAsync {
             uiThread {
                 val topicIds = Question().querySorted("topicId", Sort.ASCENDING).groupBy { it.topicId }
-                mAdapter.getBindedList().forEachIndexed { index, topic ->
-                    val doesHasOffline = topic.idWeb in topicIds.keys
-                    if (doesHasOffline != topic.hasOfflineData)  {
-                        topic.hasOfflineData = doesHasOffline
+                mAdapter.getBindedList().forEachIndexed { index, topicDto ->
+                    val doesHasOffline = topicDto.topic.idWeb in topicIds.keys
+                    if (doesHasOffline != topicDto.hasOfflineData)  {
+                        topicDto.hasOfflineData = doesHasOffline
                         mAdapter.notifyItemChanged(index)
                     }
                 }

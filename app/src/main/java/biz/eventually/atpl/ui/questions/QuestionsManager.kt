@@ -96,7 +96,7 @@ class QuestionsManager @Inject constructor(private val dataProvider: DataProvide
         }
 
         // update time reference
-        if (questionsWeb.isNotEmpty()) LastCall().update(LastCall.TYPE_SOURCE, Date().time)
+        if (questionsWeb.isNotEmpty()) LastCall().update("${LastCall.TYPE_TOPIC}_$topicId", Date().time)
     }
 }
 
