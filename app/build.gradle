@@ -5,7 +5,7 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'realm-android'
 apply plugin: 'com.google.firebase.firebase-perf'
 // To use it : ./gradlew dependencyUpdates -Drevision=release
-apply plugin: 'com.github.ben-manes.versions'
+//apply plugin: 'com.github.ben-manes.versions'
 
 apply plugin: 'io.fabric'
 
@@ -114,6 +114,7 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
+        exclude group: 'com.google.code.findbugs'
     })
 
     compile "com.android.support:appcompat-v7:$supportVersion"

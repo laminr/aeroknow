@@ -58,7 +58,7 @@ class SubjectActivity : BaseActivity<SubjectManager>() {
 
         mSourceId = intent.extras.getInt(IntentIdentifier.SOURCE_ID)
 
-        when(mSubjectList) {
+        when (mSubjectList) {
             null -> loadData()
             else -> displaySubjects(mSubjectList)
         }
@@ -85,19 +85,18 @@ class SubjectActivity : BaseActivity<SubjectManager>() {
                     .putCustomAttribute("Download offline", "${topic.id}: ${topic.name}")
             )
 
-            doAsync {
-                mSubjectList?.forEach {
-                    // here the topic is in fact a Subject, w/ idWeb = id * -1
-                    if (it.idWeb == (topic.idWeb * -1)) {
-                        it.topics.forEach { topic ->
-                            updateTopicLine(topic.idWeb, true)
-                            questionManager.getQuestions(topic.idWeb, false, fun(_: List<Question>) {
-                                updateTopicLine(topic.idWeb, hasOffline = true)
-                            }, {})
-                        }
+            mSubjectList?.forEach {
+                // here the topic is in fact a Subject, w/ idWeb = id * -1
+                if (it.idWeb == (topic.idWeb * -1)) {
+                    it.topics.forEach { topic ->
+                        updateTopicLine(topic.idWeb, true)
+                        questionManager.getQuestions(topic.idWeb, false, fun(_: List<Question>) {
+                            updateTopicLine(topic.idWeb, hasOffline = true)
+                        }, {})
                     }
                 }
             }
+
         }
         // display questions for subject
         else {
@@ -132,7 +131,7 @@ class SubjectActivity : BaseActivity<SubjectManager>() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == REFRESH_SUBJECT && resultCode == RESULT_OK){
+        if (requestCode == REFRESH_SUBJECT && resultCode == RESULT_OK) {
             loadData(true)
         }
     }
@@ -178,7 +177,7 @@ class SubjectActivity : BaseActivity<SubjectManager>() {
         doAsync {
             uiThread {
                 mAdapter.getBindedList().forEachIndexed { index, topicDto ->
-                    if (topicDto.topic.idWeb == topicId)  {
+                    if (topicDto.topic.idWeb == topicId) {
                         topicDto.isSync = isSync
                         topicDto.hasOfflineData = hasOffline
                         mAdapter.notifyItemChanged(index)
@@ -194,7 +193,7 @@ class SubjectActivity : BaseActivity<SubjectManager>() {
                 val topicIds = Question().querySorted("topicId", Sort.ASCENDING).groupBy { it.topicId }
                 mAdapter.getBindedList().forEachIndexed { index, topicDto ->
                     val doesHasOffline = topicDto.topic.idWeb in topicIds.keys
-                    if (doesHasOffline != topicDto.hasOfflineData)  {
+                    if (doesHasOffline != topicDto.hasOfflineData) {
                         topicDto.hasOfflineData = doesHasOffline
                         mAdapter.notifyItemChanged(index)
                     }
