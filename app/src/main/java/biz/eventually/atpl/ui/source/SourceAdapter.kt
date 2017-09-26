@@ -18,20 +18,26 @@ class SourceAdapter(
         context: Context,
         sources: List<Source>) : ArrayAdapter<Source>(context, 0, sources) {
 
-    var name: TextView? = null
-
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        var view = convertView
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View? {
+        val view: View?
+        val vh: ListRowHolder
         val source = getItem(position)
 
-        if (view == null) {
+        if (convertView == null) {
             view = LayoutInflater.from(context).inflate(R.layout.item_source, parent, false)
+            vh = ListRowHolder(view)
+            view.tag = vh
+        } else {
+            view = convertView
+            vh = view.tag as ListRowHolder
         }
 
-        name = view?.findViewById(R.id.item_source_label) as TextView
-        name?.text = source?.name
+        vh.label.text = source?.name
 
         return view
     }
 
+    private class ListRowHolder(row: View?) {
+        val label: TextView = row?.findViewById(R.id.item_source_label) as TextView
+    }
 }
