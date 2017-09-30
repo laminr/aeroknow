@@ -12,13 +12,13 @@ import biz.eventually.atpl.common.IntentIdentifier
 import biz.eventually.atpl.common.StateIdentifier
 import biz.eventually.atpl.data.model.Source
 import biz.eventually.atpl.data.model.Subject
+import biz.eventually.atpl.settings.SettingsActivity
 import biz.eventually.atpl.ui.BaseActivity
 import biz.eventually.atpl.ui.about.AboutActivity
 import biz.eventually.atpl.ui.subject.SubjectActivity
 import com.yalantis.guillotine.animation.GuillotineAnimation
 import kotlinx.android.synthetic.main.activity_source.*
 import kotlinx.android.synthetic.main.guillotine.*
-import org.jetbrains.anko.longToast
 import org.jetbrains.anko.startActivity
 
 class SourceActivity : BaseActivity<SourceManager>() {
@@ -40,7 +40,8 @@ class SourceActivity : BaseActivity<SourceManager>() {
         settingGuillotineMenu()
 
         savedInstanceState?.let {
-            mSourceList = it.getParcelableArrayList<Source>(StateIdentifier.SOURCE_LIST).toList()
+            val list = it.getParcelableArrayList<Source>(StateIdentifier.SOURCE_LIST)
+            mSourceList = list?.toList() ?: listOf()
         }
 
         mSourceList = mSourceList ?: intent.getParcelableArrayListExtra<Source>(IntentIdentifier.SOURCE_LIST)
@@ -71,7 +72,7 @@ class SourceActivity : BaseActivity<SourceManager>() {
                 .setClosedOnStart(true)
                 .build()
 
-        about_group.setOnClickListener { _ ->
+        about_group.setOnClickListener {
             guillotine_hamburger.performClick()
             startActivity<AboutActivity>()
         }
@@ -79,7 +80,7 @@ class SourceActivity : BaseActivity<SourceManager>() {
 
         settings_group.setOnClickListener {
             guillotine_hamburger.performClick()
-            longToast("To come")
+            startActivity<SettingsActivity>()
         }
 
         settings_back.setOnClickListener { settings_group.performClick() }

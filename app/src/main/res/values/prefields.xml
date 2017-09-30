@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="pref_timer_enable" translatable="false">prefs.question.timer.enable</string>
+    <string name="pref_timer_nbr" translatable="false">prefs.question.timer.nbr</string>
+    <string name="pref_token" translatable="false">prefs.api.token</string>
+    <string name="pref_last_data" translatable="false">prefs.api.last.call</string>
+</resources>

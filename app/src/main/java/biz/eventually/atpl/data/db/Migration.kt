@@ -16,8 +16,7 @@ fun checkRealmVersion() {
 
             // Migrate to version 1: Add a new class.
             if (old == 0) {
-                schema.get("Focus")
-                        .addField("topicId", Int::class.javaPrimitiveType)
+                schema.get("Focus")?.addField("topicId", Int::class.javaPrimitiveType)
                 old++
             }
         }
