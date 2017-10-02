@@ -19,13 +19,20 @@ class AtplApplication : Application() {
 
     companion object {
         lateinit var component: AppComponent
+        lateinit var instance: AtplApplication
         lateinit var tangerine : Typeface
+
+        fun get(): Application {
+            return  instance
+        }
     }
 
     override fun onCreate() {
         super.onCreate()
 
         component = AppComponent.Initializer.init(this)
+        instance = this
+
         tangerine = Typeface.createFromAsset(assets, "fonts/Tangerine.ttf")
 
         // Firebase Analytics

@@ -11,7 +11,7 @@ apply plugin: 'io.fabric'
 
 ext {
     majorVersion = "0"
-    minorVersion = "17"
+    minorVersion = "18"
     patchVersion = "2"
 }
 

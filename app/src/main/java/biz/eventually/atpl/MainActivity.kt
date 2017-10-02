@@ -32,9 +32,6 @@ class MainActivity : BaseActivity<SourceManager>() {
         intent?.let {
             handleIntent(it)
         }
-
-        // save preference waiting to do the screen
-        putLong(applicationContext, PREF_TIMER, 1000)
     }
 
     private fun start() {
@@ -49,7 +46,7 @@ class MainActivity : BaseActivity<SourceManager>() {
             val token = appLinkData.lastPathSegment
 
             token?.let {
-                PrefsPutString(this@MainActivity,PREF_TOKEN, token)
+                prefsPutString(this@MainActivity, Prefields.PREF_TOKEN, token)
 
                 SweetAlertDialog(this, SweetAlertDialog.CUSTOM_IMAGE_TYPE)
                         .setTitleText(getString(R.string.dialog_title_ok))

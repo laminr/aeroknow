@@ -20,6 +20,9 @@ import biz.eventually.atpl.data.network.Question
 import biz.eventually.atpl.ui.BaseActivity
 import biz.eventually.atpl.ui.source.QuestionsManager
 import biz.eventually.atpl.utils.*
+import biz.eventually.atpl.utils.Prefields.PREF_TIMER_ENABLE
+import biz.eventually.atpl.utils.Prefields.PREF_TIMER_NBR
+import biz.eventually.atpl.utils.Prefields.PREF_TOKEN
 import cn.pedant.SweetAlert.SweetAlertDialog
 import com.github.pwittchen.swipe.library.Swipe
 import com.github.pwittchen.swipe.library.SwipeListener
@@ -43,9 +46,7 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
     private var isLight: Boolean = true
 
     private var mHadChange = false
-    private var mHasToken = true
-
-    private var mTimeLength: Long = 1000
+    private var mHasToken = false
 
     private var mMenuShuffle: MenuItem? = null
     private var mMenuShare: MenuItem? = null
@@ -64,15 +65,16 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
         setContentView(R.layout.activity_questions)
         AtplApplication.component.inject(this)
 
-        mTimeLength = getLong(applicationContext, PREF_TIMER, mTimeLength)
-
         // has Token ?
-        PrefsGetString(this@QuestionsActivity, PREF_TOKEN)?.let {
-            question_care.visibility = View.VISIBLE
-            question_dontcare.visibility = View.VISIBLE
+        prefsGetString(this@QuestionsActivity, PREF_TOKEN)?.let {
+            mHasToken = it.isNotEmpty()
+            if (mHasToken) {
+                question_care.visibility = View.VISIBLE
+                question_dontcare.visibility = View.VISIBLE
 
-            question_follow.visibility = View.VISIBLE
-            question_follow_label.visibility = View.VISIBLE
+                question_follow.visibility = View.VISIBLE
+                question_follow_label.visibility = View.VISIBLE
+            }
         } ?: kotlin.run { mHasToken = false }
 
         mTopic = intent.extras.getParcelable<Topic>(IntentIdentifier.TOPIC)
@@ -381,7 +383,7 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
                     question_imgs.addView(imgContainer)
                 }
 
-                launchCountDown()
+                if (prefsGetValue(PREF_TIMER_ENABLE, false)) launchCountDown()
             }
         }
 
@@ -403,7 +405,8 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
 
         question_time.setTextColor(ContextCompat.getColor(applicationContext, R.color.colorGrey))
 
-        mTimer = object : CountDownTimer(60000, mTimeLength) {
+        val seconds = (prefsGetValue(PREF_TIMER_NBR, "60").toInt() * 1000).toLong()
+        mTimer = object : CountDownTimer(seconds, 1000) {
             override fun onFinish() {
                 question_time.text = ""
                 question_label.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.colorAccent))
