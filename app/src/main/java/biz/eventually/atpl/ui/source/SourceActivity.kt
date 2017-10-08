@@ -12,13 +12,13 @@ import biz.eventually.atpl.BuildConfig
 import biz.eventually.atpl.R
 import biz.eventually.atpl.common.IntentIdentifier
 import biz.eventually.atpl.data.db.Source
+import biz.eventually.atpl.settings.SettingsActivity
 import biz.eventually.atpl.ui.BaseActivity
 import biz.eventually.atpl.ui.about.AboutActivity
 import biz.eventually.atpl.ui.subject.SubjectActivity
 import com.yalantis.guillotine.animation.GuillotineAnimation
 import kotlinx.android.synthetic.main.activity_source.*
 import kotlinx.android.synthetic.main.guillotine.*
-import org.jetbrains.anko.longToast
 import org.jetbrains.anko.startActivity
 
 class SourceActivity : BaseActivity<SourceManager>() {
@@ -50,8 +50,6 @@ class SourceActivity : BaseActivity<SourceManager>() {
         }
 
         source_refresh.setOnClickListener { loadData() }
-
-        source_refresh.setBackgroundColor(ContextCompat.getColor(this, R.color.colorAccent))
     }
 
     private fun settingGuillotineMenu() {
@@ -63,7 +61,7 @@ class SourceActivity : BaseActivity<SourceManager>() {
                 .setClosedOnStart(true)
                 .build()
 
-        about_group.setOnClickListener { _ ->
+        about_group.setOnClickListener {
             guillotine_hamburger.performClick()
             startActivity<AboutActivity>()
         }
@@ -71,20 +69,15 @@ class SourceActivity : BaseActivity<SourceManager>() {
 
         settings_group.setOnClickListener {
             guillotine_hamburger.performClick()
-            longToast("To come")
+            startActivity<SettingsActivity>()
         }
 
         settings_back.setOnClickListener { settings_group.performClick() }
     }
 
-    override fun onPause() {
-        super.onPause()
-    }
-
-
     override fun onSaveInstanceState(outState: Bundle?, outPersistentState: PersistableBundle?) {
         mSourceList?.let {
-            //            outState?.putParcelableArrayList(StateIdentifier.SOURCE_LIST, it as? ArrayList<Subject>)
+            //            outState?.putParcelableArrayList(StateIdentifier.SOURCE_LIST, it as? ArrayList<Source>)
         }
 
         super.onSaveInstanceState(outState, outPersistentState)

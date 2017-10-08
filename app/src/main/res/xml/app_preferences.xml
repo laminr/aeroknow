@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.preference.PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <android.support.v7.preference.PreferenceCategory
+        android:key="pref_group_question"
+        android:title="Questions"
+        >
+        <android.support.v7.preference.SwitchPreferenceCompat
+            android:key="@string/pref_timer_enable"
+            android:defaultValue="true"
+            android:summary="@string/pref_timer_summary"
+            android:title="@string/pref_timer_title" />
+
+        <android.support.v7.preference.EditTextPreference
+            android:key="@string/pref_timer_nbr"
+            android:inputType="number"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:defaultValue="60"
+            android:title="@string/pref_timer_time_title"
+            android:summary="@string/pref_timer_time_summary"
+            />
+
+    </android.support.v7.preference.PreferenceCategory>
+    <android.support.v7.preference.PreferenceCategory
+        android:key="pref_group_network"
+        android:title="Network"
+        >
+        <android.support.v7.preference.EditTextPreference
+            android:key="@string/pref_token"
+            android:capitalize="words"
+            android:inputType="text"
+            android:maxLines="1"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/pref_token_title"
+            android:summary="@string/pref_token_summary"
+            />
+    </android.support.v7.preference.PreferenceCategory>
+</android.support.v7.preference.PreferenceScreen>

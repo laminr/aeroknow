@@ -3,16 +3,16 @@ package biz.eventually.atpl.ui.subject
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import biz.eventually.atpl.R
-import biz.eventually.atpl.data.dto.TopicDto
+import biz.eventually.atpl.data.dto.TopicView
 import biz.eventually.atpl.data.model.Topic
 import kotlinx.android.synthetic.main.item_subject_row.view.*
 
 /**
  * Created by Thibault de Lambilly on 29/03/2017.
  */
-class SubjectViewHolder(itemView: View, val itemClick: (Topic, Boolean) -> Unit) : RecyclerView.ViewHolder(itemView) {
+class SubjectViewHolder(itemView: View, private val itemClick: (Topic, Boolean) -> Unit) : RecyclerView.ViewHolder(itemView) {
 
-    fun bind(dto: TopicDto) {
+    fun bind(dto: TopicView) {
 
         itemView.subject_title.visibility = View.VISIBLE
 
@@ -34,6 +34,7 @@ class SubjectViewHolder(itemView: View, val itemClick: (Topic, Boolean) -> Unit)
             itemView.topic_offline.visibility = View.VISIBLE
         } else {
             itemView.topic_offline.setImageResource(R.drawable.ic_cloud_off_black)
+            itemView.topic_offline.visibility = View.GONE
         }
 
         with(dto.topic) {

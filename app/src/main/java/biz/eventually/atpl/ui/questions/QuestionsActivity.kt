@@ -10,6 +10,7 @@ import android.support.v7.widget.CardView
 import android.view.*
 import android.widget.CheckBox
 import android.widget.ImageView
+import android.widget.TextView
 import biz.eventually.atpl.AtplApplication
 import biz.eventually.atpl.BuildConfig
 import biz.eventually.atpl.R
@@ -19,6 +20,9 @@ import biz.eventually.atpl.data.model.Topic
 import biz.eventually.atpl.ui.BaseActivity
 import biz.eventually.atpl.ui.source.QuestionsManager
 import biz.eventually.atpl.utils.*
+import biz.eventually.atpl.utils.Prefields.PREF_TIMER_ENABLE
+import biz.eventually.atpl.utils.Prefields.PREF_TIMER_NBR
+import biz.eventually.atpl.utils.Prefields.PREF_TOKEN
 import cn.pedant.SweetAlert.SweetAlertDialog
 import com.github.pwittchen.swipe.library.Swipe
 import com.github.pwittchen.swipe.library.SwipeListener
@@ -42,9 +46,7 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
     private var isLight: Boolean = true
 
     private var mHadChange = false
-    private var mHasToken = true
-
-    private var mTimeLength: Long = 1000
+    private var mHasToken = false
 
     private var mMenuShuffle: MenuItem? = null
     private var mMenuShare: MenuItem? = null
@@ -57,21 +59,25 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
     private val mMime = "text/html"
     private val mEncoding = "utf-8"
 
+    private lateinit var mQuestionCardView: List<CardView>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContentView(R.layout.activity_questions)
         AtplApplication.component.inject(this)
 
-        mTimeLength = getLong(applicationContext, PREF_TIMER, mTimeLength)
+        mQuestionCardView = listOf<CardView>(question_answer_1, question_answer_2, question_answer_3, question_answer_4)
 
         // has Token ?
-        PrefsGetString(this@QuestionsActivity, PREF_TOKEN)?.let {
-            question_care.visibility = View.VISIBLE
-            question_dontcare.visibility = View.VISIBLE
+        prefsGetString(this@QuestionsActivity, PREF_TOKEN)?.let {
+            mHasToken = it.isNotEmpty()
+            if (mHasToken) {
+                question_care.visibility = View.VISIBLE
+                question_dontcare.visibility = View.VISIBLE
 
-            question_follow.visibility = View.VISIBLE
-            question_follow_label.visibility = View.VISIBLE
+                question_follow.visibility = View.VISIBLE
+                question_follow_label.visibility = View.VISIBLE
+            }
         } ?: kotlin.run { mHasToken = false }
 
         val topicId = intent.extras.getString(IntentIdentifier.TOPIC)
@@ -93,17 +99,25 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
         question_label.settings.javaScriptEnabled = false
     }
 
+    override fun onDestroy() {
+        mTimer?.cancel()
+        mTimer = null
+        super.onDestroy()
+    }
+
     private fun initListeners() {
 
-        question_answer_1.setOnClickListener { onAnswerClick(it, 0) }
-        question_answer_2.setOnClickListener { onAnswerClick(it, 1) }
-        question_answer_3.setOnClickListener { onAnswerClick(it, 2) }
-        question_answer_4.setOnClickListener { onAnswerClick(it, 3) }
+        // initiate onClick on all Question CardView
+        mQuestionCardView.forEachIndexed { index, cardView -> cardView.setOnClickListener({ onAnswerClick(it, index) }) }
 
-        question_answer_1_rdo.setOnClickListener { onAnswerClick(question_answer_1, 0) }
-        question_answer_2_rdo.setOnClickListener { onAnswerClick(question_answer_2, 1) }
-        question_answer_3_rdo.setOnClickListener { onAnswerClick(question_answer_3, 2) }
-        question_answer_4_rdo.setOnClickListener { onAnswerClick(question_answer_4, 3) }
+        listOf<CheckBox>(
+                question_answer_1_rdo,
+                question_answer_2_rdo,
+                question_answer_3_rdo,
+                question_answer_4_rdo
+        ).forEachIndexed { index, checkbox ->
+            checkbox.setOnClickListener { onAnswerClick(mQuestionCardView[index], index) }
+        }
 
         question_previous.setOnClickListener {
             mMenuShare?.isVisible = false
@@ -357,13 +371,15 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
                 question_label.loadDataWithBaseURL(null, label, mMime, mEncoding, null)
                 println(label)
 
-                for (i in 0..answers.count() - 1) {
-                    when (i) {
-                        0 -> question_answer_1_text.text = answers[i].value
-                        1 -> question_answer_2_text.text = answers[i].value
-                        2 -> question_answer_3_text.text = answers[i].value
-                        3 -> question_answer_4_text.text = answers[i].value
-                    }
+                val questionAnswerTextView = listOf<TextView>(
+                        question_answer_1_text,
+                        question_answer_2_text,
+                        question_answer_3_text,
+                        question_answer_4_text
+                )
+
+                for (i in 0 until answers.count()) {
+                    questionAnswerTextView[i].text = answers[i].value
                 }
 
                 if (mHasToken) {
@@ -382,7 +398,7 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
                     question_imgs.addView(imgContainer)
                 }
 
-                launchCountDown()
+                if (prefsGetValue(PREF_TIMER_ENABLE, false)) launchCountDown()
             }
         }
 
@@ -404,7 +420,8 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
 
         question_time.setTextColor(ContextCompat.getColor(applicationContext, R.color.colorGrey))
 
-        mTimer = object : CountDownTimer(60000, mTimeLength) {
+        val seconds = (prefsGetValue(PREF_TIMER_NBR, "60").toInt() * 1000).toLong()
+        mTimer = object : CountDownTimer(seconds, 1000) {
             override fun onFinish() {
                 question_time.text = ""
                 question_label.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.colorAccent))
@@ -440,7 +457,7 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
             question_care.setImageDrawable(ContextCompat.getDrawable(this@QuestionsActivity, R.drawable.ic_cached_black))
             question_care.setColorFilter(ContextCompat.getColor(applicationContext, R.color.colorGrey))
 
-            manager.updateFocus(mQuestions[mCurrentQuestion].idWeb, true, this::onFocusSaves, this::onSavinError)
+            manager.updateFocus(mQuestions[mCurrentQuestion].idWeb, true, this::onFocusSaves, this::onSavingError)
 
             displayFollowAndFocus()
         }
@@ -452,7 +469,7 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
             question_dontcare.setImageDrawable(ContextCompat.getDrawable(this@QuestionsActivity, R.drawable.ic_cached_black))
             question_dontcare.setColorFilter(ContextCompat.getColor(applicationContext, R.color.colorGrey))
 
-            manager.updateFocus(mQuestions[mCurrentQuestion].idWeb, false, this::onFocusSaves, this::onSavinError)
+            manager.updateFocus(mQuestions[mCurrentQuestion].idWeb, false, this::onFocusSaves, this::onSavingError)
 
             displayFollowAndFocus()
         }
@@ -470,7 +487,7 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
         displayFollowAndFocus()
     }
 
-    private fun onSavinError() {
+    private fun onSavingError() {
         Alerter.create(this)
                 .setTitle(getString(R.string.dialog_title_error))
                 .setText(getString(R.string.question_focus_error))
@@ -521,24 +538,27 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
             question_wrong_value.visibility = View.VISIBLE
             question_wrong_value.text = wrong.toString()
 
-            if (good > wrong) {
-                question_good_img.setColorFilter(ContextCompat.getColor(applicationContext, R.color.colorAccent))
-                question_wrong_img.setColorFilter(ContextCompat.getColor(applicationContext, R.color.colorGrey))
-            } else if (good < wrong) {
-                question_good_img.setColorFilter(ContextCompat.getColor(applicationContext, R.color.colorGrey))
-                question_wrong_img.setColorFilter(ContextCompat.getColor(applicationContext, R.color.colorAccent))
-            } else {
-                question_good_img.setColorFilter(ContextCompat.getColor(applicationContext, R.color.colorGrey))
-                question_wrong_img.setColorFilter(ContextCompat.getColor(applicationContext, R.color.colorGrey))
+            when {
+                good > wrong -> {
+                    question_good_img.setColorFilter(ContextCompat.getColor(applicationContext, R.color.colorAccent))
+                    question_wrong_img.setColorFilter(ContextCompat.getColor(applicationContext, R.color.colorGrey))
+                }
+                good < wrong -> {
+                    question_good_img.setColorFilter(ContextCompat.getColor(applicationContext, R.color.colorGrey))
+                    question_wrong_img.setColorFilter(ContextCompat.getColor(applicationContext, R.color.colorAccent))
+                }
+                else -> {
+                    question_good_img.setColorFilter(ContextCompat.getColor(applicationContext, R.color.colorGrey))
+                    question_wrong_img.setColorFilter(ContextCompat.getColor(applicationContext, R.color.colorGrey))
+                }
             }
         }
     }
 
     private fun initAnswerCardDisplay() {
-        question_answer_1.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.cardview_light_background))
-        question_answer_2.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.cardview_light_background))
-        question_answer_3.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.cardview_light_background))
-        question_answer_4.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.cardview_light_background))
+        for (i in 0..3) {
+            mQuestionCardView[i].setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.cardview_light_background))
+        }
     }
 
     private fun onAnswerClick(view: View, index: Int) {
@@ -559,10 +579,9 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
     }
 
     private fun resetCheckbox() {
-        checkOneBox(question_answer_1, false)
-        checkOneBox(question_answer_2, false)
-        checkOneBox(question_answer_3, false)
-        checkOneBox(question_answer_4, false)
+        for (i in 0..3) {
+            checkOneBox(mQuestionCardView[i], false)
+        }
     }
 
     private fun checkOneBox(card: CardView, check: Boolean) {
@@ -581,17 +600,16 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
     }
 
     private fun showAnswer() {
-        mQuestions[mCurrentQuestion].answers.let {
-            for (i in 0 until it.count()) {
-                if (it[i].good) {
-                    val bckg = if (it[i].good) ContextCompat.getDrawable(applicationContext, R.drawable.answer_right) else ContextCompat.getDrawable(applicationContext, R.drawable.answer_wrong)
-                    when (i) {
-                        0 -> question_answer_1.background = bckg
-                        1 -> question_answer_2.background = bckg
-                        2 -> question_answer_3.background = bckg
-                        3 -> question_answer_4.background = bckg
-                    }
-                }
+        if (mCurrentQuestion >= 0 && mCurrentQuestion < mQuestions.size) {
+            mQuestions[mCurrentQuestion].answers.let {
+                (0 until it.count())
+                        .filter { i -> it[i].good }
+                        .forEach { i ->
+                            mQuestionCardView[i].background = if (it[i].good)
+                                ContextCompat.getDrawable(applicationContext, R.drawable.answer_right)
+                            else
+                                ContextCompat.getDrawable(applicationContext, R.drawable.answer_wrong)
+                        }
             }
         }
     }

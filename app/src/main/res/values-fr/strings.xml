@@ -6,9 +6,9 @@
 	<string name="question_next">Suiv.</string>
 	<string name="network_error_message">Désolé une erreur c\'est produite!</string>
 	<string name="error_network_error">Erreur réseaux: Quelque chose c\'est mal passé!</string>
-	<string name="error_no_network">Vous êtes sans connection et sans donnée sauvegardée</string>
+	<string name="error_offline_no_data">Vous êtes sans connection et sans donnée sauvegardée</string>
 	<string name="action_shuffle">Mélanger</string>
-    <string name="try_again">Rééssayer</string>
+    <string name="try_again">Remise de Gaz!</string>
     <string name="question_focus_error">La demande n\'a pas été sauvegardée</string>
 	<string name="question_follow_up_label">Suivie</string>
 	<string name="dialog_title_error">Oups!</string>
@@ -28,4 +28,11 @@
 	<string name="about_by">par</string>
 	<string name="menu_about">a propos</string>
 	<string name="menu_settings">paramètres</string>
+    <string name="title_activity_settings">Paramètres</string>
+	<string name="pref_timer_summary">Information par un compte à rebours par question</string>
+	<string name="pref_token_title">Clé d\'identification</string>
+	<string name="pref_token_summary">Votre clé de connexion permet la sychronisation des données sur le site web parent de l\'application</string>
+	<string name="pref_timer_title">Activer le compte à rebours des questions</string>
+	<string name="pref_timer_time_title">Délai du compte à rebours</string>
+	<string name="pref_timer_time_summary">Défine le temps du compte à rebours par question: %s secondes</string>
 </resources>

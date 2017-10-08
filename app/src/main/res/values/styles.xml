@@ -11,6 +11,7 @@
 
 		<item name="android:actionBarStyle" tools:ignore="NewApi">@style/MyActionBar</item>
 		<item name="actionBarStyle">@style/MyActionBar</item>
+		<item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
 	</style>
 
 	<style name="MyActionBar" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">

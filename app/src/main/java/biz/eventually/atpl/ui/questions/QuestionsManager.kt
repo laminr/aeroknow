@@ -10,8 +10,7 @@ import com.google.firebase.perf.metrics.AddTrace
 import com.vicpin.krealmextensions.query
 import com.vicpin.krealmextensions.queryFirst
 import com.vicpin.krealmextensions.save
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
+import com.vicpin.krealmextensions.saveManaged
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -34,8 +33,8 @@ class QuestionsManager @Inject constructor(private val dataProvider: DataProvide
         if (hasInternetConnection()) {
             dataProvider
                     .dataGetTopicQuestions(topicId, starFist)
-                    .subscribeOn(Schedulers.io())
-                    ?.observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(scheduler.network)
+                    ?.observeOn(scheduler.main)
                     ?.subscribe({ questionsWeb ->
                         analyseData(topicId, questionsDb, questionsWeb)
                         display(questionsDb)
@@ -49,24 +48,34 @@ class QuestionsManager @Inject constructor(private val dataProvider: DataProvide
     }
 
     fun updateFocus(questionId: Int, care: Boolean, then: (state: Boolean?) -> Unit, error: () -> Unit) {
-        dataProvider.updateFocus(questionId, care).subscribeOn(Schedulers.io())?.observeOn(AndroidSchedulers.mainThread())?.subscribe({ focusInt ->
-            val focus = when (focusInt) {
-                0 -> false
-                1 -> true
-                else -> null
-            }
-
-            then(focus)
-        }, { _ ->
-            Log.d(TAG, "updateFocus: " + error)
-            error()
-        })
+        dataProvider.updateFocus(questionId, care)
+                .subscribeOn(scheduler.network)
+                ?.observeOn(scheduler.main)
+                ?.subscribe({ focusInt ->
+                    val focus = when (focusInt) {
+                        0 -> false
+                        1 -> true
+                        else -> null
+                    }
+                    var question = Question().queryFirst({ s -> s.equalTo("idWeb", questionId) })
+                    question?.let {
+                        it.focus = focus
+                        it.save()
+                    }
+                    then(focus)
+                }, { _ ->
+                    Log.d(TAG, "updateFocus: " + error)
+                    error()
+                })
     }
 
     fun updateFollow(questionId: Int, good: Boolean) {
-        dataProvider.updateFollow(questionId, good).subscribeOn(Schedulers.io())?.observeOn(AndroidSchedulers.mainThread())?.subscribe({}, { error ->
-            Log.d(TAG, "updateFollow: " + error)
-        })
+        dataProvider.updateFollow(questionId, good)
+                .subscribeOn(scheduler.network)
+                ?.observeOn(scheduler.main)
+                ?.subscribe({}, { error ->
+                    Log.d(TAG, "updateFollow: " + error)
+                })
     }
 
     private fun analyseData(topicId: Int, questionsDb: MutableList<Question>, questionsWeb: List<Question>) {

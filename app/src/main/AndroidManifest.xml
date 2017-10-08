@@ -1,68 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-		  xmlns:tools="http://schemas.android.com/tools"
-		  package="biz.eventually.atpl">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="biz.eventually.atpl">
 
-	<uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
-	<application
-		android:name=".AtplApplication"
-		android:allowBackup="true"
-		android:icon="@mipmap/ic_launcher"
-		android:label="@string/app_name"
-		android:roundIcon="@mipmap/ic_launcher"
-		android:supportsRtl="true"
-		android:theme="@style/AppTheme.NoActionBar"
-		tools:replace="android:icon">
-		<activity
-			android:name=".MainActivity"
-			android:theme="@style/SplashTheme">
-			<intent-filter>
-				<action android:name="android.intent.action.MAIN" />
+    <application
+        android:name=".AtplApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme.NoActionBar"
+        tools:replace="android:icon">
+        <activity
+            android:name=".MainActivity"
+            android:theme="@style/SplashTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-				<category android:name="android.intent.category.LAUNCHER" />
-			</intent-filter>
-			<intent-filter>
-				<action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
 
-				<category android:name="android.intent.category.DEFAULT" />
-				<category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
 
-				<data
-					android:host="www.aeroknow.xyz"
-					android:pathPattern="/token/.*"
-					android:scheme="http" />
-			</intent-filter>
-		</activity>
-		<activity
-			android:name=".ui.source.SourceActivity"
-			android:screenOrientation="portrait"
-			android:configChanges="orientation|screenSize|keyboardHidden"
-		/>
-		<activity
-			android:name=".ui.subject.SubjectActivity"
-			android:configChanges="orientation|screenSize|keyboardHidden"
-			android:label="@string/title_activity_subject"
-			android:parentActivityName=".ui.source.SourceActivity"
-			android:theme="@style/AppTheme.NoActionBar">
-			<meta-data
-				android:name="android.support.PARENT_ACTIVITY"
-				android:value="biz.eventually.atpl.ui.source.SourceActivity" />
-		</activity>
-		<activity
-			android:name=".ui.questions.QuestionsActivity"
-			android:configChanges="orientation|screenSize|keyboardHidden"
-
-			android:theme="@style/AppTheme">
-			<meta-data
-				android:name="android.support.PARENT_ACTIVITY"
-				android:value="biz.eventually.atpl.ui.subject.SubjectActivity" />
-		</activity>
-		<activity
-			android:name=".ui.about.AboutActivity"
-			android:theme="@style/AppTheme.NoActionBar">
-		</activity>
-
-	</application>
+                <data
+                    android:host="www.aeroknow.xyz"
+                    android:pathPattern="/token/.*"
+                    android:scheme="http" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.source.SourceActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.subject.SubjectActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:label="@string/title_activity_subject"
+            android:parentActivityName=".ui.source.SourceActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="biz.eventually.atpl.ui.source.SourceActivity" />
+        </activity>
+        <activity
+            android:name=".ui.questions.QuestionsActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="biz.eventually.atpl.ui.subject.SubjectActivity" />
+        </activity>
+        <activity
+            android:name=".ui.about.AboutActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".settings.SettingsActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="biz.eventually.atpl.ui.source.SourceActivity" />
+        </activity>
+    </application>
 
 </manifest>

@@ -11,8 +11,6 @@ import com.google.firebase.perf.metrics.AddTrace
 import com.vicpin.krealmextensions.queryAll
 import com.vicpin.krealmextensions.queryFirst
 import com.vicpin.krealmextensions.save
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -35,26 +33,32 @@ class SourceManager @Inject constructor(private val dataProvider: DataProvider) 
             if (sourcesDb.size > 0) {
                 display(sourcesDb)
             } else {
-                error(R.string.error_no_network)
+                error(R.string.error_offline_no_data)
             }
         } else {
-            getData()?.let(display) ?: kotlin.run({ error(R.string.error_network_error) })
+            getWebData(display, error)
         }
     }
 
-    private fun getData(): List<Source>? {
+    private fun getWebData(display: (List<Source>?) -> Unit, error: (Int) -> Unit) {
 
         val sourcesDb: MutableList<Source> = Source().queryAll().toMutableList()
 
         if (hasInternetConnection()) {
             dataProvider
                     .dataGetSources()
-                    .subscribeOn(Schedulers.io())
-                    ?.observeOn(AndroidSchedulers.mainThread())
-                    ?.subscribe({ sWeb -> analyseData(sourcesDb, sWeb) }, { e -> Log.d(TAG, "getSources: " + e) })
+                    .subscribeOn(scheduler.network)
+                    ?.observeOn(scheduler.main)
+                    ?.subscribe({ sWeb ->
+                        analyseData(sourcesDb, sWeb)
+                        display(sourcesDb)
+                    }, { e ->
+                        Log.d(TAG, "getSources: " + e)
+                        error(R.string.error_network_error)
+                    })
+        } else {
+            if (sourcesDb.size > 0) display(sourcesDb) else error(R.string.error_offline_no_data)
         }
-
-        return if (sourcesDb.size > 0) sourcesDb else null
     }
 
     private fun analyseData(sourcesDb: MutableList<Source>, sWeb: List<Source>) {

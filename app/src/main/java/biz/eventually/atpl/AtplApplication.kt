@@ -7,6 +7,7 @@ import android.support.multidex.MultiDex
 import biz.eventually.atpl.data.db.checkRealmVersion
 import biz.eventually.atpl.di.AppComponent
 import com.google.firebase.analytics.FirebaseAnalytics
+import com.squareup.leakcanary.LeakCanary
 import io.realm.Realm
 
 /**
@@ -33,7 +34,6 @@ class AtplApplication : Application() {
         component = AppComponent.Initializer.init(this)
         instance = this
 
-        println("AtplApplication")
         tangerine = Typeface.createFromAsset(assets, "fonts/Tangerine.ttf")
 
         // Firebase Analytics
@@ -45,14 +45,15 @@ class AtplApplication : Application() {
 
         MultiDex.install(this)
 
-        /*
-        if (LeakCanary.isInAnalyzerProcess(this)) {
-            // This process is dedicated to LeakCanary for heap analysis.
-            // You should not init your app in this process.
-            return
+        if (BuildConfig.DEBUG) {
+            if (LeakCanary.isInAnalyzerProcess(this)) {
+                // This process is dedicated to LeakCanary for heap analysis.
+                // You should not init your app in this process.
+                return
+            }
+            LeakCanary.install(this)
         }
-        LeakCanary.install(this)
-        */
+
     }
 
 }

@@ -6,21 +6,42 @@ package biz.eventually.atpl.utils
 
 import android.content.Context
 import android.preference.PreferenceManager
+import biz.eventually.atpl.AtplApplication
+import biz.eventually.atpl.R
 
-val PREF_TIMER : String = "prefs.question.timer"
-val PREF_TOKEN : String = "prefs.api.token"
-val PREF_LAST_DATA : String = "prefs.api.last.call"
+object Prefields {
+    val PREF_TIMER_NBR: String = AtplApplication.get().getString(R.string.pref_timer_nbr)
+    val PREF_TIMER_ENABLE : String = AtplApplication.get().getString(R.string.pref_timer_enable)
+    val PREF_TOKEN : String = AtplApplication.get().getString(R.string.pref_token)
+    val PREF_LAST_DATA : String = AtplApplication.get().getString(R.string.pref_last_data)
+}
 
-fun PrefsGetString(context: Context, key: String, defValue: String? = null) : String? {
+fun prefsGetString(context: Context, key: String, defValue: String? = null) : String? {
     val pref = PreferenceManager.getDefaultSharedPreferences(context)
     return pref.getString(key, defValue)
 }
 
-fun PrefsPutString(context: Context, key: String, value: String) {
+fun prefsPutString(context: Context, key: String, value: String) {
     val pref = PreferenceManager.getDefaultSharedPreferences(context)
     val editor = pref.edit()
     editor.putString(key, value)
     editor.apply()
+}
+
+inline fun <reified T> prefsGetValue(key: String, defValue: T): T {
+    val pref = PreferenceManager.getDefaultSharedPreferences(AtplApplication.get())
+    return when(T::class) {
+        Int::class -> pref.getInt(key, defValue as Int) as T
+        String::class -> pref.getString(key, defValue as String) as T
+        Boolean::class -> pref.getBoolean(key, defValue as Boolean) as T
+        Long::class -> pref.getLong(key, defValue as Long) as T
+        else -> defValue
+    }
+}
+
+fun prefsPutBool(context: Context, key: String, defValue: Boolean): Boolean {
+    val pref = PreferenceManager.getDefaultSharedPreferences(context)
+    return pref.getBoolean(key, defValue)
 }
 
 fun getInt(context: Context, key: String, defValue: Int): Int {

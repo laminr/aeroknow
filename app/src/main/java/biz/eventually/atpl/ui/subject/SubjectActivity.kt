@@ -11,7 +11,7 @@ import biz.eventually.atpl.AtplApplication
 import biz.eventually.atpl.R
 import biz.eventually.atpl.common.IntentIdentifier
 import biz.eventually.atpl.common.IntentIdentifier.Companion.REFRESH_SUBJECT
-import biz.eventually.atpl.data.dto.TopicDto
+import biz.eventually.atpl.data.dto.TopicView
 import biz.eventually.atpl.data.model.Question
 import biz.eventually.atpl.data.model.Subject
 import biz.eventually.atpl.data.model.Topic
@@ -24,9 +24,10 @@ import com.google.firebase.perf.metrics.AddTrace
 import com.vicpin.krealmextensions.querySorted
 import io.realm.Sort
 import kotlinx.android.synthetic.main.activity_subject.*
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.uiThread
+import kotlinx.coroutines.experimental.launch
 import javax.inject.Inject
+
+import kotlinx.coroutines.experimental.android.UI as UI
 
 class SubjectActivity : BaseActivity<SubjectManager>() {
 
@@ -96,7 +97,6 @@ class SubjectActivity : BaseActivity<SubjectManager>() {
                     }
                 }
             }
-
         }
         // display questions for subject
         else {
@@ -144,15 +144,15 @@ class SubjectActivity : BaseActivity<SubjectManager>() {
     private fun displaySubjects(subjects: List<Subject>?) {
         mSubjectList = subjects
         mSubjectList?.let {
-            val topics = mutableListOf<TopicDto>()
+            val topics = mutableListOf<TopicView>()
 
             it.forEach { t ->
                 // header
                 val titleTopic = Topic((t.idWeb * -1), t.name)
-                topics.add(TopicDto(titleTopic, false, false))
+                topics.add(TopicView(titleTopic, false, false))
 
                 // line of topics
-                topics.addAll(t.topics.map { TopicDto(it, false, false) })
+                topics.addAll(t.topics.map { TopicView(it, false, false) })
             }
 
             mAdapter.bind(topics)
@@ -174,29 +174,51 @@ class SubjectActivity : BaseActivity<SubjectManager>() {
     }
 
     private fun updateTopicLine(topicId: Int, isSync: Boolean = false, hasOffline: Boolean = false) {
-        doAsync {
-            uiThread {
-                mAdapter.getBindedList().forEachIndexed { index, topicDto ->
-                    if (topicDto.topic.idWeb == topicId) {
-                        topicDto.isSync = isSync
-                        topicDto.hasOfflineData = hasOffline
-                        mAdapter.notifyItemChanged(index)
-                    }
+        launch(UI) {
+            mAdapter.getBindedList().forEachIndexed { index, topicDto ->
+                if (topicDto.topic.idWeb == topicId) {
+                    topicDto.isSync = isSync
+                    topicDto.hasOfflineData = hasOffline
+                    mAdapter.notifyItemChanged(index)
                 }
             }
         }
+//        doAsync {
+//            uiThread {
+//                mAdapter.getBindedList().forEachIndexed { index, topicDto ->
+//                    if (topicDto.topic.idWeb == topicId) {
+//                        topicDto.isSync = isSync
+//                        topicDto.hasOfflineData = hasOffline
+//                        mAdapter.notifyItemChanged(index)
+//                    }
+//                }
+//            }
+//        }
+
+
     }
 
     private fun gatherWhoHasOfflineData() {
-        doAsync {
-            uiThread {
-                val topicIds = Question().querySorted("topicId", Sort.ASCENDING).groupBy { it.topicId }
-                mAdapter.getBindedList().forEachIndexed { index, topicDto ->
-                    val doesHasOffline = topicDto.topic.idWeb in topicIds.keys
-                    if (doesHasOffline != topicDto.hasOfflineData) {
-                        topicDto.hasOfflineData = doesHasOffline
-                        mAdapter.notifyItemChanged(index)
-                    }
+//        doAsync {
+//            uiThread {
+//                val topicIds = Question().querySorted("topicId", Sort.ASCENDING).groupBy { it.topicId }
+//                mAdapter.getBindedList().forEachIndexed { index, topicDto ->
+//                    val doesHasOffline = topicDto.topic.idWeb in topicIds.keys
+//                    if (doesHasOffline != topicDto.hasOfflineData) {
+//                        topicDto.hasOfflineData = doesHasOffline
+//                        mAdapter.notifyItemChanged(index)
+//                    }
+//                }
+//            }
+//        }
+
+        launch(UI) {
+            val topicIds = Question().querySorted("topicId", Sort.ASCENDING).groupBy { it.topicId }
+            mAdapter.getBindedList().forEachIndexed { index, topicDto ->
+                val doesHasOffline = topicDto.topic.idWeb in topicIds.keys
+                if (doesHasOffline != topicDto.hasOfflineData) {
+                    topicDto.hasOfflineData = doesHasOffline
+                    mAdapter.notifyItemChanged(index)
                 }
             }
         }

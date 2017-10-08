@@ -69,3 +69,8 @@
 # Google analytics
 -keep public class com.google.android.gms.* { public *; }
 -dontwarn com.google.android.gms.**
+
+# Kotlin coroutines
+-keepclassmembernames class kotlinx.** {
+    volatile <fields>;
+}

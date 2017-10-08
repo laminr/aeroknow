@@ -1,36 +1,44 @@
 <resources>
-	<string name="app_name" translatable="false">Aero Knowledge</string>
-	<string name="action_settings">Settings</string>
-	<string name="title_activity_subject">Subjects</string>
-	<string name="sum_symbol">Σ</string>
-	<string name="question_back">back</string>
-	<string name="question_next">next</string>
-	<string name="network_error_message">An error has occurred, Sorry!</string>
-	<string name="error_network_error">Network Error: Something went wrong!</string>
-	<string name="error_no_network">Your are offline w/ no data saved</string>
-	<string name="action_shuffle">shuffle</string>
-	<string name="try_again">Try again</string>
-	<string name="question_focus_error">the focus request has not been saved</string>
-	<string name="question_follow_up_label">Follow up</string>
+    <string name="app_name" translatable="false">Aero Knowledge</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_subject">Subjects</string>
+    <string name="sum_symbol">Σ</string>
+    <string name="question_back">back</string>
+    <string name="question_next">next</string>
+    <string name="network_error_message">An error has occurred, Sorry!</string>
+    <string name="error_network_error">Network Error: Something went wrong!</string>
+	<string name="error_offline_no_data">Your are offline w/ no data saved</string>
+    <string name="action_shuffle">shuffle</string>
+    <string name="try_again">Go Around !</string>
+    <string name="question_focus_error">the focus request has not been saved</string>
+    <string name="question_follow_up_label">Follow up</string>
 
-	<string name="dialog_title_error">Oops!</string>
-	<string name="dialog_title_ok">Sweet!</string>
-	<string name="settings_api_saved">Your API key has been saved</string>
-	<string name="settings_api_error">Your API key has not been recognised</string>
-	<string name="welcome">Welcome</string>
-	<string name="welcome_message">Pick up the subject under you\'ve like to work</string>
-	<string name="msg_processing">processing…</string>
-	<string name="subject_mean_value">[μ:%.1f]</string>
-	<string name="result_title_good">Great job!</string>
-	<string name="result_title_warning">Done! but it could be better</string>
-	<string name="result_title_bad">Not good man, back to work</string>
-	<string name="result_value">Your score is: %d%%</string>
+    <string name="dialog_title_error">Oops!</string>
+    <string name="dialog_title_ok">Sweet!</string>
+    <string name="settings_api_saved">Your API key has been saved</string>
+    <string name="settings_api_error">Your API key has not been recognised</string>
+    <string name="welcome">Welcome</string>
+    <string name="welcome_message">Pick up the subject under you\'ve like to work</string>
+    <string name="msg_processing">processing…</string>
+    <string name="subject_mean_value">[μ:%.1f]</string>
+    <string name="result_title_good">Great job!</string>
+    <string name="result_title_warning">Done! but it could be better</string>
+    <string name="result_title_bad">Not good man, back to work</string>
+    <string name="result_value">Your score is: %d%%</string>
 
 	<string name="developed_by">developer</string>
-	<string name="developers" translatable="false">Thibault de Lambilly</string>
+	<string  name="developers" translatable="false">Thibault de Lambilly</string>
 	<string name="by_company" translatable="false">eventually business</string>
 	<string name="about_by">by</string>
 
-	<string name="menu_about">about</string>
-	<string name="menu_settings">settings</string>
+    <string name="menu_about">about</string>
+    <string name="menu_settings">settings</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <string name="pref_timer_summary">Get an information of a countdown on questions</string>
+    <string name="pref_timer_title">Enable question timer</string>
+    <string name="pref_timer_time_title">Question countdown delay</string>
+    <string name="pref_timer_time_summary">Define the timer amount for the question countdown: %s seconds</string>
+    <string name="pref_token_title">Website sync token</string>
+    <string name="pref_token_summary">Your connection token let\'s you have your data synchronised with the online version of the application</string>
 </resources>
