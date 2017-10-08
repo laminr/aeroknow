@@ -10,6 +10,7 @@ import android.support.v7.widget.CardView
 import android.view.*
 import android.widget.CheckBox
 import android.widget.ImageView
+import android.widget.TextView
 import biz.eventually.atpl.AtplApplication
 import biz.eventually.atpl.BuildConfig
 import biz.eventually.atpl.R
@@ -59,11 +60,14 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
     private val mMime = "text/html"
     private val mEncoding = "utf-8"
 
+    private lateinit var mQuestionCardView: List<CardView>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContentView(R.layout.activity_questions)
         AtplApplication.component.inject(this)
+
+        mQuestionCardView = listOf<CardView>(question_answer_1, question_answer_2, question_answer_3, question_answer_4)
 
         // has Token ?
         prefsGetString(this@QuestionsActivity, PREF_TOKEN)?.let {
@@ -96,15 +100,17 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
 
     private fun initListeners() {
 
-        question_answer_1.setOnClickListener { onAnswerClick(it, 0) }
-        question_answer_2.setOnClickListener { onAnswerClick(it, 1) }
-        question_answer_3.setOnClickListener { onAnswerClick(it, 2) }
-        question_answer_4.setOnClickListener { onAnswerClick(it, 3) }
+        // initiate onClick on all Question CardView
+        mQuestionCardView.forEachIndexed { index, cardView -> cardView.setOnClickListener({ onAnswerClick(it, index) }) }
 
-        question_answer_1_rdo.setOnClickListener { onAnswerClick(question_answer_1, 0) }
-        question_answer_2_rdo.setOnClickListener { onAnswerClick(question_answer_2, 1) }
-        question_answer_3_rdo.setOnClickListener { onAnswerClick(question_answer_3, 2) }
-        question_answer_4_rdo.setOnClickListener { onAnswerClick(question_answer_4, 3) }
+        listOf<CheckBox>(
+                question_answer_1_rdo,
+                question_answer_2_rdo,
+                question_answer_3_rdo,
+                question_answer_4_rdo
+        ).forEachIndexed { index, checkbox ->
+            checkbox.setOnClickListener { onAnswerClick(mQuestionCardView[index], index) }
+        }
 
         question_previous.setOnClickListener {
             mMenuShare?.isVisible = false
@@ -358,13 +364,15 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
                 question_label.loadDataWithBaseURL(null, label, mMime, mEncoding, null)
                 println(label)
 
-                for (i in 0..answers.count() - 1) {
-                    when (i) {
-                        0 -> question_answer_1_text.text = answers[i].value
-                        1 -> question_answer_2_text.text = answers[i].value
-                        2 -> question_answer_3_text.text = answers[i].value
-                        3 -> question_answer_4_text.text = answers[i].value
-                    }
+                val questionAnswerTextView = listOf<TextView>(
+                        question_answer_1_text,
+                        question_answer_2_text,
+                        question_answer_3_text,
+                        question_answer_4_text
+                )
+
+                for (i in 0 until answers.count()) {
+                    questionAnswerTextView[i].text = answers[i].value
                 }
 
                 if (mHasToken) {
@@ -523,24 +531,27 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
             question_wrong_value.visibility = View.VISIBLE
             question_wrong_value.text = wrong.toString()
 
-            if (good > wrong) {
-                question_good_img.setColorFilter(ContextCompat.getColor(applicationContext, R.color.colorAccent))
-                question_wrong_img.setColorFilter(ContextCompat.getColor(applicationContext, R.color.colorGrey))
-            } else if (good < wrong) {
-                question_good_img.setColorFilter(ContextCompat.getColor(applicationContext, R.color.colorGrey))
-                question_wrong_img.setColorFilter(ContextCompat.getColor(applicationContext, R.color.colorAccent))
-            } else {
-                question_good_img.setColorFilter(ContextCompat.getColor(applicationContext, R.color.colorGrey))
-                question_wrong_img.setColorFilter(ContextCompat.getColor(applicationContext, R.color.colorGrey))
+            when {
+                good > wrong -> {
+                    question_good_img.setColorFilter(ContextCompat.getColor(applicationContext, R.color.colorAccent))
+                    question_wrong_img.setColorFilter(ContextCompat.getColor(applicationContext, R.color.colorGrey))
+                }
+                good < wrong -> {
+                    question_good_img.setColorFilter(ContextCompat.getColor(applicationContext, R.color.colorGrey))
+                    question_wrong_img.setColorFilter(ContextCompat.getColor(applicationContext, R.color.colorAccent))
+                }
+                else -> {
+                    question_good_img.setColorFilter(ContextCompat.getColor(applicationContext, R.color.colorGrey))
+                    question_wrong_img.setColorFilter(ContextCompat.getColor(applicationContext, R.color.colorGrey))
+                }
             }
         }
     }
 
     private fun initAnswerCardDisplay() {
-        question_answer_1.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.cardview_light_background))
-        question_answer_2.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.cardview_light_background))
-        question_answer_3.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.cardview_light_background))
-        question_answer_4.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.cardview_light_background))
+        for (i in 0..3) {
+            mQuestionCardView[i].setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.cardview_light_background))
+        }
     }
 
     private fun onAnswerClick(view: View, index: Int) {
@@ -561,10 +572,9 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
     }
 
     private fun resetCheckbox() {
-        checkOneBox(question_answer_1, false)
-        checkOneBox(question_answer_2, false)
-        checkOneBox(question_answer_3, false)
-        checkOneBox(question_answer_4, false)
+        for (i in 0..3) {
+            checkOneBox(mQuestionCardView[i], false)
+        }
     }
 
     private fun checkOneBox(card: CardView, check: Boolean) {
@@ -583,17 +593,16 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
     }
 
     private fun showAnswer() {
-        mQuestions[mCurrentQuestion].answers.let {
-            for (i in 0 until it.count()) {
-                if (it[i].good) {
-                    val bckg = if (it[i].good) ContextCompat.getDrawable(applicationContext, R.drawable.answer_right) else ContextCompat.getDrawable(applicationContext, R.drawable.answer_wrong)
-                    when (i) {
-                        0 -> question_answer_1.background = bckg
-                        1 -> question_answer_2.background = bckg
-                        2 -> question_answer_3.background = bckg
-                        3 -> question_answer_4.background = bckg
-                    }
-                }
+        if (mCurrentQuestion >= 0 && mCurrentQuestion < mQuestions.size) {
+            mQuestions[mCurrentQuestion].answers.let {
+                (0 until it.count())
+                        .filter { i -> it[i].good }
+                        .forEach { i ->
+                            mQuestionCardView[i].background = if (it[i].good)
+                                ContextCompat.getDrawable(applicationContext, R.drawable.answer_right)
+                            else
+                                ContextCompat.getDrawable(applicationContext, R.drawable.answer_wrong)
+                        }
             }
         }
     }

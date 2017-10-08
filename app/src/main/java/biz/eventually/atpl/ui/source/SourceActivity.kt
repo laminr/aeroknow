@@ -86,14 +86,9 @@ class SourceActivity : BaseActivity<SourceManager>() {
         settings_back.setOnClickListener { settings_group.performClick() }
     }
 
-    override fun onPause() {
-        super.onPause()
-    }
-
-
     override fun onSaveInstanceState(outState: Bundle?, outPersistentState: PersistableBundle?) {
         mSourceList?.let {
-            outState?.putParcelableArrayList(StateIdentifier.SOURCE_LIST, it as? ArrayList<Subject>)
+            outState?.putParcelableArrayList(StateIdentifier.SOURCE_LIST, it as? ArrayList<Source>)
         }
 
         super.onSaveInstanceState(outState, outPersistentState)
