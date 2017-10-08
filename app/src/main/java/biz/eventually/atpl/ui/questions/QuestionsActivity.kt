@@ -98,6 +98,12 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
         question_label.settings.javaScriptEnabled = false
     }
 
+    override fun onDestroy() {
+        mTimer?.cancel()
+        mTimer = null
+        super.onDestroy()
+    }
+
     private fun initListeners() {
 
         // initiate onClick on all Question CardView
