@@ -41,4 +41,6 @@
     <string name="pref_timer_time_summary">Define the timer amount for the question countdown: %s seconds</string>
     <string name="pref_token_title">Website sync token</string>
     <string name="pref_token_summary">Your connection token let\'s you have your data synchronised with the online version of the application</string>
+	<string name="msg_offline_title">Offline</string>
+	<string name="error_dialog_message">Network error</string>
 </resources>

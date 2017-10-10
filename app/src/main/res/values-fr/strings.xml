@@ -5,7 +5,6 @@
 	<string name="question_back">Préc.</string>
 	<string name="question_next">Suiv.</string>
 	<string name="network_error_message">Désolé une erreur c\'est produite!</string>
-	<string name="error_network_error">Erreur réseaux: Quelque chose c\'est mal passé!</string>
 	<string name="error_offline_no_data">Vous êtes sans connection et sans donnée sauvegardée</string>
 	<string name="action_shuffle">Mélanger</string>
     <string name="try_again">Remise de Gaz!</string>
@@ -35,4 +34,7 @@
 	<string name="pref_timer_title">Activer le compte à rebours des questions</string>
 	<string name="pref_timer_time_title">Délai du compte à rebours</string>
 	<string name="pref_timer_time_summary">Défine le temps du compte à rebours par question: %s secondes</string>
+	<string name="error_network_error">Erreur reseau: Quelque chose c\'est mal passé</string>
+	<string name="msg_offline_title">Hors ligne</string>
+	<string name="error_dialog_message">Erreur reseaux</string>
 </resources>

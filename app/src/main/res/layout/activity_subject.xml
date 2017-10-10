@@ -47,7 +47,7 @@
 					android:layout_alignParentEnd="true"
                     android:layout_marginRight="-150dp"
                     android:layout_marginEnd="-150dp"
-                    app:srcCompat="@drawable/atr_yellow" />
+                    app:srcCompat="@drawable/ic_atr" />
             </RelativeLayout>
 
         </android.support.design.widget.CollapsingToolbarLayout>

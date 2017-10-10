@@ -2,6 +2,8 @@ package biz.eventually.atpl.ui.subject
 
 import android.support.v7.widget.RecyclerView
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import biz.eventually.atpl.R
 import biz.eventually.atpl.data.dto.TopicView
 import biz.eventually.atpl.data.model.Topic
@@ -32,9 +34,11 @@ class SubjectViewHolder(itemView: View, private val itemClick: (Topic, Boolean) 
         if (dto.isSync) {
             itemView.topic_offline.setImageResource(R.drawable.ic_sync)
             itemView.topic_offline.visibility = View.VISIBLE
+            itemView.topic_download.visibility = GONE
         } else {
             itemView.topic_offline.setImageResource(R.drawable.ic_cloud_off_black)
             itemView.topic_offline.visibility = View.GONE
+            itemView.topic_download.visibility = VISIBLE
         }
 
         with(dto.topic) {
@@ -53,7 +57,11 @@ class SubjectViewHolder(itemView: View, private val itemClick: (Topic, Boolean) 
                 itemView.topic_care_ico.visibility = View.GONE
                 itemView.topic_care_nbr.visibility = View.GONE
 
-                itemView.topic_download.setOnClickListener { itemClick(this, true) }
+                itemView.topic_download.visibility = if (dto.isSync) View.GONE else View.VISIBLE
+                itemView.topic_download.setOnClickListener {
+                    itemView.topic_download.visibility = GONE
+                    itemClick(this, true)
+                }
             }
             // Value Card
             else {

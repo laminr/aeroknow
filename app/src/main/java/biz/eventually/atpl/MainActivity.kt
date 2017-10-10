@@ -16,7 +16,6 @@ import org.jetbrains.anko.alert
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.yesButton
 
-// https://www.bignerdranch.com/blog/splash-screens-the-right-way/
 class MainActivity : BaseActivity<SourceManager>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,7 +34,8 @@ class MainActivity : BaseActivity<SourceManager>() {
     }
 
     private fun start() {
-        rotateloading.start()
+        splash_rotating_left.start()
+        splash_rotating_right.start()
         manager.getSources(false, { s -> openSourceActivity(s) }, { openSourceActivity(null) })
     }
 
@@ -70,7 +70,9 @@ class MainActivity : BaseActivity<SourceManager>() {
 
     private fun openSourceActivity(sources: List<Source>?) {
 
-        rotateloading.stop()
+        splash_rotating_left.stop()
+        splash_rotating_right.stop()
+
 
         when(sources) {
             null -> startActivity<SourceActivity>(IntentIdentifier.NETWORK_ERROR to true)

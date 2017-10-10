@@ -70,12 +70,20 @@ class QuestionsManager @Inject constructor(private val dataProvider: DataProvide
     }
 
     fun updateFollow(questionId: Int, good: Boolean) {
-        dataProvider.updateFollow(questionId, good)
-                .subscribeOn(scheduler.network)
-                ?.observeOn(scheduler.main)
-                ?.subscribe({}, { error ->
-                    Log.d(TAG, "updateFollow: " + error)
-                })
+        if (hasInternetConnection()) {
+            dataProvider.updateFollow(questionId, good)
+                    .subscribeOn(scheduler.network)
+                    ?.observeOn(scheduler.main)
+                    ?.subscribe({ question ->
+                        question?.let {
+                            if (it.idWeb != -1) {
+                                it.save()
+                            }
+                        }
+                    }, { error ->
+                        Log.d(TAG, "updateFollow: " + error)
+                    })
+        }
     }
 
     private fun analyseData(topicId: Int, questionsDb: MutableList<Question>, questionsWeb: List<Question>) {

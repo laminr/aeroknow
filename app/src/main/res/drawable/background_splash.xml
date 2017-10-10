@@ -4,8 +4,8 @@
 	<item
 		android:drawable="@color/colorPrimaryDark"/>
 	<item>
-		<bitmap
-			android:gravity="center"
-			android:src="@drawable/atr_background"/>
+		<inset
+			android:drawable="@drawable/ic_atr"
+			android:gravity="center" />
 	</item>
 </layer-list>
