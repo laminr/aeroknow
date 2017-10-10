@@ -13,8 +13,8 @@ apply plugin: 'io.fabric'
 
 ext {
     majorVersion = "0"
-    minorVersion = "18"
-    patchVersion = "2"
+    minorVersion = "19"
+    patchVersion = "0"
 }
 
 // Load keystore

@@ -39,7 +39,7 @@ class SubjectAdapter(val onClick: (dto: Topic, startFirst: Boolean) -> Unit) : R
         mTopics.addAll(topics)
     }
 
-    fun getBindedList() : MutableList<TopicView> {
+    fun getList() : MutableList<TopicView> {
         return mTopics
     }
 }

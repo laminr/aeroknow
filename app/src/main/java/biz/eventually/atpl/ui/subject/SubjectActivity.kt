@@ -31,6 +31,9 @@ import kotlinx.coroutines.experimental.launch
 import javax.inject.Inject
 
 import kotlinx.coroutines.experimental.android.UI as UI
+import io.fabric.sdk.android.Fabric
+
+
 
 class SubjectActivity : BaseActivity<SubjectManager>() {
 
@@ -50,6 +53,7 @@ class SubjectActivity : BaseActivity<SubjectManager>() {
 
         super.onCreate(savedInstanceState)
         AtplApplication.component.inject(this)
+        Fabric.with(this, Answers())
 
         setContentView(R.layout.activity_subject)
         val toolbar = findViewById(R.id.toolbar) as Toolbar
@@ -86,7 +90,7 @@ class SubjectActivity : BaseActivity<SubjectManager>() {
                     .putContentName("Subject")
                     .putContentType("Download Questions")
                     .putContentId("Source_${mSourceId}_subject_${topic.id}")
-                    .putCustomAttribute("Download offline", "${topic.id}: ${topic.name}")
+                    .putCustomAttribute("Download offline", "${topic.idWeb}: ${topic.name}")
             )
 
             mSubjectList?.forEach {
@@ -175,10 +179,10 @@ class SubjectActivity : BaseActivity<SubjectManager>() {
             it.forEach { t ->
                 // header
                 val titleTopic = Topic((t.idWeb * -1), t.name)
-                topics.add(TopicView(titleTopic, false, false))
+                topics.add(TopicView(titleTopic))
 
                 // line of topics
-                topics.addAll(t.topics.map { TopicView(it, false, false) })
+                topics.addAll(t.topics.map { TopicView(it) })
             }
 
             mAdapter.bind(topics)
@@ -201,7 +205,7 @@ class SubjectActivity : BaseActivity<SubjectManager>() {
 
     private fun updateTopicLine(topicId: Int, isSync: Boolean = false, hasOffline: Boolean = false) {
         launch(UI) {
-            mAdapter.getBindedList().forEachIndexed { index, topicDto ->
+            mAdapter.getList().forEachIndexed { index, topicDto ->
                 if (topicDto.topic.idWeb == topicId) {
                     topicDto.isSync = isSync
                     topicDto.hasOfflineData = hasOffline
@@ -214,7 +218,7 @@ class SubjectActivity : BaseActivity<SubjectManager>() {
     private fun gatherWhoHasOfflineData() {
         launch(UI) {
             val topicIds = Question().querySorted("topicId", Sort.ASCENDING).groupBy { it.topicId }
-            mAdapter.getBindedList().forEachIndexed { index, topicDto ->
+            mAdapter.getList().forEachIndexed { index, topicDto ->
                 val doesHasOffline = topicDto.topic.idWeb in topicIds.keys
                 if (doesHasOffline != topicDto.hasOfflineData) {
                     topicDto.hasOfflineData = doesHasOffline
