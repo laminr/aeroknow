@@ -20,7 +20,6 @@ import biz.eventually.atpl.data.model.Topic
 import biz.eventually.atpl.ui.BaseActivity
 import biz.eventually.atpl.ui.source.QuestionsManager
 import biz.eventually.atpl.utils.*
-import biz.eventually.atpl.utils.Prefields.PREF_TIMER_ENABLE
 import biz.eventually.atpl.utils.Prefields.PREF_TIMER_NBR
 import biz.eventually.atpl.utils.Prefields.PREF_TOKEN
 import cn.pedant.SweetAlert.SweetAlertDialog
@@ -43,6 +42,8 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
 
     private var transparentColor: Int = 0x00000000
     private var mTimer: CountDownTimer? = null
+    private var mWithCountDown = true
+
     private var isLight: Boolean = true
 
     private var mHadChange = false
@@ -68,8 +69,11 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
 
         mQuestionCardView = listOf<CardView>(question_answer_1, question_answer_2, question_answer_3, question_answer_4)
 
+        /***
+         * settings properties
+         */
         // has Token ?
-        prefsGetString(this@QuestionsActivity, PREF_TOKEN)?.let {
+        prefsGetValue(PREF_TOKEN, "").let {
             mHasToken = it.isNotEmpty()
             if (mHasToken) {
                 question_care.visibility = View.VISIBLE
@@ -78,8 +82,13 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
                 question_follow.visibility = View.VISIBLE
                 question_follow_label.visibility = View.VISIBLE
             }
-        } ?: kotlin.run { mHasToken = false }
+        }
 
+        mWithCountDown = prefsGetValue(Prefields.PREF_TIMER_ENABLE, true)
+
+        /***
+         * Data
+         */
         val topicId = intent.extras.getString(IntentIdentifier.TOPIC)
         val startFirst = intent.extras.getBoolean(IntentIdentifier.TOPIC_STARRED, false)
 
@@ -398,7 +407,7 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
                     question_imgs.addView(imgContainer)
                 }
 
-                if (prefsGetValue(PREF_TIMER_ENABLE, false)) launchCountDown()
+                if (mWithCountDown) launchCountDown()
             }
         }
 
