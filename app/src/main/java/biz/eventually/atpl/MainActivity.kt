@@ -6,17 +6,15 @@ import biz.eventually.atpl.common.IntentIdentifier
 import biz.eventually.atpl.data.db.Source
 import biz.eventually.atpl.ui.BaseActivity
 import biz.eventually.atpl.ui.source.SourceActivity
-import biz.eventually.atpl.ui.source.SourceManager
+import biz.eventually.atpl.ui.source.SourceRepository
 import biz.eventually.atpl.utils.*
 import cn.pedant.SweetAlert.SweetAlertDialog
 import com.crashlytics.android.Crashlytics
 import io.fabric.sdk.android.Fabric
 import kotlinx.android.synthetic.main.activity_splash.*
-import org.jetbrains.anko.alert
 import org.jetbrains.anko.startActivity
-import org.jetbrains.anko.yesButton
 
-class MainActivity : BaseActivity<SourceManager>() {
+class MainActivity : BaseActivity<SourceRepository>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,7 +34,9 @@ class MainActivity : BaseActivity<SourceManager>() {
     private fun start() {
         splash_rotating_left.start()
         splash_rotating_right.start()
-        manager.getSources(false, { s -> openSourceActivity(s) }, { openSourceActivity(null) })
+//        manager.getSources(false, { s -> openSourceActivity(s) }, { openSourceActivity(null) })
+        // FIXME:
+        openSourceActivity(null)
     }
 
     private fun handleIntent(intent: Intent) {

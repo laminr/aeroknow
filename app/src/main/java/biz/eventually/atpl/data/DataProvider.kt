@@ -21,18 +21,18 @@ import javax.inject.Singleton
 class DataProvider @Inject constructor(private val sourceService: SourceService, val context: Context) {
 
     fun dataGetSources() : Observable<List<Source>> {
-        val lastCall = 0L //LastCall().queryFirst({ query -> query.equalTo("id", LastCall.TYPE_SOURCE) })?.updated
+        val lastCall = 0L //LastCall().queryFirst({ query -> query.equalTo("idWeb", LastCall.TYPE_SOURCE) })?.updated
         return sourceService.loadSources(lastCall ?: 0).map { api -> toAppSources(api.data) }
     }
 
     fun dataGetSubjects(sourceId: Int) : Observable<List<Subject>> {
-        val lastCall = 0L //LastCall().queryFirst({ query -> query.equalTo("id", LastCall.TYPE_SUBJECT) })?.updated
+        val lastCall = 0L //LastCall().queryFirst({ query -> query.equalTo("idWeb", LastCall.TYPE_SUBJECT) })?.updated
         val token = prefsGetString(context , PREF_TOKEN) ?: ""
         return sourceService.loadSubjects(sourceId, lastCall ?: 0, token).map { api -> toAppSubjects(sourceId, api.data) }
     }
 
     fun dataGetTopicQuestions(topicId: Int, startFirst: Boolean) : Observable<List<Question>> {
-        val lastCall = 0L // LastCall().queryFirst({ query -> query.equalTo("id", "${LastCall.TYPE_TOPIC}_$topicId") })?.updated
+        val lastCall = 0L // LastCall().queryFirst({ query -> query.equalTo("idWeb", "${LastCall.TYPE_TOPIC}_$topicId") })?.updated
         val token = prefsGetValue(PREF_TOKEN, "")
         val questions = when (startFirst) {
             true -> sourceService.loadQuestionsStarred(topicId, lastCall ?: 0, token)

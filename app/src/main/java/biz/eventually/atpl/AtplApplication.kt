@@ -1,14 +1,16 @@
 package biz.eventually.atpl
 
 import android.app.Application
-import android.content.Context
 import android.graphics.Typeface
+import android.support.multidex.BuildConfig
 import android.support.multidex.MultiDex
 import biz.eventually.atpl.data.db.checkRealmVersion
 import biz.eventually.atpl.di.AppComponent
+import com.facebook.stetho.Stetho
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.squareup.leakcanary.LeakCanary
 import io.realm.Realm
+import timber.log.Timber
 
 /**
  * Created by laminr on 18/03/2017.
@@ -44,6 +46,9 @@ class AtplApplication : Application() {
         checkRealmVersion()
 
         MultiDex.install(this)
+
+        Stetho.initializeWithDefaults(this)
+        Timber.plant(Timber.DebugTree())
 
         if (BuildConfig.DEBUG) {
             if (LeakCanary.isInAnalyzerProcess(this)) {

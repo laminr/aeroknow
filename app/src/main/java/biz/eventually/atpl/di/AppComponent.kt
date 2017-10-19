@@ -1,9 +1,7 @@
 package biz.eventually.atpl.di
 
 import biz.eventually.atpl.AtplApplication
-import biz.eventually.atpl.di.module.AppModule
-import biz.eventually.atpl.di.module.HttpModule
-import biz.eventually.atpl.di.module.ServiceModule
+import biz.eventually.atpl.di.module.*
 import dagger.Component
 import javax.inject.Singleton
 
@@ -12,7 +10,13 @@ import javax.inject.Singleton
  */
 
 @Singleton
-@Component(modules = arrayOf(AppModule::class, HttpModule::class, ServiceModule::class))
+@Component(modules = arrayOf(
+        AppModule::class,
+        HttpModule::class,
+        ServiceModule::class,
+        DatabaseModule::class,
+        ViewModelModule::class
+))
 interface AppComponent : AppGraph {
 
     /**

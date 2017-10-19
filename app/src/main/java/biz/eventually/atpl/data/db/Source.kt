@@ -1,25 +1,19 @@
 package biz.eventually.atpl.data.db
 
-import io.realm.RealmObject
-import io.realm.annotations.PrimaryKey
-import io.realm.annotations.Required
-import java.util.*
+import android.arch.persistence.room.ColumnInfo
+import android.arch.persistence.room.Entity
+import android.arch.persistence.room.PrimaryKey
 
 /**
  * Created by thibault on 20/03/17.
  */
-open class Source() : RealmObject() {
+@Entity(tableName = "source")
+data class Source(
 
-    @PrimaryKey
-    @Required
-    var id : String = UUID.randomUUID().toString()
+        @PrimaryKey
+        @ColumnInfo(name = "idWeb")
+        var idWeb: Long? = null,
 
-    var idWeb: Int = -1
-
-    var name: String = ""
-
-    constructor(idWeb: Int, name: String) : this() {
-        this.idWeb = idWeb
-        this.name = name
-    }
-}
+        @ColumnInfo(name = "name")
+        var name: String
+)

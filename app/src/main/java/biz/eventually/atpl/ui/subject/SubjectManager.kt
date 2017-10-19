@@ -4,10 +4,7 @@ import android.util.Log
 import biz.eventually.atpl.common.RxBaseManager
 import biz.eventually.atpl.data.DataProvider
 import biz.eventually.atpl.data.db.LastCall
-import biz.eventually.atpl.data.db.Source
 import biz.eventually.atpl.data.model.Subject
-import biz.eventually.atpl.data.model.Topic
-import biz.eventually.atpl.ui.source.SourceManager
 import biz.eventually.atpl.utils.hasInternetConnection
 import com.google.firebase.perf.metrics.AddTrace
 import com.vicpin.krealmextensions.*

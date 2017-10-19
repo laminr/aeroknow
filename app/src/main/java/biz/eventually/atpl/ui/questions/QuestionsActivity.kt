@@ -92,7 +92,7 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
         val topicId = intent.extras.getString(IntentIdentifier.TOPIC)
         val startFirst = intent.extras.getBoolean(IntentIdentifier.TOPIC_STARRED, false)
 
-        mTopic = Topic().queryFirst({ query -> query.equalTo("id", topicId) })
+        mTopic = Topic().queryFirst({ query -> query.equalTo("idWeb", topicId) })
 
         mTopic?.apply {
             rotateloading.start()
@@ -500,7 +500,7 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
         Alerter.create(this)
                 .setTitle(getString(R.string.dialog_title_error))
                 .setText(getString(R.string.question_focus_error))
-                .setBackgroundColor(R.color.colorAccent)
+                .setBackgroundColorRes(R.color.colorSecondary)
                 .show()
 
         displayFollowAndFocus()

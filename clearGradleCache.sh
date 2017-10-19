@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-gradle build --refresh-dependencies
+./gradlew build --refresh-dependencies

@@ -1,9 +1,11 @@
 package biz.eventually.atpl.ui.source
 
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProvider
+import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.support.annotation.StringRes
-import android.support.v4.content.ContextCompat
 import android.view.View
 import android.view.View.GONE
 import android.widget.AdapterView
@@ -13,25 +15,34 @@ import biz.eventually.atpl.R
 import biz.eventually.atpl.common.IntentIdentifier
 import biz.eventually.atpl.data.db.Source
 import biz.eventually.atpl.settings.SettingsActivity
-import biz.eventually.atpl.ui.BaseActivity
+import biz.eventually.atpl.ui.BaseComponentActivity
 import biz.eventually.atpl.ui.about.AboutActivity
 import biz.eventually.atpl.ui.subject.SubjectActivity
 import com.yalantis.guillotine.animation.GuillotineAnimation
 import kotlinx.android.synthetic.main.activity_source.*
 import kotlinx.android.synthetic.main.guillotine.*
 import org.jetbrains.anko.startActivity
+import timber.log.Timber
+import javax.inject.Inject
 
-class SourceActivity : BaseActivity<SourceManager>() {
+class SourceActivity : BaseComponentActivity() {
 
     private var mAdapter: SourceAdapter? = null
     private var mSourceList: List<Source>? = null
     private val RIPPLE_DURATION: Long = 250
 
+    @Inject lateinit var viewModelFactory: ViewModelFactory
+    private lateinit var viewModel: SourceViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Timber.i("Starting SourceActivity")
 
         AtplApplication.component.inject(this)
+
         setContentView(R.layout.activity_source)
+
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(SourceViewModel::class.java)
 
         app_version.text = "v${BuildConfig.VERSION_APP}"
 
@@ -48,6 +59,15 @@ class SourceActivity : BaseActivity<SourceManager>() {
                 loadData(intent.getBooleanExtra(IntentIdentifier.DATA_FROM_DB, false))
             }
         }
+
+        viewModel.sources.observe(this, Observer<List<Source>> {
+            if (it?.isEmpty() == true) {
+                showHideError(View.VISIBLE)
+            } else {
+                showHideError(View.GONE)
+                displayData(it)
+            }
+        })
 
         source_refresh.setOnClickListener { loadData() }
     }
@@ -99,11 +119,12 @@ class SourceActivity : BaseActivity<SourceManager>() {
 
             source_listview.adapter = mAdapter
             source_listview.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
-                startActivity<SubjectActivity>(
-                        IntentIdentifier.SOURCE_ID to get(position).idWeb,
-                        IntentIdentifier.SOURCE_NAME to get(position).name
-                )
-
+                get(position).idWeb?.let {
+                    startActivity<SubjectActivity>(
+                            IntentIdentifier.SOURCE_ID to it,
+                            IntentIdentifier.SOURCE_NAME to get(position).name
+                    )
+                }
             }
             rotateloading.stop()
         }
@@ -112,7 +133,11 @@ class SourceActivity : BaseActivity<SourceManager>() {
     private fun loadData(fromDb: Boolean = false) {
         showHideError(View.GONE)
         rotateloading.start()
-        manager.getSources(fromDb, this::displayData, this::onError)
+
+        /**
+         * FIXME: to put back
+         */
+//        manager.getSources(fromDb, this::displayData, this::onError)
     }
 
     private fun showHideError(show: Int) {

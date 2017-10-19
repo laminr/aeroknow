@@ -32,12 +32,12 @@ class SourceAdapter(
             vh = view.tag as ListRowHolder
         }
 
-        vh.label.text = source?.name
+        vh.label?.text = source?.name
 
         return view
     }
 
     private class ListRowHolder(row: View?) {
-        val label: TextView = row?.findViewById(R.id.item_source_label) as TextView
+        val label: TextView? = row?.findViewById(R.id.item_source_label)
     }
 }

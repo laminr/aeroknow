@@ -56,13 +56,13 @@ class SubjectActivity : BaseActivity<SubjectManager>() {
         Fabric.with(this, Answers())
 
         setContentView(R.layout.activity_subject)
-        val toolbar = findViewById(R.id.toolbar) as Toolbar
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val sourceName = intent.extras.getString(IntentIdentifier.SOURCE_NAME)
-        supportActionBar?.title = sourceName
+        supportActionBar?.title = sourceName ?: ""
 
         mSourceId = intent.extras.getInt(IntentIdentifier.SOURCE_ID)
 
@@ -94,7 +94,7 @@ class SubjectActivity : BaseActivity<SubjectManager>() {
             )
 
             mSubjectList?.forEach {
-                // here the topic is in fact a Subject, w/ idWeb = id * -1
+                // here the topic is in fact a Subject, w/ idWeb = idWeb * -1
                 if (it.idWeb == (topic.idWeb * -1)) {
 
                     var count = 0

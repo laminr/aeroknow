@@ -7,5 +7,8 @@ import io.reactivex.schedulers.Schedulers
 /**
  * Created by Thibault de Lambilly on 07/10/2017.
  */
-data class AppRxSchedulers(val network: Scheduler = Schedulers.io(),
-                           val main: Scheduler = AndroidSchedulers.mainThread())
+data class AppRxSchedulers(
+        val disk: Scheduler = Schedulers.single(),
+        val network: Scheduler = Schedulers.io(),
+        val main: Scheduler = AndroidSchedulers.mainThread()
+)
