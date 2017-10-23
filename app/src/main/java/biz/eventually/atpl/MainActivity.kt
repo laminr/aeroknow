@@ -1,20 +1,29 @@
 package biz.eventually.atpl
 
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import biz.eventually.atpl.common.IntentIdentifier
 import biz.eventually.atpl.data.db.Source
 import biz.eventually.atpl.ui.BaseActivity
 import biz.eventually.atpl.ui.source.SourceActivity
 import biz.eventually.atpl.ui.source.SourceRepository
+import biz.eventually.atpl.ui.source.SourceViewModel
+import biz.eventually.atpl.ui.source.ViewModelFactory
 import biz.eventually.atpl.utils.*
 import cn.pedant.SweetAlert.SweetAlertDialog
 import com.crashlytics.android.Crashlytics
 import io.fabric.sdk.android.Fabric
 import kotlinx.android.synthetic.main.activity_splash.*
 import org.jetbrains.anko.startActivity
+import javax.inject.Inject
 
 class MainActivity : BaseActivity<SourceRepository>() {
+
+    @Inject lateinit var viewModelFactory: ViewModelFactory
+    private lateinit var viewModel: SourceViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,18 +34,21 @@ class MainActivity : BaseActivity<SourceRepository>() {
 
         splash_version.text = "v${BuildConfig.VERSION_NAME}"
 
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(SourceViewModel::class.java)
+
         // for App Links
         intent?.let {
             handleIntent(it)
-        }
+        } ?: kotlin.run { start() }
     }
 
     private fun start() {
         splash_rotating_left.start()
         splash_rotating_right.start()
-//        manager.getSources(false, { s -> openSourceActivity(s) }, { openSourceActivity(null) })
-        // FIXME:
-        openSourceActivity(null)
+
+        viewModel.data.observe(this, Observer<List<Source>> {
+            openSourceActivity()
+        })
     }
 
     private fun handleIntent(intent: Intent) {
@@ -68,16 +80,17 @@ class MainActivity : BaseActivity<SourceRepository>() {
     }
 
 
-    private fun openSourceActivity(sources: List<Source>?) {
+    private fun openSourceActivity() {
 
         splash_rotating_left.stop()
         splash_rotating_right.stop()
 
+        startActivity<SourceActivity>()
 
-        when(sources) {
-            null -> startActivity<SourceActivity>(IntentIdentifier.NETWORK_ERROR to true)
-            else -> startActivity<SourceActivity>(IntentIdentifier.DATA_FROM_DB to true)
-        }
+//        when(hasData) {
+//            true -> startActivity<SourceActivity>(IntentIdentifier.DATA_FROM_DB to true)
+//            false -> startActivity<SourceActivity>(IntentIdentifier.NETWORK_ERROR to true)
+//        }
 
         finish()
     }

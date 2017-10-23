@@ -1,6 +1,7 @@
 package biz.eventually.atpl.ui.source
 
 import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.MutableLiveData
 import biz.eventually.atpl.R
 import biz.eventually.atpl.common.RxBaseManager
 import biz.eventually.atpl.data.DataProvider

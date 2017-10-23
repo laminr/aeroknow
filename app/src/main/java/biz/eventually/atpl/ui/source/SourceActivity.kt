@@ -1,7 +1,6 @@
 package biz.eventually.atpl.ui.source
 
 import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.os.PersistableBundle
@@ -50,17 +49,7 @@ class SourceActivity : BaseComponentActivity() {
         source_welcome.typeface = AtplApplication.tangerine
         settingGuillotineMenu()
 
-        when (intent.getBooleanExtra(IntentIdentifier.NETWORK_ERROR, false)) {
-            true -> {
-                source_error.visibility = GONE
-                onError(R.string.error_network_error)
-            }
-            false -> {
-                loadData(intent.getBooleanExtra(IntentIdentifier.DATA_FROM_DB, false))
-            }
-        }
-
-        viewModel.sources.observe(this, Observer<List<Source>> {
+        viewModel.data.observe(this, Observer<List<Source>> {
             if (it?.isEmpty() == true) {
                 showHideError(View.VISIBLE)
             } else {
@@ -103,15 +92,6 @@ class SourceActivity : BaseComponentActivity() {
         super.onSaveInstanceState(outState, outPersistentState)
     }
 
-    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
-        super.onRestoreInstanceState(savedInstanceState)
-
-        savedInstanceState?.let {
-            //            mSourceList = it.getParcelableArrayList(StateIdentifier.SOURCE_LIST)
-//            displayData(mSourceList)
-        }
-    }
-
     private fun displayData(sources: List<Source>?): Unit {
 
         sources?.apply {
@@ -130,14 +110,8 @@ class SourceActivity : BaseComponentActivity() {
         }
     }
 
-    private fun loadData(fromDb: Boolean = false) {
-        showHideError(View.GONE)
-        rotateloading.start()
-
-        /**
-         * FIXME: to put back
-         */
-//        manager.getSources(fromDb, this::displayData, this::onError)
+    private fun loadData() {
+        viewModel.refreshData()
     }
 
     private fun showHideError(show: Int) {

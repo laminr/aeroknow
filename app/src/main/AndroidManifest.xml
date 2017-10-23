@@ -36,7 +36,8 @@
         <activity
             android:name=".ui.source.SourceActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
-            android:screenOrientation="portrait" />
+		/>
+
         <activity
             android:name=".ui.subject.SubjectActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
