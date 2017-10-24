@@ -4,15 +4,14 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
-import biz.eventually.atpl.common.IntentIdentifier
 import biz.eventually.atpl.data.db.Source
 import biz.eventually.atpl.ui.BaseActivity
 import biz.eventually.atpl.ui.source.SourceActivity
 import biz.eventually.atpl.ui.source.SourceRepository
 import biz.eventually.atpl.ui.source.SourceViewModel
 import biz.eventually.atpl.ui.source.ViewModelFactory
-import biz.eventually.atpl.utils.*
+import biz.eventually.atpl.utils.Prefields
+import biz.eventually.atpl.utils.prefsPutString
 import cn.pedant.SweetAlert.SweetAlertDialog
 import com.crashlytics.android.Crashlytics
 import io.fabric.sdk.android.Fabric
@@ -43,11 +42,20 @@ class MainActivity : BaseActivity<SourceRepository>() {
     }
 
     private fun start() {
-        splash_rotating_left.start()
-        splash_rotating_right.start()
 
         viewModel.data.observe(this, Observer<List<Source>> {
-            openSourceActivity()
+            startActivity<SourceActivity>()
+            finish()
+        })
+
+        viewModel.isLoading.observe(this, Observer<Boolean> {
+            if (it == true) {
+                splash_rotating_left.start()
+                splash_rotating_right.start()
+            } else {
+                splash_rotating_left.stop()
+                splash_rotating_right.stop()
+            }
         })
     }
 
@@ -78,21 +86,4 @@ class MainActivity : BaseActivity<SourceRepository>() {
             start()
         }
     }
-
-
-    private fun openSourceActivity() {
-
-        splash_rotating_left.stop()
-        splash_rotating_right.stop()
-
-        startActivity<SourceActivity>()
-
-//        when(hasData) {
-//            true -> startActivity<SourceActivity>(IntentIdentifier.DATA_FROM_DB to true)
-//            false -> startActivity<SourceActivity>(IntentIdentifier.NETWORK_ERROR to true)
-//        }
-
-        finish()
-    }
-
 }

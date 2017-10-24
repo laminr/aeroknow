@@ -12,6 +12,7 @@ import biz.eventually.atpl.utils.hasInternetConnection
 import com.google.firebase.perf.metrics.AddTrace
 import io.reactivex.Maybe
 import io.reactivex.rxkotlin.plusAssign
+import org.jetbrains.anko.doAsync
 import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
@@ -22,6 +23,9 @@ import javax.inject.Singleton
  */
 @Singleton
 class SourceRepository @Inject constructor(private val dataProvider: DataProvider, private val dao: SourceDao) : RxBaseManager() {
+
+
+    private var loading: MutableLiveData<Boolean> = MutableLiveData()
 
     companion object {
         val TAG = "SourceRepository"
@@ -34,16 +38,23 @@ class SourceRepository @Inject constructor(private val dataProvider: DataProvide
         return dao.getAll()
     }
 
+    fun isLoading(): LiveData<Boolean> {
+        return loading
+    }
+
     private fun getWebData() {
 
+        loading.value = true
         disposables += dataProvider
                 .dataGetSources()
                 .subscribeOn(scheduler.network)
                 .observeOn(scheduler.main)
                 .subscribe({ sWeb ->
                     analyseData(sWeb)
+                    loading.value = false
                 }, { e ->
                     Timber.d("getSources: " + e)
+                    loading.value = false
                     error(R.string.error_network_error)
                 })
 
@@ -51,29 +62,31 @@ class SourceRepository @Inject constructor(private val dataProvider: DataProvide
 
     private fun analyseData(sWeb: List<Source>) {
 
-        val sourceIds = dao.getIds()
+        doAsync {
+            val sourceIds = dao.getIds()
 
-        sWeb.forEach { s ->
-            // Update
-            if (s.idWeb in sourceIds) {
-                s.idWeb?.let {
-                    Maybe.just(it).observeOn(scheduler.disk).map {
-                        val sourceDb = dao.findById(it)
-                        sourceDb?.let {
-                            it.name = s.name
-                            dao.update(it)
+            sWeb.forEach { s ->
+                // Update
+                if (s.idWeb in sourceIds) {
+                    s.idWeb?.let {
+                        Maybe.just(it).observeOn(scheduler.disk).map {
+                            val sourceDb = dao.findById(it)
+                            sourceDb?.let {
+                                it.name = s.name
+                                dao.update(it)
+                            }
                         }
                     }
                 }
+                // New
+                else {
+                    dao.insert(s)
+                }
             }
-            // New
-            else {
-                dao.insert(s)
-            }
-        }
 
-        // update time reference
-        if (sWeb.isNotEmpty()) LastCall().update(LastCall.TYPE_SOURCE, Date().time)
+            // update time reference
+            if (sWeb.isNotEmpty()) LastCall().update(LastCall.TYPE_SOURCE, Date().time)
+        }
     }
 }
 

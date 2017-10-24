@@ -15,7 +15,7 @@ open class Subject() : RealmObject() {
     @Required
     var id : String = UUID.randomUUID().toString()
 
-    var sourceId: Int = -1
+    var sourceId: Long = -1
 
     var idWeb: Int = -1
 
@@ -23,7 +23,7 @@ open class Subject() : RealmObject() {
 
     var topics: RealmList<Topic> = RealmList()
 
-    constructor(sourceId: Int, idWeb: Int, name: String, topics: RealmList<Topic>): this() {
+    constructor(sourceId: Long, idWeb: Int, name: String, topics: RealmList<Topic>): this() {
         this.sourceId = sourceId
         this.idWeb = idWeb
         this.name = name

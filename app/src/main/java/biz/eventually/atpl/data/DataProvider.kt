@@ -25,7 +25,7 @@ class DataProvider @Inject constructor(private val sourceService: SourceService,
         return sourceService.loadSources(lastCall ?: 0).map { api -> toAppSources(api.data) }
     }
 
-    fun dataGetSubjects(sourceId: Int) : Observable<List<Subject>> {
+    fun dataGetSubjects(sourceId: Long) : Observable<List<Subject>> {
         val lastCall = 0L //LastCall().queryFirst({ query -> query.equalTo("idWeb", LastCall.TYPE_SUBJECT) })?.updated
         val token = prefsGetString(context , PREF_TOKEN) ?: ""
         return sourceService.loadSubjects(sourceId, lastCall ?: 0, token).map { api -> toAppSubjects(sourceId, api.data) }

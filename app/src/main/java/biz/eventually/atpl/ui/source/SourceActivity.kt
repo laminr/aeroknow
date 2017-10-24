@@ -27,7 +27,6 @@ import javax.inject.Inject
 class SourceActivity : BaseComponentActivity() {
 
     private var mAdapter: SourceAdapter? = null
-    private var mSourceList: List<Source>? = null
     private val RIPPLE_DURATION: Long = 250
 
     @Inject lateinit var viewModelFactory: ViewModelFactory
@@ -58,6 +57,14 @@ class SourceActivity : BaseComponentActivity() {
             }
         })
 
+        viewModel.isLoading.observe(this, Observer<Boolean> {
+            if (it == true) {
+                rotateloading.start()
+            } else {
+                rotateloading.stop()
+            }
+        })
+
         source_refresh.setOnClickListener { loadData() }
     }
 
@@ -84,14 +91,6 @@ class SourceActivity : BaseComponentActivity() {
         settings_back.setOnClickListener { settings_group.performClick() }
     }
 
-    override fun onSaveInstanceState(outState: Bundle?, outPersistentState: PersistableBundle?) {
-        mSourceList?.let {
-            //            outState?.putParcelableArrayList(StateIdentifier.SOURCE_LIST, it as? ArrayList<Source>)
-        }
-
-        super.onSaveInstanceState(outState, outPersistentState)
-    }
-
     private fun displayData(sources: List<Source>?): Unit {
 
         sources?.apply {
@@ -99,10 +98,11 @@ class SourceActivity : BaseComponentActivity() {
 
             source_listview.adapter = mAdapter
             source_listview.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
-                get(position).idWeb?.let {
+                val source = get(position)
+                source.idWeb?.let {
                     startActivity<SubjectActivity>(
                             IntentIdentifier.SOURCE_ID to it,
-                            IntentIdentifier.SOURCE_NAME to get(position).name
+                            IntentIdentifier.SOURCE_NAME to source.name
                     )
                 }
             }

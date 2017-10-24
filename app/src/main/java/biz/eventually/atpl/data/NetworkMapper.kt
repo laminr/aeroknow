@@ -10,7 +10,7 @@ import io.realm.RealmList
  */
 
 fun toAppSources(from: List<SourceNetwork>?) = from?.map({ Source(it.id, it.name) }) ?: listOf()
-fun toAppSubjects(sourceId: Int, from: List<SubjectNetwork>?) = from?.map({ Subject(sourceId, it.id, it.name, toAppTopics(it.topics))}) ?: listOf()
+fun toAppSubjects(sourceId: Long, from: List<SubjectNetwork>?) = from?.map({ Subject(sourceId, it.id, it.name, toAppTopics(it.topics))}) ?: listOf()
 
 fun toAppTopic(from: TopicNetwork) = Topic(from.id, from.name, from.questions, from.follow, from.focus)
 

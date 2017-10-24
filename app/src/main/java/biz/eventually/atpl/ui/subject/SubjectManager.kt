@@ -26,7 +26,7 @@ class SubjectManager @Inject constructor(private val dataProvider: DataProvider)
     }
 
     @AddTrace(name = "getSubjects", enabled = true)
-    fun getSubjects(sourceId: Int, display: (List<Subject>?) -> Unit, error: () -> Unit) {
+    fun getSubjects(sourceId: Long, display: (List<Subject>?) -> Unit, error: () -> Unit) {
 
         if (hasInternetConnection()) {
             dataProvider.dataGetSubjects(sourceId).subscribeOn(Schedulers.io())?.observeOn(AndroidSchedulers.mainThread())?.subscribe({ subWeb ->
@@ -46,7 +46,7 @@ class SubjectManager @Inject constructor(private val dataProvider: DataProvider)
         }
     }
 
-    private fun analyseData(subWeb: List<Subject>, sourceId: Int) {
+    private fun analyseData(subWeb: List<Subject>, sourceId: Long) {
 
         val subjectsIds = Subject().query({ s -> s.equalTo("sourceId", sourceId) }).map { it.idWeb }
 

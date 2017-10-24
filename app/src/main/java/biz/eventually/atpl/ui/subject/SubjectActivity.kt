@@ -44,7 +44,7 @@ class SubjectActivity : BaseActivity<SubjectManager>() {
     @Inject
     lateinit var questionManager: QuestionsManager
 
-    private var mSourceId: Int = 0
+    private var mSourceId: Long = 0
     private var mSubjectList: List<Subject>? = null
 
     private var mAdapter: SubjectAdapter = SubjectAdapter(this::onItemClick)
@@ -64,7 +64,7 @@ class SubjectActivity : BaseActivity<SubjectManager>() {
         val sourceName = intent.extras.getString(IntentIdentifier.SOURCE_NAME)
         supportActionBar?.title = sourceName ?: ""
 
-        mSourceId = intent.extras.getInt(IntentIdentifier.SOURCE_ID)
+        mSourceId = intent.extras.getLong(IntentIdentifier.SOURCE_ID)
 
         when (mSubjectList) {
             null -> loadData()
@@ -200,6 +200,8 @@ class SubjectActivity : BaseActivity<SubjectManager>() {
 
         if (mSourceId > 0) {
             manager.getSubjects(mSourceId, this::displaySubjects, this::onError)
+        } else {
+            showHideError(R.string.dialog_title_error)
         }
     }
 

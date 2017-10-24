@@ -2,9 +2,7 @@ package biz.eventually.atpl.di.module
 
 import android.arch.persistence.room.Room
 import android.content.Context
-import android.graphics.Bitmap
 import android.os.Debug
-import biz.eventually.atpl.BuildConfig
 import biz.eventually.atpl.data.DataProvider
 import biz.eventually.atpl.data.dao.SourceDao
 import biz.eventually.atpl.ui.source.SourceRepository

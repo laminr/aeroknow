@@ -16,7 +16,7 @@ interface SourceService {
     fun loadSources(@Query("last") lastCall: Long): Observable<ApiResponse<SourceNetwork>>
 
     @GET("source/{idWeb}")
-    fun loadSubjects(@Path("idWeb") sourceId: Int, @Query("last") lastCall: Long, @Query("token") token: String): Observable<ApiResponse<SubjectNetwork>>
+    fun loadSubjects(@Path("idWeb") sourceId: Long, @Query("last") lastCall: Long, @Query("token") token: String): Observable<ApiResponse<SubjectNetwork>>
 
     @GET("topic/{idWeb}/full")
     fun loadQuestions(@Path("idWeb") topicId: Int, @Query("last") lastCall: Long, @Query("token") token: String): Observable<ApiSingleResponse<TopicWithQuestionNetwork>>
