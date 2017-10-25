@@ -89,7 +89,7 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
         /***
          * Data
          */
-        val topicId = intent.extras.getString(IntentIdentifier.TOPIC)
+        val topicId = intent.extras.getInt(IntentIdentifier.TOPIC)
         val startFirst = intent.extras.getBoolean(IntentIdentifier.TOPIC_STARRED, false)
 
         mTopic = Topic().queryFirst({ query -> query.equalTo("idWeb", topicId) })

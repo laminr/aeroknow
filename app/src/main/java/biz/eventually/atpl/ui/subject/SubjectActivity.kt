@@ -139,7 +139,7 @@ class SubjectActivity : BaseActivity<SubjectManager>() {
 
                 val intent = Intent(this, QuestionsActivity::class.java)
 
-                intent.putExtra(IntentIdentifier.TOPIC, topic.id)
+                intent.putExtra(IntentIdentifier.TOPIC, topic.idWeb)
                 intent.putExtra(IntentIdentifier.TOPIC_STARRED, startFirst)
 
                 startActivityForResult(intent, REFRESH_SUBJECT)
