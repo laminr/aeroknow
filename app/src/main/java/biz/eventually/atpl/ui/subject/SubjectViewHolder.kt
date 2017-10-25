@@ -6,7 +6,7 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import biz.eventually.atpl.R
 import biz.eventually.atpl.data.dto.TopicView
-import biz.eventually.atpl.data.model.Topic
+import biz.eventually.atpl.data.db.Topic
 import kotlinx.android.synthetic.main.item_subject_row.view.*
 
 /**

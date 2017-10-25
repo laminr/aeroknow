@@ -1,5 +1,7 @@
 package biz.eventually.atpl.ui.subject
 
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.DefaultItemAnimator
@@ -11,11 +13,12 @@ import biz.eventually.atpl.AtplApplication
 import biz.eventually.atpl.R
 import biz.eventually.atpl.common.IntentIdentifier
 import biz.eventually.atpl.common.IntentIdentifier.Companion.REFRESH_SUBJECT
+import biz.eventually.atpl.data.db.Subject
+import biz.eventually.atpl.data.db.Topic
 import biz.eventually.atpl.data.dto.TopicView
 import biz.eventually.atpl.data.model.Question
-import biz.eventually.atpl.data.model.Subject
-import biz.eventually.atpl.data.model.Topic
-import biz.eventually.atpl.ui.BaseActivity
+import biz.eventually.atpl.ui.BaseComponentActivity
+import biz.eventually.atpl.ui.source.SourceViewModelFactory
 import biz.eventually.atpl.ui.questions.QuestionsActivity
 import biz.eventually.atpl.ui.source.QuestionsManager
 import biz.eventually.atpl.utils.hasInternetConnection
@@ -25,17 +28,14 @@ import com.crashlytics.android.answers.ContentViewEvent
 import com.google.firebase.perf.metrics.AddTrace
 import com.vicpin.krealmextensions.query
 import com.vicpin.krealmextensions.querySorted
+import io.fabric.sdk.android.Fabric
 import io.realm.Sort
 import kotlinx.android.synthetic.main.activity_subject.*
+import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
 import javax.inject.Inject
 
-import kotlinx.coroutines.experimental.android.UI as UI
-import io.fabric.sdk.android.Fabric
-
-
-
-class SubjectActivity : BaseActivity<SubjectManager>() {
+class SubjectActivity : BaseComponentActivity() {
 
     companion object {
         val TAG = "SubjectActivity"
@@ -44,8 +44,11 @@ class SubjectActivity : BaseActivity<SubjectManager>() {
     @Inject
     lateinit var questionManager: QuestionsManager
 
-    private var mSourceId: Long = 0
     private var mSubjectList: List<Subject>? = null
+    private var mSourceId: Long = 0
+
+    @Inject lateinit var subjectViewModelFactory: SubjectViewModelFactory
+    private lateinit var viewModel: SubjectViewModel
 
     private var mAdapter: SubjectAdapter = SubjectAdapter(this::onItemClick)
 
@@ -53,6 +56,8 @@ class SubjectActivity : BaseActivity<SubjectManager>() {
 
         super.onCreate(savedInstanceState)
         AtplApplication.component.inject(this)
+        viewModel = ViewModelProviders.of(this, subjectViewModelFactory).get(SubjectViewModel::class.java)
+
         Fabric.with(this, Answers())
 
         setContentView(R.layout.activity_subject)
@@ -66,10 +71,9 @@ class SubjectActivity : BaseActivity<SubjectManager>() {
 
         mSourceId = intent.extras.getLong(IntentIdentifier.SOURCE_ID)
 
-        when (mSubjectList) {
-            null -> loadData()
-            else -> displaySubjects(mSubjectList)
-        }
+        viewModel.getData(mSourceId).observe(this, Observer<List<Subject>> {
+            displaySubjects(it)
+        })
 
         val mLayoutManager = LinearLayoutManager(applicationContext)
         subject_subject_list.layoutManager = mLayoutManager
@@ -89,7 +93,7 @@ class SubjectActivity : BaseActivity<SubjectManager>() {
             Answers.getInstance().logContentView(ContentViewEvent()
                     .putContentName("Subject")
                     .putContentType("Download Questions")
-                    .putContentId("Source_${mSourceId}_subject_${topic.id}")
+                    .putContentId("Source_${mSourceId}_subject_${topic.idWeb}")
                     .putCustomAttribute("Download offline", "${topic.idWeb}: ${topic.name}")
             )
 
@@ -99,9 +103,9 @@ class SubjectActivity : BaseActivity<SubjectManager>() {
 
                     var count = 0
                     val subjectId = topic.idWeb
-                    val max = it.topics.count()
+                    val max = it.topics?.count() ?: 0
 
-                    it.topics.forEach { topic ->
+                    it.topics?.forEach { topic ->
                         updateTopicLine(topic.idWeb, true)
                         questionManager.getQuestions(topic.idWeb, false, fun(_: List<Question>) {
                             updateTopicLine(topic.idWeb, hasOffline = true)
@@ -133,8 +137,8 @@ class SubjectActivity : BaseActivity<SubjectManager>() {
                 Answers.getInstance().logContentView(ContentViewEvent()
                         .putContentName("Subject")
                         .putContentType("Questions")
-                        .putContentId("Source_${mSourceId}_subject_${topic.id}")
-                        .putCustomAttribute("Subject Name", "${topic.id}: ${topic.name}")
+                        .putContentId("Source_${mSourceId}_subject_${topic.idWeb}")
+                        .putCustomAttribute("Subject Name", "${topic.idWeb}: ${topic.name}")
                 )
 
                 val intent = Intent(this, QuestionsActivity::class.java)
@@ -178,11 +182,11 @@ class SubjectActivity : BaseActivity<SubjectManager>() {
 
             it.forEach { t ->
                 // header
-                val titleTopic = Topic((t.idWeb * -1), t.name)
+                val titleTopic = Topic((t.idWeb * -1), t.idWeb, t.name)
                 topics.add(TopicView(titleTopic))
 
                 // line of topics
-                topics.addAll(t.topics.map { TopicView(it) })
+                topics.addAll(t.topics?.map { TopicView(it) } ?: listOf())
             }
 
             mAdapter.bind(topics)
@@ -199,13 +203,14 @@ class SubjectActivity : BaseActivity<SubjectManager>() {
         if (!silent) rotateloading.start()
 
         if (mSourceId > 0) {
-            manager.getSubjects(mSourceId, this::displaySubjects, this::onError)
+            // FIXME:
+//            manager.getSubjects(mSourceId, this::displaySubjects, this::onError)
         } else {
             showHideError(R.string.dialog_title_error)
         }
     }
 
-    private fun updateTopicLine(topicId: Int, isSync: Boolean = false, hasOffline: Boolean = false) {
+    private fun updateTopicLine(topicId: Long, isSync: Boolean = false, hasOffline: Boolean = false) {
         launch(UI) {
             mAdapter.getList().forEachIndexed { index, topicDto ->
                 if (topicDto.topic.idWeb == topicId) {
@@ -221,7 +226,7 @@ class SubjectActivity : BaseActivity<SubjectManager>() {
         launch(UI) {
             val topicIds = Question().querySorted("topicId", Sort.ASCENDING).groupBy { it.topicId }
             mAdapter.getList().forEachIndexed { index, topicDto ->
-                val doesHasOffline = topicDto.topic.idWeb in topicIds.keys
+                val doesHasOffline = topicDto.topic.idWeb.toInt() in topicIds.keys
                 if (doesHasOffline != topicDto.hasOfflineData) {
                     topicDto.hasOfflineData = doesHasOffline
                     mAdapter.notifyItemChanged(index)

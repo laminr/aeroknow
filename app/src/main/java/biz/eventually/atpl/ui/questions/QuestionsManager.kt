@@ -26,7 +26,7 @@ class QuestionsManager @Inject constructor(private val dataProvider: DataProvide
     }
 
     @AddTrace(name = "getQuestions", enabled = true)
-    fun getQuestions(topicId: Int, starFist: Boolean, display: (qs: List<Question>) -> Unit, error: () -> Unit) {
+    fun getQuestions(topicId: Long, starFist: Boolean, display: (qs: List<Question>) -> Unit, error: () -> Unit) {
 
         val questionsDb = Question().query({ s -> s.equalTo("topicId", topicId) }).toMutableList()
 
@@ -86,7 +86,7 @@ class QuestionsManager @Inject constructor(private val dataProvider: DataProvide
         }
     }
 
-    private fun analyseData(topicId: Int, questionsDb: MutableList<Question>, questionsWeb: List<Question>) {
+    private fun analyseData(topicId: Long, questionsDb: MutableList<Question>, questionsWeb: List<Question>) {
 
         val questionsId = questionsDb.map { it.idWeb }
 
@@ -106,7 +106,7 @@ class QuestionsManager @Inject constructor(private val dataProvider: DataProvide
             }
             // New
             else {
-                qWeb.topicId = topicId
+                qWeb.topicId = topicId.toInt()
                 qWeb.save()
                 questionsDb.add(qWeb)
             }

@@ -22,7 +22,7 @@ class SourceActivity : BaseComponentActivity() {
 
     private var mAdapter: SourceAdapter? = null
 
-    @Inject lateinit var viewModelFactory: ViewModelFactory
+    @Inject lateinit var sourceViewModelFactory: SourceViewModelFactory
     private lateinit var viewModel: SourceViewModel
 
     private lateinit var menuDecorator : MenuDecorator
@@ -38,7 +38,7 @@ class SourceActivity : BaseComponentActivity() {
         // handling menu screen
         menuDecorator = MenuDecorator(this)
 
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(SourceViewModel::class.java)
+        viewModel = ViewModelProviders.of(this, sourceViewModelFactory).get(SourceViewModel::class.java)
 
         app_version.text = "v${BuildConfig.VERSION_APP}"
 
