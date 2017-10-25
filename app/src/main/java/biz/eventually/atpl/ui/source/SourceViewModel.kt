@@ -12,16 +12,15 @@ import javax.inject.Singleton
 @Singleton
 class SourceViewModel @Inject constructor(val repository: SourceRepository) : ViewModel() {
 
-    private var sources : LiveData<List<Source>>
+    var sources: LiveData<List<Source>>
 
-    var isLoading : LiveData<Boolean>
+    var isLoading: LiveData<Boolean> = repository.isLoading()
 
     init {
         sources = repository.getSources()
-        isLoading = repository.isLoading()
     }
 
-    var data : LiveData<List<Source>> = sources
+//    var data : LiveData<List<Source>> = sources
 
     fun refreshData() {
         sources = repository.getSources()

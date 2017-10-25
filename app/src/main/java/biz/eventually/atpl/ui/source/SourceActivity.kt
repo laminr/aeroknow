@@ -48,7 +48,7 @@ class SourceActivity : BaseComponentActivity() {
         source_welcome.typeface = AtplApplication.tangerine
         settingGuillotineMenu()
 
-        viewModel.data.observe(this, Observer<List<Source>> {
+        viewModel.sources.observe(this, Observer<List<Source>> {
             if (it?.isEmpty() == true) {
                 showHideError(View.VISIBLE)
             } else {

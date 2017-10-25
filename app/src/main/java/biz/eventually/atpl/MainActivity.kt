@@ -43,7 +43,7 @@ class MainActivity : BaseActivity<SourceRepository>() {
 
     private fun start() {
 
-        viewModel.data.observe(this, Observer<List<Source>> {
+        viewModel.sources.observe(this, Observer<List<Source>> {
             startActivity<SourceActivity>()
             finish()
         })
