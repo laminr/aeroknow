@@ -4,7 +4,8 @@ import android.content.Context
 import biz.eventually.atpl.data.db.Source
 import biz.eventually.atpl.data.model.Follow
 import biz.eventually.atpl.data.model.Question
-import biz.eventually.atpl.data.model.Subject
+import biz.eventually.atpl.data.db.Subject
+import biz.eventually.atpl.data.dto.SubjectView
 import biz.eventually.atpl.data.service.SourceService
 import biz.eventually.atpl.utils.Prefields.PREF_TOKEN
 import biz.eventually.atpl.utils.prefsGetString
@@ -31,7 +32,7 @@ class DataProvider @Inject constructor(private val sourceService: SourceService,
         return sourceService.loadSubjects(sourceId, lastCall ?: 0, token).map { api -> toAppSubjects(sourceId, api.data) }
     }
 
-    fun dataGetTopicQuestions(topicId: Int, startFirst: Boolean) : Observable<List<Question>> {
+    fun dataGetTopicQuestions(topicId: Long, startFirst: Boolean) : Observable<List<Question>> {
         val lastCall = 0L // LastCall().queryFirst({ query -> query.equalTo("idWeb", "${LastCall.TYPE_TOPIC}_$topicId") })?.updated
         val token = prefsGetValue(PREF_TOKEN, "")
         val questions = when (startFirst) {

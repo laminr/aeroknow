@@ -12,7 +12,7 @@ import timber.log.Timber
  * Created by Thibault de Lambilly on 17/10/17.
  */
 @Dao
-abstract class SourceDao {
+abstract class SourceDao: BaseDao<Source>() {
 
     @Query("SELECT * FROM source")
     abstract fun getAll(): LiveData<List<Source>>
@@ -23,26 +23,4 @@ abstract class SourceDao {
     @Query("SELECT * FROM source WHERE idWeb = :idWeb")
     abstract fun findById(idWeb: Long): Source?
 
-    @Insert(onConflict = REPLACE)
-    abstract fun insert(source: Source): Long
-
-    @Update
-    abstract fun update(source: Source)
-
-    @Delete
-    abstract fun delete(source: Source)
-
-    fun insertOrUpdateShow(source: Source): Source {
-        return when {
-            source.idWeb == null -> {
-                Timber.d("Inserting show: %s", source)
-                source.copy(idWeb = insert(source))
-            }
-            else -> {
-                Timber.d("Updating show: %s", source)
-                update(source)
-                source
-            }
-        }
-    }
 }

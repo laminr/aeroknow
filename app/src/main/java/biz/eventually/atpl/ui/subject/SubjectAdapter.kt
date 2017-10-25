@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import biz.eventually.atpl.R
 import biz.eventually.atpl.data.dto.TopicView
-import biz.eventually.atpl.data.model.Topic
+import biz.eventually.atpl.data.db.Topic
 
 
 /**

@@ -16,7 +16,7 @@ import biz.eventually.atpl.BuildConfig
 import biz.eventually.atpl.R
 import biz.eventually.atpl.common.IntentIdentifier
 import biz.eventually.atpl.data.model.Question
-import biz.eventually.atpl.data.model.Topic
+import biz.eventually.atpl.data.db.Topic
 import biz.eventually.atpl.ui.BaseActivity
 import biz.eventually.atpl.ui.source.QuestionsManager
 import biz.eventually.atpl.utils.*
@@ -27,7 +27,6 @@ import com.github.pwittchen.swipe.library.Swipe
 import com.github.pwittchen.swipe.library.SwipeListener
 import com.squareup.picasso.Picasso
 import com.tapadoo.alerter.Alerter
-import com.vicpin.krealmextensions.queryFirst
 import kotlinx.android.synthetic.main.activity_questions.*
 import org.jetbrains.anko.share
 
@@ -89,10 +88,10 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
         /***
          * Data
          */
-        val topicId = intent.extras.getString(IntentIdentifier.TOPIC)
+        val topicId = intent.extras.getInt(IntentIdentifier.TOPIC)
         val startFirst = intent.extras.getBoolean(IntentIdentifier.TOPIC_STARRED, false)
 
-        mTopic = Topic().queryFirst({ query -> query.equalTo("idWeb", topicId) })
+//        mTopic = Topic().queryFirst({ query -> query.equalTo("idWeb", topicId) })
 
         mTopic?.apply {
             rotateloading.start()

@@ -9,7 +9,7 @@ import biz.eventually.atpl.ui.BaseActivity
 import biz.eventually.atpl.ui.source.SourceActivity
 import biz.eventually.atpl.ui.source.SourceRepository
 import biz.eventually.atpl.ui.source.SourceViewModel
-import biz.eventually.atpl.ui.source.ViewModelFactory
+import biz.eventually.atpl.ui.source.SourceViewModelFactory
 import biz.eventually.atpl.utils.Prefields
 import biz.eventually.atpl.utils.prefsPutString
 import cn.pedant.SweetAlert.SweetAlertDialog
@@ -21,7 +21,7 @@ import javax.inject.Inject
 
 class MainActivity : BaseActivity<SourceRepository>() {
 
-    @Inject lateinit var viewModelFactory: ViewModelFactory
+    @Inject lateinit var sourceViewModelFactory: SourceViewModelFactory
     private lateinit var viewModel: SourceViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,7 +33,7 @@ class MainActivity : BaseActivity<SourceRepository>() {
 
         splash_version.text = "v${BuildConfig.VERSION_NAME}"
 
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(SourceViewModel::class.java)
+        viewModel = ViewModelProviders.of(this, sourceViewModelFactory).get(SourceViewModel::class.java)
 
         // for App Links
         intent?.let {

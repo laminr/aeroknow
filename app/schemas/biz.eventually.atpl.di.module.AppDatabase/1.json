@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "6636f13c4a7e888b0d8870a9efdca15c",
+    "identityHash": "26b60178acda1e2458f06bef94f359d7",
     "entities": [
       {
         "tableName": "source",
@@ -29,11 +29,99 @@
         },
         "indices": [],
         "foreignKeys": []
+      },
+      {
+        "tableName": "subject",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`idWeb` INTEGER NOT NULL, `source_id` INTEGER NOT NULL, `name` TEXT NOT NULL, PRIMARY KEY(`idWeb`))",
+        "fields": [
+          {
+            "fieldPath": "idWeb",
+            "columnName": "idWeb",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sourceId",
+            "columnName": "source_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "idWeb"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "topic",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`mean` REAL NOT NULL, `idWeb` INTEGER NOT NULL, `subject_id` INTEGER NOT NULL, `name` TEXT NOT NULL, `questions` INTEGER NOT NULL, `follow` INTEGER NOT NULL, `focus` INTEGER NOT NULL, PRIMARY KEY(`idWeb`))",
+        "fields": [
+          {
+            "fieldPath": "mean",
+            "columnName": "mean",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "idWeb",
+            "columnName": "idWeb",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "subjectId",
+            "columnName": "subject_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "questions",
+            "columnName": "questions",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "follow",
+            "columnName": "follow",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "focus",
+            "columnName": "focus",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "idWeb"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"6636f13c4a7e888b0d8870a9efdca15c\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"26b60178acda1e2458f06bef94f359d7\")"
     ]
   }
 }

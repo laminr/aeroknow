@@ -1,6 +1,6 @@
 package biz.eventually.atpl.data.dto
 
-import biz.eventually.atpl.data.model.Topic
+import biz.eventually.atpl.data.db.Topic
 
 /**
  * Created by thibault on 20/03/17.
