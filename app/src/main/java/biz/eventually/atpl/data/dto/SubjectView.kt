@@ -8,15 +8,10 @@ import biz.eventually.atpl.data.db.Topic
 /**
  * Created by Thibault de Lambilly on 25/10/17.
  */
-class SubjectView() {
-    @Embedded
-    var subject: Subject = Subject(-1, -1, "")
+class SubjectView(
+        @Embedded
+        var subject: Subject = Subject(-1, -1, ""),
 
-    @Relation(parentColumn = "idWeb", entityColumn = "subject_id", entity = Topic::class)
-    var topics: List<Topic>? = null
-
-    constructor(subject: Subject, topics: List<Topic>?) : this() {
-        this.subject = subject
-        this.topics = topics
-    }
-}
+        @Relation(parentColumn = "idWeb", entityColumn = "subject_id", entity = Topic::class)
+        var topics: List<Topic> = listOf()
+)

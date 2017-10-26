@@ -186,7 +186,7 @@ class SubjectActivity : BaseComponentActivity() {
                 topics.add(TopicView(titleTopic))
 
                 // line of topics
-                topics.addAll(t.topics?.map { TopicView(it) } ?: listOf())
+                topics.addAll(t.topics.map { TopicView(it) })
             }
 
             mAdapter.bind(topics)
