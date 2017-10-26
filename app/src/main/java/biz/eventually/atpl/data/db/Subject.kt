@@ -1,14 +1,17 @@
 package biz.eventually.atpl.data.db
 
-import android.arch.persistence.room.ColumnInfo
-import android.arch.persistence.room.Entity
-import android.arch.persistence.room.Ignore
-import android.arch.persistence.room.PrimaryKey
+import android.arch.persistence.room.*
 
 /**
  * Created by thibault on 20/03/17.
  */
-@Entity(tableName = "subject")
+@Entity(
+        tableName = "subject",
+        indices= arrayOf(Index(value = "source_id", name = "idx_subject_source_id")),
+        foreignKeys = arrayOf(
+                ForeignKey(entity = Source::class, parentColumns = arrayOf("idWeb"), childColumns = arrayOf("source_id"))
+        )
+)
 class Subject(
 
     @PrimaryKey

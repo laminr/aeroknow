@@ -2,6 +2,7 @@ package biz.eventually.atpl.ui.subject
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
+import android.arch.lifecycle.Transformations
 import android.util.Log
 import biz.eventually.atpl.R
 import biz.eventually.atpl.common.RxBaseManager
@@ -16,6 +17,7 @@ import biz.eventually.atpl.utils.hasInternetConnection
 import com.google.firebase.perf.metrics.AddTrace
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.plusAssign
+import io.reactivex.rxkotlin.toMaybe
 import io.reactivex.schedulers.Schedulers
 import org.jetbrains.anko.doAsync
 import timber.log.Timber
@@ -41,9 +43,12 @@ class SubjectRepository @Inject constructor(private val dataProvider: DataProvid
 
     @AddTrace(name = "getSubjects", enabled = true)
     fun getSubjects(sourceId: Long): LiveData<List<Subject>> {
+
         if (hasInternetConnection()) getWebData(sourceId)
-        val data = dao.getAll()
-        data.value?.forEach { it.topics = topicDao.findBySubjectId(it.idWeb) }
+        val data = dao.findBySourceId(sourceId)
+        data.value?.forEach {
+            it.topics = topicDao.findBySubjectId(it.idWeb)
+        }
 
         return data
     }
@@ -62,7 +67,6 @@ class SubjectRepository @Inject constructor(private val dataProvider: DataProvid
                     error(R.string.error_network_error)
                 })
     }
-
 
     private fun analyseData(subWeb: List<Subject>, sourceId: Long) {
 
@@ -93,11 +97,16 @@ class SubjectRepository @Inject constructor(private val dataProvider: DataProvid
                                 topicDao.update(t)
                             }
                         }
+
                         // Topics from web to save (not in topicDbIds)
-                        for (topic in subjectWeb.topics?.filter({ t -> t.idWeb !in topicDbIds }) ?: listOf()) {
-                            // must be saved before add to topicDbs
-                            topicDao.insert(Topic(topic.idWeb, it.idWeb, topic.name, topic.questions, topic.follow, topic.focus))
+                        val topicToInsert = mutableListOf<Topic>()
+                        // must be saved before add to topicDbs
+                        (subjectWeb.topics?.filter({ t -> t.idWeb !in topicDbIds }) ?: listOf()).mapTo(topicToInsert) { topic ->
+                            Topic(topic.idWeb, it.idWeb, topic.name, topic.questions, topic.follow, topic.focus)
                         }
+
+                        // saving topic if any
+                        if (topicToInsert.isNotEmpty()) topicDao.insertAll(topicToInsert)
 
                         // update the subject
                         dao.update(it)
@@ -105,7 +114,10 @@ class SubjectRepository @Inject constructor(private val dataProvider: DataProvid
                 }
                 // New
                 else {
-                    dao.insert(Subject(subjectWeb.idWeb, sourceId, subjectWeb.name))
+                    val subjectId = dao.insert(Subject(subjectWeb.idWeb, sourceId, subjectWeb.name))
+                    subjectWeb.topics?.forEach {
+                        topicDao.insert(Topic(it.idWeb, subjectId, it.name, it.questions, it.follow, it.focus))
+                    }
                 }
             }
 

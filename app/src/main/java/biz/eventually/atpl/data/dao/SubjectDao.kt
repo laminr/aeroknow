@@ -16,8 +16,9 @@ abstract class SubjectDao: BaseDao<Subject>() {
     @Query("SELECT * FROM subject")
     abstract fun getAll(): LiveData<List<Subject>>
 
-    @Query("SELECT * FROM subject")
-    abstract fun getAllView(): LiveData<List<SubjectView>>
+    @Query("SELECT * FROM subject WHERE source_id = :sourceId")
+    abstract fun findBySourceId(sourceId: Long): LiveData<List<Subject>>
+
 
     @Query("SELECT idWeb FROM subject")
     abstract fun getIds(): List<Long>

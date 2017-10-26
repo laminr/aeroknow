@@ -16,9 +16,15 @@ import javax.inject.Singleton
 @Singleton
 class SubjectViewModel @Inject constructor(val repository: SubjectRepository) : ViewModel() {
 
-    var isLoading : LiveData<Boolean> = repository.isLoading()
+    private var sourceId: MutableLiveData<Long> = MutableLiveData()
 
-    fun getData(sourceId: Long) : LiveData<List<Subject>>{
-        return repository.getSubjects(sourceId)
+    var isLoading: LiveData<Boolean> = repository.isLoading()
+
+    var subjects: LiveData<List<Subject>> = Transformations.switchMap(sourceId) {
+        repository.getSubjects(it)
+    }
+
+    fun setSourceId(sourceId: Long) {
+        this.sourceId.value = sourceId
     }
 }

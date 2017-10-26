@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "26b60178acda1e2458f06bef94f359d7",
+    "identityHash": "20be1a82c7261bfb11c6ac946e1b5674",
     "entities": [
       {
         "tableName": "source",
@@ -32,7 +32,7 @@
       },
       {
         "tableName": "subject",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`idWeb` INTEGER NOT NULL, `source_id` INTEGER NOT NULL, `name` TEXT NOT NULL, PRIMARY KEY(`idWeb`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`idWeb` INTEGER NOT NULL, `source_id` INTEGER NOT NULL, `name` TEXT NOT NULL, PRIMARY KEY(`idWeb`), FOREIGN KEY(`source_id`) REFERENCES `source`(`idWeb`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "idWeb",
@@ -59,12 +59,33 @@
           ],
           "autoGenerate": false
         },
-        "indices": [],
-        "foreignKeys": []
+        "indices": [
+          {
+            "name": "idx_subject_source_id",
+            "unique": false,
+            "columnNames": [
+              "source_id"
+            ],
+            "createSql": "CREATE  INDEX `idx_subject_source_id` ON `${TABLE_NAME}` (`source_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "source",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "source_id"
+            ],
+            "referencedColumns": [
+              "idWeb"
+            ]
+          }
+        ]
       },
       {
         "tableName": "topic",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`mean` REAL NOT NULL, `idWeb` INTEGER NOT NULL, `subject_id` INTEGER NOT NULL, `name` TEXT NOT NULL, `questions` INTEGER NOT NULL, `follow` INTEGER NOT NULL, `focus` INTEGER NOT NULL, PRIMARY KEY(`idWeb`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`mean` REAL NOT NULL, `idWeb` INTEGER NOT NULL, `subject_id` INTEGER NOT NULL, `name` TEXT NOT NULL, `questions` INTEGER NOT NULL, `follow` INTEGER NOT NULL, `focus` INTEGER NOT NULL, PRIMARY KEY(`idWeb`), FOREIGN KEY(`subject_id`) REFERENCES `subject`(`idWeb`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "mean",
@@ -115,13 +136,34 @@
           ],
           "autoGenerate": false
         },
-        "indices": [],
-        "foreignKeys": []
+        "indices": [
+          {
+            "name": "idx_topic_subject_id",
+            "unique": false,
+            "columnNames": [
+              "subject_id"
+            ],
+            "createSql": "CREATE  INDEX `idx_topic_subject_id` ON `${TABLE_NAME}` (`subject_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "subject",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "subject_id"
+            ],
+            "referencedColumns": [
+              "idWeb"
+            ]
+          }
+        ]
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"26b60178acda1e2458f06bef94f359d7\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"20be1a82c7261bfb11c6ac946e1b5674\")"
     ]
   }
 }

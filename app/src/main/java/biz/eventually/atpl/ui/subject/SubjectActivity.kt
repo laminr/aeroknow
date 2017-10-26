@@ -71,7 +71,8 @@ class SubjectActivity : BaseComponentActivity() {
 
         mSourceId = intent.extras.getLong(IntentIdentifier.SOURCE_ID)
 
-        viewModel.getData(mSourceId).observe(this, Observer<List<Subject>> {
+        viewModel.setSourceId(mSourceId)
+        viewModel.subjects.observe(this, Observer<List<Subject>> {
             displaySubjects(it)
         })
 
