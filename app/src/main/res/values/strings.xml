@@ -43,4 +43,5 @@
     <string name="pref_token_summary">Your connection token let\'s you have your data synchronised with the online version of the application</string>
 	<string name="msg_offline_title">Offline</string>
 	<string name="error_dialog_message">Network error</string>
+    <string name="no_data">Yet, no data to display</string>
 </resources>

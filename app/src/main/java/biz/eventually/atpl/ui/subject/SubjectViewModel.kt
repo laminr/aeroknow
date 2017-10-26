@@ -4,9 +4,7 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Transformations
 import android.arch.lifecycle.ViewModel
-import biz.eventually.atpl.data.db.Source
-import biz.eventually.atpl.data.db.Subject
-import biz.eventually.atpl.ui.source.SourceRepository
+import biz.eventually.atpl.data.dto.SubjectView
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -20,7 +18,7 @@ class SubjectViewModel @Inject constructor(val repository: SubjectRepository) : 
 
     var isLoading: LiveData<Boolean> = repository.isLoading()
 
-    var subjects: LiveData<List<Subject>> = Transformations.switchMap(sourceId) {
+    var subjects: LiveData<List<SubjectView>> = Transformations.switchMap(sourceId) {
         repository.getSubjects(it)
     }
 

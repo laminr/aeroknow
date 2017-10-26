@@ -37,4 +37,5 @@
 	<string name="error_network_error">Erreur reseau: Quelque chose c\'est mal passé</string>
 	<string name="msg_offline_title">Hors ligne</string>
 	<string name="error_dialog_message">Erreur reseaux</string>
+    <string name="no_data">Pas encore de donnée à afficher</string>
 </resources>

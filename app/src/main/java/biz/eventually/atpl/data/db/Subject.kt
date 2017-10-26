@@ -3,7 +3,7 @@ package biz.eventually.atpl.data.db
 import android.arch.persistence.room.*
 
 /**
- * Created by thibault on 20/03/17.
+ * Created by Thibault de Lambilly on 20/03/17.
  */
 @Entity(
         tableName = "subject",

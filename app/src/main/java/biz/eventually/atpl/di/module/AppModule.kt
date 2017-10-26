@@ -9,7 +9,7 @@ import dagger.Module
 import dagger.Provides
 
 /**
- * Created by laminr on 18/03/2017.
+ * Created by Thibault de Lambilly on 18/03/2017.
  */
 @Module
 class AppModule(val app: AtplApplication) {

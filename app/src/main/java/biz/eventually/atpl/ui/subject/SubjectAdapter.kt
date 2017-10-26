@@ -10,7 +10,7 @@ import biz.eventually.atpl.data.db.Topic
 
 
 /**
- * Created by laminr on 29/03/2017.
+ * Created by Thibault de Lambilly on 29/03/2017.
  */
 class SubjectAdapter(val onClick: (dto: Topic, startFirst: Boolean) -> Unit) : RecyclerView.Adapter<SubjectViewHolder>() {
 

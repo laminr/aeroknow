@@ -6,7 +6,7 @@ import biz.eventually.atpl.ui.source.SourceActivity
 import biz.eventually.atpl.ui.subject.SubjectActivity
 
 /**
- * Created by laminr on 19/03/2017.
+ * Created by Thibault de Lambilly on 19/03/2017.
  */
 
 interface AppGraph {

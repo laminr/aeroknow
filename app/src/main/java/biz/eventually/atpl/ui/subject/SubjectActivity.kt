@@ -13,12 +13,11 @@ import biz.eventually.atpl.AtplApplication
 import biz.eventually.atpl.R
 import biz.eventually.atpl.common.IntentIdentifier
 import biz.eventually.atpl.common.IntentIdentifier.Companion.REFRESH_SUBJECT
-import biz.eventually.atpl.data.db.Subject
 import biz.eventually.atpl.data.db.Topic
+import biz.eventually.atpl.data.dto.SubjectView
 import biz.eventually.atpl.data.dto.TopicView
 import biz.eventually.atpl.data.model.Question
 import biz.eventually.atpl.ui.BaseComponentActivity
-import biz.eventually.atpl.ui.source.SourceViewModelFactory
 import biz.eventually.atpl.ui.questions.QuestionsActivity
 import biz.eventually.atpl.ui.source.QuestionsManager
 import biz.eventually.atpl.utils.hasInternetConnection
@@ -44,7 +43,7 @@ class SubjectActivity : BaseComponentActivity() {
     @Inject
     lateinit var questionManager: QuestionsManager
 
-    private var mSubjectList: List<Subject>? = null
+    private var mSubjectList: List<SubjectView> = listOf()
     private var mSourceId: Long = 0
 
     @Inject lateinit var subjectViewModelFactory: SubjectViewModelFactory
@@ -72,8 +71,8 @@ class SubjectActivity : BaseComponentActivity() {
         mSourceId = intent.extras.getLong(IntentIdentifier.SOURCE_ID)
 
         viewModel.setSourceId(mSourceId)
-        viewModel.subjects.observe(this, Observer<List<Subject>> {
-            displaySubjects(it)
+        viewModel.subjects.observe(this, Observer<List<SubjectView>> {
+            displaySubjects(it ?: listOf())
         })
 
         val mLayoutManager = LinearLayoutManager(applicationContext)
@@ -98,9 +97,9 @@ class SubjectActivity : BaseComponentActivity() {
                     .putCustomAttribute("Download offline", "${topic.idWeb}: ${topic.name}")
             )
 
-            mSubjectList?.forEach {
+            mSubjectList.forEach {
                 // here the topic is in fact a Subject, w/ idWeb = idWeb * -1
-                if (it.idWeb == (topic.idWeb * -1)) {
+                if (it.subject.idWeb == (topic.idWeb * -1)) {
 
                     var count = 0
                     val subjectId = topic.idWeb
@@ -176,14 +175,14 @@ class SubjectActivity : BaseComponentActivity() {
         gatherWhoHasOfflineData()
     }
 
-    private fun displaySubjects(subjects: List<Subject>?) {
+    private fun displaySubjects(subjects: List<SubjectView>) {
         mSubjectList = subjects
-        mSubjectList?.let {
+        mSubjectList.let {
             val topics = mutableListOf<TopicView>()
 
             it.forEach { t ->
                 // header
-                val titleTopic = Topic((t.idWeb * -1), t.idWeb, t.name)
+                val titleTopic = Topic((t.subject.idWeb * -1), t.subject.idWeb, t.subject.name)
                 topics.add(TopicView(titleTopic))
 
                 // line of topics
@@ -196,16 +195,15 @@ class SubjectActivity : BaseComponentActivity() {
 
             gatherWhoHasOfflineData()
         }
+
+        showHideError(if (mSubjectList.isEmpty()) View.VISIBLE else View.GONE)
     }
 
     @AddTrace(name = "loadDataSubject", enabled = true)
     private fun loadData(silent: Boolean = false) {
-        showHideError(View.GONE)
         if (!silent) rotateloading.start()
-
         if (mSourceId > 0) {
-            // FIXME:
-//            manager.getSubjects(mSourceId, this::displaySubjects, this::onError)
+            viewModel.setSourceId(mSourceId)
         } else {
             showHideError(R.string.dialog_title_error)
         }

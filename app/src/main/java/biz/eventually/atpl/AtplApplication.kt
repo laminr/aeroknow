@@ -13,7 +13,7 @@ import io.realm.Realm
 import timber.log.Timber
 
 /**
- * Created by laminr on 18/03/2017.
+ * Created by Thibault de Lambilly on 18/03/2017.
  */
 
 class AtplApplication : Application() {

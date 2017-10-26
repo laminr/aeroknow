@@ -19,7 +19,7 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
 
 /**
- * Created by laminr on 18/03/2017.
+ * Created by Thibault de Lambilly on 18/03/2017.
  */
 @Module
 class HttpModule {

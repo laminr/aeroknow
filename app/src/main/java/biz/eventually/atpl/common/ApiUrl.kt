@@ -3,7 +3,7 @@ package biz.eventually.atpl.common
 import javax.inject.Qualifier
 
 /**
- * Created by laminr on 18/03/2017.
+ * Created by Thibault de Lambilly on 18/03/2017.
  */
 class ApiUrl(val value: String = ATPL) {
     companion object {

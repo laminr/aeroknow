@@ -2,8 +2,6 @@ package biz.eventually.atpl.ui.subject
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.Transformations
-import android.util.Log
 import biz.eventually.atpl.R
 import biz.eventually.atpl.common.RxBaseManager
 import biz.eventually.atpl.data.DataProvider
@@ -17,7 +15,6 @@ import biz.eventually.atpl.utils.hasInternetConnection
 import com.google.firebase.perf.metrics.AddTrace
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.plusAssign
-import io.reactivex.rxkotlin.toMaybe
 import io.reactivex.schedulers.Schedulers
 import org.jetbrains.anko.doAsync
 import timber.log.Timber
@@ -42,15 +39,10 @@ class SubjectRepository @Inject constructor(private val dataProvider: DataProvid
     }
 
     @AddTrace(name = "getSubjects", enabled = true)
-    fun getSubjects(sourceId: Long): LiveData<List<Subject>> {
+    fun getSubjects(sourceId: Long): LiveData<List<SubjectView>> {
 
         if (hasInternetConnection()) getWebData(sourceId)
-        val data = dao.findBySourceId(sourceId)
-        data.value?.forEach {
-            it.topics = topicDao.findBySubjectId(it.idWeb)
-        }
-
-        return data
+        return dao.findBySourceId(sourceId)
     }
 
     private fun getWebData(sourceId: Long) {

@@ -1,7 +1,7 @@
 package biz.eventually.atpl.common
 
 /**
- * Created by laminr on 28/03/2017.
+ * Created by Thibault de Lambilly on 28/03/2017.
  */
 interface IntentIdentifier {
     companion object {
