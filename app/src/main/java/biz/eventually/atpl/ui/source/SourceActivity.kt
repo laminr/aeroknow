@@ -14,24 +14,21 @@ import biz.eventually.atpl.data.db.Source
 import biz.eventually.atpl.ui.BaseComponentActivity
 import biz.eventually.atpl.ui.ViewModelFactory
 import biz.eventually.atpl.ui.subject.SubjectActivity
-import biz.eventually.atpl.ui.subject.SubjectRepository
 import kotlinx.android.synthetic.main.activity_source.*
 import org.jetbrains.anko.startActivity
 import timber.log.Timber
 import javax.inject.Inject
-import javax.inject.Named
 
 class SourceActivity : BaseComponentActivity() {
 
     private var mAdapter: SourceAdapter? = null
 
     @Inject
-    @Named("SourceViewModelFactory")
     lateinit var sourceViewModelFactory: ViewModelFactory<SourceRepository>
 
     private lateinit var viewModel: SourceViewModel
 
-    private lateinit var menuDecorator : MenuDecorator
+    private lateinit var menuDecorator: MenuDecorator
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

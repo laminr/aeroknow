@@ -18,13 +18,11 @@ import io.fabric.sdk.android.Fabric
 import kotlinx.android.synthetic.main.activity_splash.*
 import org.jetbrains.anko.startActivity
 import javax.inject.Inject
-import javax.inject.Named
 
 class MainActivity : BaseActivity<SourceRepository>() {
 
 
     @Inject
-    @Named("SourceViewModelFactory")
     lateinit var sourceViewModelFactory: ViewModelFactory<SourceRepository>
 
     private lateinit var viewModel: SourceViewModel
