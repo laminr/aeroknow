@@ -18,6 +18,7 @@ import biz.eventually.atpl.data.dto.SubjectView
 import biz.eventually.atpl.data.dto.TopicView
 import biz.eventually.atpl.data.model.Question
 import biz.eventually.atpl.ui.BaseComponentActivity
+import biz.eventually.atpl.ui.ViewModelFactory
 import biz.eventually.atpl.ui.questions.QuestionsActivity
 import biz.eventually.atpl.ui.source.QuestionsManager
 import biz.eventually.atpl.utils.hasInternetConnection
@@ -33,6 +34,7 @@ import kotlinx.android.synthetic.main.activity_subject.*
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
 import javax.inject.Inject
+import javax.inject.Named
 
 class SubjectActivity : BaseComponentActivity() {
 
@@ -46,7 +48,11 @@ class SubjectActivity : BaseComponentActivity() {
     private var mSubjectList: List<SubjectView> = listOf()
     private var mSourceId: Long = 0
 
-    @Inject lateinit var subjectViewModelFactory: SubjectViewModelFactory
+//    @Inject lateinit var subjectViewModelFactory: SubjectViewModelFactory
+    @Inject
+    @Named("SubjectViewModelFactory")
+    lateinit var subjectViewModelFactory: ViewModelFactory<SubjectRepository>
+
     private lateinit var viewModel: SubjectViewModel
 
     private var mAdapter: SubjectAdapter = SubjectAdapter(this::onItemClick)
@@ -103,9 +109,9 @@ class SubjectActivity : BaseComponentActivity() {
 
                     var count = 0
                     val subjectId = topic.idWeb
-                    val max = it.topics?.count() ?: 0
+                    val max = it.topics.count() ?: 0
 
-                    it.topics?.forEach { topic ->
+                    it.topics.forEach { topic ->
                         updateTopicLine(topic.idWeb, true)
                         questionManager.getQuestions(topic.idWeb, false, fun(_: List<Question>) {
                             updateTopicLine(topic.idWeb, hasOffline = true)

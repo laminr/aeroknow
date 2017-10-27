@@ -12,17 +12,23 @@ import biz.eventually.atpl.R
 import biz.eventually.atpl.common.IntentIdentifier
 import biz.eventually.atpl.data.db.Source
 import biz.eventually.atpl.ui.BaseComponentActivity
+import biz.eventually.atpl.ui.ViewModelFactory
 import biz.eventually.atpl.ui.subject.SubjectActivity
+import biz.eventually.atpl.ui.subject.SubjectRepository
 import kotlinx.android.synthetic.main.activity_source.*
 import org.jetbrains.anko.startActivity
 import timber.log.Timber
 import javax.inject.Inject
+import javax.inject.Named
 
 class SourceActivity : BaseComponentActivity() {
 
     private var mAdapter: SourceAdapter? = null
 
-    @Inject lateinit var sourceViewModelFactory: SourceViewModelFactory
+    @Inject
+    @Named("SourceViewModelFactory")
+    lateinit var sourceViewModelFactory: ViewModelFactory<SourceRepository>
+
     private lateinit var viewModel: SourceViewModel
 
     private lateinit var menuDecorator : MenuDecorator
