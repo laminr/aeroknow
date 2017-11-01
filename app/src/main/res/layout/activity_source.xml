@@ -100,6 +100,7 @@
 		app:layout_constraintRight_toRightOf="parent"
 		android:dividerHeight="0dp"
 		android:divider="@null"
+		tools:listitem="@layout/item_source"
 	/>
 
 	<com.victor.loading.rotate.RotateLoading
@@ -158,6 +159,6 @@
 		app:layout_constraintTop_toTopOf="parent"
 		app:srcCompat="@drawable/ic_menu_white_24dp" />
 
-	<include layout="@layout/guillotine" android:visibility="visible" />
+	<!--<include layout="@layout/guillotine" android:visibility="visible" />-->
 
 </android.support.constraint.ConstraintLayout>

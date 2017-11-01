@@ -1,0 +1,11 @@
+{
+  "data" :[
+    {"idweb": -1, "sourceId" : 1, "name" : "AIRCRAFT ACCIDENT AND INCIDENT INVESTIGATION", "star": 2, "done":5, "total": 9},
+    {"idweb": 1, "sourceId" : 1, "name" : "ANNEX 1 - PERSONNEL LICENSING", "star": 4, "done":3, "total": 120},
+    {"idweb": 2, "sourceId" : 1, "name" : "ANNEX 11 - AIR TRAFFIC SERVICES (ATS)", "star": 90, "done":10, "total": 34},
+    {"idweb": 3, "sourceId" : 1, "name" : "ANNEX 12 - SEARCH AND RESCUE / SAR", "star": 1, "done":2, "total": 2},
+    {"idweb": 4, "sourceId" : 1, "name" : "ANNEX 14 - AERODROMES", "star": 23, "done":8, "total": 20},
+    {"idweb": 5, "sourceId" : 1, "name" : "ANNEX 15 - AERONAUTICAL INFORMATION SERVICE", "star": 0, "done":17, "total": 120},
+    {"idweb": 6, "sourceId" : 1, "name" : "ANNEX 17 - SECURITY", "star": 12, "done":10, "total": 89}
+  ]
+}

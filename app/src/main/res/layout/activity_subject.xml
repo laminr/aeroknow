@@ -62,7 +62,9 @@
 		android:fillViewport="true"
 		app:layout_behavior="@string/appbar_scrolling_view_behavior"
 		tools:context="biz.eventually.atpl.ui.subject.SubjectActivity"
-		tools:showIn="@layout/activity_subject">
+		tools:showIn="@layout/activity_subject"
+		tools:listitem="@layout/item_subject_row"
+		>
 
 	</android.support.v7.widget.RecyclerView>
 
@@ -91,7 +93,7 @@
 			android:text="@string/no_data"
 			android:textAppearance="@style/TextAppearance.AppCompat.Large"
 			android:textColor="@color/colorGrey"
-			android:visibility="visible" />
+			android:visibility="gone" />
 
 		<Button
 			android:id="@+id/subject_refresh"
@@ -99,7 +101,7 @@
 			android:layout_height="wrap_content"
 			android:text="@string/try_again"
 			android:layout_marginTop="8dp"
-			android:visibility="visible"
+			android:visibility="gone"
 			/>
 
 	</LinearLayout>

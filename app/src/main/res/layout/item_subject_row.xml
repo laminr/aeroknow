@@ -26,7 +26,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_goneMarginLeft="32dp"
-            tools:text="The Subject text" />
+            />
 
         <ImageView
             android:id="@+id/topic_download"
@@ -88,7 +88,8 @@
                 app:layout_constraintEnd_toStartOf="@+id/topic_mean_nbr"
                 app:layout_constraintStart_toEndOf="@+id/topic_offline"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:text="One Topic" />
+                tools:text="@sample/subjects.json/data/name"
+                />
 
             <TextView
                 android:id="@+id/topic_mean_nbr"
@@ -127,7 +128,7 @@
                 app:layout_constraintBottom_toBottomOf="@+id/topic_done_nbr"
                 app:layout_constraintEnd_toStartOf="@+id/topic_done_ico"
                 app:layout_constraintTop_toTopOf="@+id/topic_done_nbr"
-                tools:text="50" />
+                tools:text="@sample/subjects.json/data/star" />
 
             <ImageView
                 android:id="@+id/topic_done_ico"
@@ -152,7 +153,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/topic_item_questions_ico"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:text="100" />
+                tools:text="@sample/subjects.json/data/done" />
 
             <TextView
                 android:id="@+id/topic_item_questions_ico"
@@ -177,7 +178,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:text="100" />
+                tools:text="@sample/subjects.json/data/total" />
         </android.support.constraint.ConstraintLayout>
     </android.support.v7.widget.CardView>
 
