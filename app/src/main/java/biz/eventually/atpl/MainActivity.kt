@@ -4,6 +4,7 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
+import biz.eventually.atpl.data.NetworkStatus
 import biz.eventually.atpl.data.db.Source
 import biz.eventually.atpl.ui.BaseActivity
 import biz.eventually.atpl.ui.ViewModelFactory
@@ -20,7 +21,6 @@ import org.jetbrains.anko.startActivity
 import javax.inject.Inject
 
 class MainActivity : BaseActivity<SourceRepository>() {
-
 
     @Inject
     lateinit var sourceViewModelFactory: ViewModelFactory<SourceRepository>
@@ -51,13 +51,14 @@ class MainActivity : BaseActivity<SourceRepository>() {
             finish()
         })
 
-        viewModel.isLoading.observe(this, Observer<Boolean> {
-            if (it == true) {
-                splash_rotating_left.start()
-                splash_rotating_right.start()
-            } else {
-                splash_rotating_left.stop()
-                splash_rotating_right.stop()
+        viewModel.networkStatus.observe(this, Observer<NetworkStatus> {
+            when (it) {
+                NetworkStatus.LOADING -> {
+                    splash_rotate.start()
+                }
+                else -> {
+                    splash_rotate.stop()
+                }
             }
         })
     }

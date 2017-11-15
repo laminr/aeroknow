@@ -13,6 +13,7 @@ import biz.eventually.atpl.AtplApplication
 import biz.eventually.atpl.R
 import biz.eventually.atpl.common.IntentIdentifier
 import biz.eventually.atpl.common.IntentIdentifier.Companion.REFRESH_SUBJECT
+import biz.eventually.atpl.data.NetworkStatus
 import biz.eventually.atpl.data.db.Topic
 import biz.eventually.atpl.data.dto.SubjectView
 import biz.eventually.atpl.data.dto.TopicView
@@ -22,6 +23,7 @@ import biz.eventually.atpl.ui.ViewModelFactory
 import biz.eventually.atpl.ui.questions.QuestionsActivity
 import biz.eventually.atpl.ui.source.QuestionsManager
 import biz.eventually.atpl.utils.hasInternetConnection
+import biz.eventually.atr.RunUpLoader
 import cn.pedant.SweetAlert.SweetAlertDialog
 import com.crashlytics.android.answers.Answers
 import com.crashlytics.android.answers.ContentViewEvent
@@ -30,16 +32,13 @@ import com.vicpin.krealmextensions.query
 import com.vicpin.krealmextensions.querySorted
 import io.fabric.sdk.android.Fabric
 import io.realm.Sort
+import kotlinx.android.synthetic.main.activity_source.*
 import kotlinx.android.synthetic.main.activity_subject.*
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
 import javax.inject.Inject
 
 class SubjectActivity : BaseComponentActivity() {
-
-    companion object {
-        val TAG = "SubjectActivity"
-    }
 
     @Inject
     lateinit var questionManager: QuestionsManager
@@ -58,11 +57,13 @@ class SubjectActivity : BaseComponentActivity() {
 
         super.onCreate(savedInstanceState)
         AtplApplication.component.inject(this)
+
         viewModel = ViewModelProviders.of(this, subjectViewModelFactory).get(SubjectViewModel::class.java)
 
         Fabric.with(this, Answers())
 
         setContentView(R.layout.activity_subject)
+
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
 
@@ -76,6 +77,13 @@ class SubjectActivity : BaseComponentActivity() {
         viewModel.setSourceId(mSourceId)
         viewModel.subjects.observe(this, Observer<List<SubjectView>> {
             displaySubjects(it ?: listOf())
+        })
+
+        viewModel.networkStatus.observe(this, Observer<NetworkStatus> {
+            when (it) {
+                NetworkStatus.LOADING -> subject_rotate.start()
+                else -> subject_rotate.stop()
+            }
         })
 
         val mLayoutManager = LinearLayoutManager(applicationContext)
@@ -194,7 +202,6 @@ class SubjectActivity : BaseComponentActivity() {
 
             mAdapter.bind(topics)
             mAdapter.notifyDataSetChanged()
-            rotateloading.stop()
 
             gatherWhoHasOfflineData()
         }
@@ -204,7 +211,8 @@ class SubjectActivity : BaseComponentActivity() {
 
     @AddTrace(name = "loadDataSubject", enabled = true)
     private fun loadData(silent: Boolean = false) {
-        if (!silent) rotateloading.start()
+        // FIXME: Handle the silent param
+//        if (!silent) subject_rotate.start()
         if (mSourceId > 0) {
             viewModel.setSourceId(mSourceId)
         } else {
@@ -243,7 +251,6 @@ class SubjectActivity : BaseComponentActivity() {
     }
 
     private fun onError() {
-        rotateloading.stop()
         showHideError(View.VISIBLE)
     }
 }

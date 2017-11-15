@@ -2,6 +2,7 @@ package biz.eventually.atpl.ui.source
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.ViewModel
+import biz.eventually.atpl.data.NetworkStatus
 import biz.eventually.atpl.data.db.Source
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -14,7 +15,7 @@ class SourceViewModel @Inject constructor(val repository: SourceRepository) : Vi
 
     var sources : LiveData<List<Source>> = repository.getSources()
 
-    var isLoading : LiveData<Boolean> = repository.isLoading()
+    var networkStatus: LiveData<NetworkStatus> = repository.networkStatus()
 
     fun refreshData() {
         sources = repository.getSources()

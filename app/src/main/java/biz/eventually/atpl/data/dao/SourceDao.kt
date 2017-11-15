@@ -12,7 +12,7 @@ import timber.log.Timber
  * Created by Thibault de Lambilly on 17/10/17.
  */
 @Dao
-abstract class SourceDao: BaseDao<Source>() {
+abstract class SourceDao: BaseDao<Source> {
 
     @Query("SELECT * FROM source")
     abstract fun getAll(): LiveData<List<Source>>

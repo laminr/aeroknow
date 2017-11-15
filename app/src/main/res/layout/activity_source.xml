@@ -104,7 +104,7 @@
 	/>
 
 	<com.victor.loading.rotate.RotateLoading
-		android:id="@+id/rotateloading"
+		android:id="@+id/source_rotating"
 		android:layout_width="80dp"
 		android:layout_height="80dp"
 		app:loading_width="5dp"
@@ -159,6 +159,6 @@
 		app:layout_constraintTop_toTopOf="parent"
 		app:srcCompat="@drawable/ic_menu_white_24dp" />
 
-	<!--<include layout="@layout/guillotine" android:visibility="visible" />-->
+	<include layout="@layout/guillotine" android:visibility="visible" />
 
 </android.support.constraint.ConstraintLayout>

@@ -10,10 +10,12 @@ import biz.eventually.atpl.AtplApplication
 import biz.eventually.atpl.BuildConfig
 import biz.eventually.atpl.R
 import biz.eventually.atpl.common.IntentIdentifier
+import biz.eventually.atpl.data.NetworkStatus
 import biz.eventually.atpl.data.db.Source
 import biz.eventually.atpl.ui.BaseComponentActivity
 import biz.eventually.atpl.ui.ViewModelFactory
 import biz.eventually.atpl.ui.subject.SubjectActivity
+
 import kotlinx.android.synthetic.main.activity_source.*
 import org.jetbrains.anko.startActivity
 import timber.log.Timber
@@ -57,11 +59,10 @@ class SourceActivity : BaseComponentActivity() {
             }
         })
 
-        viewModel.isLoading.observe(this, Observer<Boolean> {
-            if (it == true) {
-                rotateloading.start()
-            } else {
-                rotateloading.stop()
+        viewModel.networkStatus.observe(this, Observer<NetworkStatus> {
+            when (it) {
+                NetworkStatus.LOADING -> source_rotating.start()
+                else -> source_rotating.stop()
             }
         })
 
@@ -83,7 +84,6 @@ class SourceActivity : BaseComponentActivity() {
                     )
                 }
             }
-            rotateloading.stop()
         }
     }
 
@@ -97,7 +97,6 @@ class SourceActivity : BaseComponentActivity() {
     }
 
     private fun onError(@StringRes messageId: Int): Unit {
-        rotateloading.stop()
         showHideError(View.VISIBLE)
         source_error.text = getString(messageId)
     }
