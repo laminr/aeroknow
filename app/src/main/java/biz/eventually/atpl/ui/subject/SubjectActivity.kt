@@ -23,7 +23,6 @@ import biz.eventually.atpl.ui.ViewModelFactory
 import biz.eventually.atpl.ui.questions.QuestionsActivity
 import biz.eventually.atpl.ui.source.QuestionsManager
 import biz.eventually.atpl.utils.hasInternetConnection
-import biz.eventually.atr.RunUpLoader
 import cn.pedant.SweetAlert.SweetAlertDialog
 import com.crashlytics.android.answers.Answers
 import com.crashlytics.android.answers.ContentViewEvent
@@ -32,7 +31,6 @@ import com.vicpin.krealmextensions.query
 import com.vicpin.krealmextensions.querySorted
 import io.fabric.sdk.android.Fabric
 import io.realm.Sort
-import kotlinx.android.synthetic.main.activity_source.*
 import kotlinx.android.synthetic.main.activity_subject.*
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
