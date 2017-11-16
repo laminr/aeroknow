@@ -4,6 +4,8 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
+import android.os.CountDownTimer
+import android.support.v4.content.ContextCompat
 import biz.eventually.atpl.data.db.Source
 import biz.eventually.atpl.ui.BaseActivity
 import biz.eventually.atpl.ui.ViewModelFactory
@@ -15,6 +17,7 @@ import biz.eventually.atpl.utils.prefsPutString
 import cn.pedant.SweetAlert.SweetAlertDialog
 import com.crashlytics.android.Crashlytics
 import io.fabric.sdk.android.Fabric
+import kotlinx.android.synthetic.main.activity_questions.*
 import kotlinx.android.synthetic.main.activity_splash.*
 import org.jetbrains.anko.startActivity
 import javax.inject.Inject
@@ -46,20 +49,16 @@ class MainActivity : BaseActivity<SourceRepository>() {
 
     private fun start() {
 
-        viewModel.sources.observe(this, Observer<List<Source>> {
-            startActivity<SourceActivity>()
-            finish()
-        })
-
-        viewModel.isLoading.observe(this, Observer<Boolean> {
-            if (it == true) {
-                splash_rotating_left.start()
-                splash_rotating_right.start()
-            } else {
-                splash_rotating_left.stop()
-                splash_rotating_right.stop()
+        object : CountDownTimer(2000, 1000) {
+            override fun onFinish() {
+                viewModel.sources.observe(this@MainActivity, Observer<List<Source>> {
+                    startActivity<SourceActivity>()
+                    finish()
+                })
             }
-        })
+
+            override fun onTick(millisUntilFinished: Long) {}
+        }.start()
     }
 
     private fun handleIntent(intent: Intent) {

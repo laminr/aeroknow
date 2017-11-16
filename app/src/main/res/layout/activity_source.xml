@@ -159,6 +159,6 @@
 		app:layout_constraintTop_toTopOf="parent"
 		app:srcCompat="@drawable/ic_menu_white_24dp" />
 
-	<!--<include layout="@layout/guillotine" android:visibility="visible" />-->
+	<include layout="@layout/guillotine" android:visibility="visible" />
 
 </android.support.constraint.ConstraintLayout>
