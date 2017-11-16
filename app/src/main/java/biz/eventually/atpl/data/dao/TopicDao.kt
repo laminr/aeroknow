@@ -11,7 +11,7 @@ import biz.eventually.atpl.data.db.Topic
  * Created by Thibault de Lambilly on 17/10/17.
  */
 @Dao
-abstract class TopicDao : BaseDao<Topic>() {
+abstract class TopicDao : BaseDao<Topic> {
 
     @Query("SELECT * FROM topic")
     abstract fun getAll(): LiveData<List<Topic>>

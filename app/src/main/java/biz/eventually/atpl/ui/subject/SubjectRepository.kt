@@ -5,6 +5,7 @@ import android.arch.lifecycle.MutableLiveData
 import biz.eventually.atpl.R
 import biz.eventually.atpl.common.RxBaseManager
 import biz.eventually.atpl.data.DataProvider
+import biz.eventually.atpl.data.NetworkStatus
 import biz.eventually.atpl.data.dao.SubjectDao
 import biz.eventually.atpl.data.dao.TopicDao
 import biz.eventually.atpl.data.db.LastCall
@@ -28,15 +29,9 @@ import javax.inject.Singleton
 @Singleton
 class SubjectRepository @Inject constructor(private val dataProvider: DataProvider, private val dao: SubjectDao, private val topicDao: TopicDao) : RxBaseManager() {
 
-    private var loading: MutableLiveData<Boolean> = MutableLiveData()
+    private var status: MutableLiveData<NetworkStatus> = MutableLiveData()
 
-    companion object {
-        val TAG = "SourceRepository"
-    }
-
-    fun isLoading(): LiveData<Boolean> {
-        return loading
-    }
+    fun networkStatus(): LiveData<NetworkStatus> = status
 
     @AddTrace(name = "getSubjects", enabled = true)
     fun getSubjects(sourceId: Long): LiveData<List<SubjectView>> {
@@ -47,15 +42,17 @@ class SubjectRepository @Inject constructor(private val dataProvider: DataProvid
 
     private fun getWebData(sourceId: Long) {
 
+        status.postValue(NetworkStatus.LOADING)
         disposables += dataProvider
                 .dataGetSubjects(sourceId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ subWeb ->
                     analyseData(subWeb, sourceId)
+                    status.postValue(NetworkStatus.SUCCESS)
                 }, { e ->
                     Timber.d("getSources: " + e)
-                    loading.value = false
+                    status.postValue(NetworkStatus.ERROR)
                     error(R.string.error_network_error)
                 })
     }

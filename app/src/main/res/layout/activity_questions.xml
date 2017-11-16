@@ -386,7 +386,7 @@
         </android.support.constraint.ConstraintLayout>
 
         <com.victor.loading.rotate.RotateLoading
-            android:id="@+id/rotateloading"
+            android:id="@+id/question_rotate"
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_gravity="center"

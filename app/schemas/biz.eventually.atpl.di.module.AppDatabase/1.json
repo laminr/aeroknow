@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "20be1a82c7261bfb11c6ac946e1b5674",
+    "identityHash": "6742477f449c8eea9234f79b6ab53b92",
     "entities": [
       {
         "tableName": "source",
@@ -32,7 +32,7 @@
       },
       {
         "tableName": "subject",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`idWeb` INTEGER NOT NULL, `source_id` INTEGER NOT NULL, `name` TEXT NOT NULL, PRIMARY KEY(`idWeb`), FOREIGN KEY(`source_id`) REFERENCES `source`(`idWeb`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`idWeb` INTEGER NOT NULL, `source_id` INTEGER NOT NULL, `name` TEXT NOT NULL, PRIMARY KEY(`idWeb`), FOREIGN KEY(`source_id`) REFERENCES `source`(`idWeb`) ON UPDATE CASCADE ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "idWeb",
@@ -72,8 +72,8 @@
         "foreignKeys": [
           {
             "table": "source",
-            "onDelete": "NO ACTION",
-            "onUpdate": "NO ACTION",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
             "columns": [
               "source_id"
             ],
@@ -163,7 +163,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"20be1a82c7261bfb11c6ac946e1b5674\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"6742477f449c8eea9234f79b6ab53b92\")"
     ]
   }
 }

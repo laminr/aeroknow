@@ -64,6 +64,7 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_questions)
+
         AtplApplication.component.inject(this)
 
         mQuestionCardView = listOf<CardView>(question_answer_1, question_answer_2, question_answer_3, question_answer_4)
@@ -94,7 +95,7 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
 //        mTopic = Topic().queryFirst({ query -> query.equalTo("idWeb", topicId) })
 
         mTopic?.apply {
-            rotateloading.start()
+            question_rotate.start()
             manager.getQuestions(idWeb, startFirst, { t -> questionsLoaded(t) }, { loadError() })
 
             supportActionBar?.title = name
@@ -345,7 +346,7 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
 //            Collections.shuffle(q.answers)
 //        }
 
-        rotateloading.stop()
+        question_rotate.stop()
 
         if (mQuestions.size > 0) {
             mMenuShuffle?.isVisible = true
@@ -355,7 +356,7 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
     }
 
     private fun loadError() {
-        rotateloading.stop()
+        question_rotate.stop()
     }
 
     private fun displayQuestion() {

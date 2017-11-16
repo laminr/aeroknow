@@ -4,6 +4,7 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'realm-android'
 apply plugin: 'com.google.firebase.firebase-perf'
+
 // To use it : ./gradlew dependencyUpdates -Drevision=release
 //apply plugin: 'com.github.ben-manes.versions'
 
@@ -29,8 +30,9 @@ android {
         javaMaxHeapSize = "2g"
     }
 
-    compileSdkVersion 26
-    buildToolsVersion "26.0.2"
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+
     defaultConfig {
         applicationId "biz.eventually.atpl"
         minSdkVersion 16
@@ -107,6 +109,8 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation project(":loading")
+
     androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
         exclude group: 'com.google.code.findbugs'
@@ -162,12 +166,9 @@ dependencies {
     implementation "android.arch.persistence.room:rxjava2:${versions.room}"
     kapt "android.arch.persistence.room:compiler:${versions.room}"
 
-    implementation "android.arch.lifecycle:runtime:1.0.0"
+    implementation "android.arch.lifecycle:runtime:1.0.3"
     implementation "android.arch.lifecycle:extensions:${versions.livecycle}"
     kapt "android.arch.lifecycle:compiler:${versions.livecycle}"
-
-    // LOADER
-    implementation 'com.victor:lib:1.0.4'
 
     // Menu
     implementation 'com.github.Yalantis:GuillotineMenu-Android:1.2'

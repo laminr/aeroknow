@@ -2,6 +2,11 @@
 
 buildscript {
 
+    ext {
+        compileSdkVersion = 26
+        buildToolsVersion = '26.0.2'
+    }
+
     ext.versions = [
             kotlin    : '1.1.60',
             support   : '26.1.0',
