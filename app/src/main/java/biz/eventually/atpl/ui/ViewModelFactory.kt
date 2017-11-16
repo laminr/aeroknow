@@ -11,8 +11,10 @@ import javax.inject.Singleton
 
 /**
  * Created by Thibault de Lambilly on 19/10/17.
+ *
  */
 @Singleton
+@Suppress("UNCHECKED_CAST")
 class ViewModelFactory<REPO> @Inject constructor(private val sRepo: REPO) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {

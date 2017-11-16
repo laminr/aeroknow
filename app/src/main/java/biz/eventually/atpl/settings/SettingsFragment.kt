@@ -31,7 +31,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
     private fun updateCountdownSummary(nbr: String? = null) {
         try {
             val value = nbr ?: countdownNbr?.text
-            val summary = context.getString(R.string.pref_timer_time_summary, value)
+            val summary = context?.getString(R.string.pref_timer_time_summary, value)
             countdownNbr?.summary = summary
         } catch (e: NumberFormatException) { }
     }

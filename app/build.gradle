@@ -20,7 +20,7 @@ ext {
 
 // Load keystore
 // http://stackoverflow.com/questions/20562189/sign-apk-without-putting-keystore-info-in-build-gradle
-def keystorePropertiesFile = rootProject.file("keystore.properties");
+def keystorePropertiesFile = rootProject.file("keystore.properties")
 def keystoreProperties = new Properties()
 keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
@@ -36,7 +36,7 @@ android {
     defaultConfig {
         applicationId "biz.eventually.atpl"
         minSdkVersion 16
-        targetSdkVersion 26
+        targetSdkVersion rootProject.ext.targetSdkVersion
 
         versionCode(getDate() as Integer)
         versionName "${majorVersion}.${minorVersion}.${patchVersion} build ${versionCode}"
