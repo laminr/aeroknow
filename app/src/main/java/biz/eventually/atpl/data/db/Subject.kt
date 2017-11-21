@@ -4,6 +4,7 @@ import android.arch.persistence.room.*
 
 /**
  * Created by Thibault de Lambilly on 20/03/17.
+ *
  */
 @Entity(
         tableName = "subject",

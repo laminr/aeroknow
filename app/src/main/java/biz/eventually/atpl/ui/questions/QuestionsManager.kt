@@ -4,13 +4,12 @@ import android.util.Log
 import biz.eventually.atpl.common.RxBaseManager
 import biz.eventually.atpl.data.DataProvider
 import biz.eventually.atpl.data.db.LastCall
-import biz.eventually.atpl.data.model.Question
+import biz.eventually.atpl.data.db.Question
 import biz.eventually.atpl.utils.hasInternetConnection
 import com.google.firebase.perf.metrics.AddTrace
 import com.vicpin.krealmextensions.query
 import com.vicpin.krealmextensions.queryFirst
 import com.vicpin.krealmextensions.save
-import com.vicpin.krealmextensions.saveManaged
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton

@@ -15,7 +15,7 @@ import biz.eventually.atpl.AtplApplication
 import biz.eventually.atpl.BuildConfig
 import biz.eventually.atpl.R
 import biz.eventually.atpl.common.IntentIdentifier
-import biz.eventually.atpl.data.model.Question
+import biz.eventually.atpl.data.db.Question
 import biz.eventually.atpl.data.db.Topic
 import biz.eventually.atpl.ui.BaseActivity
 import biz.eventually.atpl.ui.source.QuestionsManager

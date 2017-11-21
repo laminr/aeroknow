@@ -17,7 +17,7 @@ import biz.eventually.atpl.data.NetworkStatus
 import biz.eventually.atpl.data.db.Topic
 import biz.eventually.atpl.data.dto.SubjectView
 import biz.eventually.atpl.data.dto.TopicView
-import biz.eventually.atpl.data.model.Question
+import biz.eventually.atpl.data.db.Question
 import biz.eventually.atpl.ui.BaseComponentActivity
 import biz.eventually.atpl.ui.ViewModelFactory
 import biz.eventually.atpl.ui.questions.QuestionsActivity

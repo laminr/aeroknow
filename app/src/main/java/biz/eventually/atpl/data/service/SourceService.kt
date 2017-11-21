@@ -25,8 +25,8 @@ interface SourceService {
     fun loadQuestionsStarred(@Path("idWeb") topicId: Long, @Query("last") lastCall: Long, @Query("token") token: String): Observable<ApiSingleResponse<TopicWithQuestionNetwork>>
 
     @GET("question/{idWeb}/focus/{care}")
-    fun updateFocus(@Path("idWeb") questionId: Int, @Path("care") care: Int, @Query("token") token: String): Observable<ApiSingleResponse<FocusStateNetwork>>
+    fun updateFocus(@Path("idWeb") questionId: Long, @Path("care") care: Int, @Query("token") token: String): Observable<ApiSingleResponse<FocusStateNetwork>>
 
     @GET("question/{idWeb}/follow/{good}")
-    fun updateFollow(@Path("idWeb") v: Int, @Path("good") good: Int, @Query("token") token: String): Observable<ApiSingleResponse<QuestionNetwork>>
+    fun updateFollow(@Path("idWeb") v: Long, @Path("good") good: Int, @Query("token") token: String): Observable<ApiSingleResponse<QuestionNetwork>>
 }

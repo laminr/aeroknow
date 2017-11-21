@@ -3,9 +3,9 @@ package biz.eventually.atpl.data
 import biz.eventually.atpl.data.db.Source
 import biz.eventually.atpl.data.db.Subject
 import biz.eventually.atpl.data.dto.SubjectView
-import biz.eventually.atpl.data.model.Answer
+import biz.eventually.atpl.data.db.Answer
 import biz.eventually.atpl.data.model.Follow
-import biz.eventually.atpl.data.model.Question
+import biz.eventually.atpl.data.db.Question
 import biz.eventually.atpl.data.db.Topic
 import biz.eventually.atpl.data.network.*
 import io.realm.RealmList

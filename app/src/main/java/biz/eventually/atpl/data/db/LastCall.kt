@@ -1,16 +1,17 @@
 package biz.eventually.atpl.data.db
 
-import com.vicpin.krealmextensions.queryFirst
-import com.vicpin.krealmextensions.save
-import io.realm.RealmObject
-import io.realm.annotations.PrimaryKey
-import io.realm.annotations.Required
+import android.arch.persistence.room.Entity
+import android.arch.persistence.room.PrimaryKey
+import biz.eventually.atpl.data.dao.LastCallDao
 import java.util.*
+import javax.inject.Inject
 
 /**
  * Created by Thibault de Lambilly on 26/08/2017.
+ *
  */
-open class LastCall() : RealmObject() {
+@Entity(tableName = "lastCall")
+class LastCall(val type: String) {
 
     companion object {
         val COL_NAME = "name"
@@ -19,30 +20,23 @@ open class LastCall() : RealmObject() {
         val TYPE_SUBJECT = "subject"
         val TYPE_TOPIC = "topic"
         val TYPE_QUESTION = "question"
+
+        @Inject
+        private  lateinit var dao : LastCallDao
+
+        fun findByType(type: String) : LastCall? = dao.findByType(type)
+
+        fun update(type: String, value: Long) {
+            dao.findByType(type)?.let {
+                it.updated = value
+                dao.update(it)
+            } ?: dao.insert(LastCall(type).apply { updated = value })
+
+        }
     }
 
     @PrimaryKey
-    @Required
     var id : String = ""
 
     var updated: Long = Date().time
-
-    constructor(type: String) : this() {
-        this.id = type
-    }
-
-    fun update(type: String, value: Long) {
-
-        val lastCall: LastCall? = LastCall().queryFirst({ query -> query.equalTo("id", type) })
-
-        lastCall?.let {
-            it.updated = value
-        } ?: kotlin.run {
-            LastCall(type).apply {
-                updated = value
-                save()
-            }
-        }
-
-    }
 }

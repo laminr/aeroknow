@@ -3,9 +3,8 @@ package biz.eventually.atpl.data
 import android.content.Context
 import biz.eventually.atpl.data.db.Source
 import biz.eventually.atpl.data.model.Follow
-import biz.eventually.atpl.data.model.Question
+import biz.eventually.atpl.data.db.Question
 import biz.eventually.atpl.data.db.Subject
-import biz.eventually.atpl.data.dto.SubjectView
 import biz.eventually.atpl.data.service.SourceService
 import biz.eventually.atpl.utils.Prefields.PREF_TOKEN
 import biz.eventually.atpl.utils.prefsGetString
@@ -46,15 +45,15 @@ class DataProvider @Inject constructor(private val sourceService: SourceService,
         }
     }
 
-    fun updateFollow(questionId: Int, good: Boolean) : Observable<Question?> {
+    fun updateFollow(questionId: Long, good: Boolean) : Observable<Question?> {
         val isGood = if (good) 1 else 0
         val token = prefsGetValue( PREF_TOKEN, "")
         return sourceService.updateFollow(questionId, isGood , token).map { response ->
-            response.data?.let(::toAppQuestion) ?: Question(-1, "", RealmList(), null, null, Follow() )
+            response.data?.let(::toAppQuestion) ?: Question(-1, -1,"", "", null, Follow())
         }
     }
 
-    fun updateFocus(questionId: Int, care: Boolean) : Observable<Int> {
+    fun updateFocus(questionId: Long, care: Boolean) : Observable<Int> {
         val doCare = if (care) 1 else 0
         val token = prefsGetValue( PREF_TOKEN, "")
         return sourceService.updateFocus(questionId, doCare , token).map { response ->
