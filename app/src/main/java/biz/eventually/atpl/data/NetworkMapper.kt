@@ -33,16 +33,20 @@ fun toAppTopics(sourceId: Long = -1, from: List<TopicNetwork>?): List<Topic> {
     return list
 }
 
-fun toAppAnswers(from: List<AnswerNetwork>?): RealmList<Answer> {
-    val list = RealmList<Answer>()
-    from?.forEach {
-        list.add(Answer(it.id, it.value, it.good))
-    }
-
-    return list
+fun toAppAnswers(questionId: Long, from: List<AnswerNetwork>?): List<Answer> {
+    return from?.map { Answer(it.id, questionId, it.value, it.good) } ?: listOf()
 }
 
 fun toAppFollow(from: FollowNetwork?) = Follow(from?.good ?: 0, from?.wrong ?: 0)
 
-fun toAppQuestion(from: QuestionNetwork) = Question(from.id, from.label, toAppAnswers(from.answers), from.img, from.focus, toAppFollow(from.follow))
-fun toAppQuestions(from: List<QuestionNetwork>?): List<Question> = from?.map(::toAppQuestion)?.toList() ?: listOf()
+fun toAppQuestion(topicId: Long, from: QuestionNetwork) = Question(
+            from.id,
+            topicId,
+            from.label,
+            from.img ?: "",
+            from.focus,
+            from.follow?.good ?: 0,
+            from.follow?.wrong ?: 0
+    )
+
+fun toAppQuestions(topicId: Long, from: List<QuestionNetwork>?) = from?.map { toAppQuestion(topicId, it) } ?: listOf()

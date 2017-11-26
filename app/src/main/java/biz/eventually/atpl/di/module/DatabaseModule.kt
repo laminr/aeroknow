@@ -68,6 +68,6 @@ class DatabaseModule {
 
     @Singleton
     @Provides
-    fun provideSubjectRepository(dataProvider: DataProvider, dao: QuestionDao): QuestionRepository =
+    fun provideQuestionRepository(dataProvider: DataProvider, dao: QuestionDao): QuestionRepository =
             QuestionRepository(dataProvider, dao)
 }

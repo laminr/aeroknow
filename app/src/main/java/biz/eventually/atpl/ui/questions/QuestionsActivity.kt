@@ -54,7 +54,7 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
     private var mSwipe: Swipe? = null
 
     // answer ticked results for stat
-    private val mStatistic = mutableMapOf<Int, Int>()
+    private val mStatistic = mutableMapOf<Long, Int>()
 
     private val mMime = "text/html"
     private val mEncoding = "utf-8"
@@ -529,8 +529,8 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
 
     private fun displayFollowCount() {
 
-        val good = mQuestions[mCurrentQuestion].follow?.good ?: 0
-        val wrong = mQuestions[mCurrentQuestion].follow?.wrong ?: 0
+        val good = mQuestions[mCurrentQuestion].good
+        val wrong = mQuestions[mCurrentQuestion].wrong
 
         if (good == 0 && wrong == 0) {
             question_good_img.visibility = View.GONE

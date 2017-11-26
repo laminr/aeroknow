@@ -15,7 +15,8 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 /**
- * Created by thibault on 21/03/17.
+ * Created by Thibault de Lambilly on 21/03/17.
+ *
  */
 @Singleton
 class DataProvider @Inject constructor(private val sourceService: SourceService, val context: Context) {
@@ -40,16 +41,15 @@ class DataProvider @Inject constructor(private val sourceService: SourceService,
         }
 
         return questions.map { response ->
-            //response.data?.let(::toAppTopic) ?: Topic(-1, "", 0, null, null )
-            response.data?.questions?.let(::toAppQuestions) ?: listOf()
+            response.data?.questions?.let{toAppQuestions(topicId, it)} ?: listOf()
         }
     }
 
-    fun updateFollow(questionId: Long, good: Boolean) : Observable<Question?> {
+    fun updateFollow(questionId: Long, good: Boolean) : Observable<Question> {
         val isGood = if (good) 1 else 0
         val token = prefsGetValue( PREF_TOKEN, "")
         return sourceService.updateFollow(questionId, isGood , token).map { response ->
-            response.data?.let(::toAppQuestion) ?: Question(-1, -1,"", "", null, Follow())
+            response.data?.let{ toAppQuestion(-1, it) } ?: Question(-1, -1,"", "", null, 0, 0)
         }
     }
 

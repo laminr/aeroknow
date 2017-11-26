@@ -12,6 +12,7 @@ import biz.eventually.atpl.data.db.LastCall
 import biz.eventually.atpl.data.db.Subject
 import biz.eventually.atpl.data.db.Topic
 import biz.eventually.atpl.data.dto.SubjectView
+import biz.eventually.atpl.ui.BaseRepository
 import biz.eventually.atpl.utils.hasInternetConnection
 import com.google.firebase.perf.metrics.AddTrace
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -24,14 +25,11 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 /**
- * Created by thibault on 20/03/17.
+ * Created by Thibault de Lambilly on 20/03/17.
+ *
  */
 @Singleton
-class SubjectRepository @Inject constructor(private val dataProvider: DataProvider, private val dao: SubjectDao, private val topicDao: TopicDao) : RxBaseManager() {
-
-    private var status: MutableLiveData<NetworkStatus> = MutableLiveData()
-
-    fun networkStatus(): LiveData<NetworkStatus> = status
+class SubjectRepository @Inject constructor(private val dataProvider: DataProvider, private val dao: SubjectDao, private val topicDao: TopicDao) : BaseRepository() {
 
     @AddTrace(name = "getSubjects", enabled = true)
     fun getSubjects(sourceId: Long): LiveData<List<SubjectView>> {
@@ -111,7 +109,7 @@ class SubjectRepository @Inject constructor(private val dataProvider: DataProvid
             }
 
             // update time reference
-            if (subWeb.isNotEmpty()) LastCall().update(LastCall.TYPE_SUBJECT, Date().time)
+            if (subWeb.isNotEmpty()) LastCall(LastCall.TYPE_SUBJECT, Date().time).update()
         }
     }
 }

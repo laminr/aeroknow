@@ -72,11 +72,11 @@ public class RotateLoading extends View {
         speedOfDegree = DEFAULT_SPEED_OF_DEGREE;
 
         if (null != attrs) {
-            TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.RotateLoading);
-            color = typedArray.getColor(R.styleable.RotateLoading_loading_color, Color.WHITE);
-            width = typedArray.getDimensionPixelSize(R.styleable.RotateLoading_loading_width, dpToPx(context, DEFAULT_WIDTH));
-            shadowPosition = typedArray.getInt(R.styleable.RotateLoading_shadow_position, DEFAULT_SHADOW_POSITION);
-            speedOfDegree = typedArray.getInt(R.styleable.RotateLoading_loading_speed, DEFAULT_SPEED_OF_DEGREE);
+            TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.LoadingRotateLoading);
+            color = typedArray.getColor(R.styleable.LoadingRotateLoading_loading_color, Color.WHITE);
+            width = typedArray.getDimensionPixelSize(R.styleable.LoadingRotateLoading_loading_width, dpToPx(context, DEFAULT_WIDTH));
+            shadowPosition = typedArray.getInt(R.styleable.LoadingRotateLoading_loading_shadow_position, DEFAULT_SHADOW_POSITION);
+            speedOfDegree = typedArray.getInt(R.styleable.LoadingRotateLoading_loading_speed, DEFAULT_SPEED_OF_DEGREE);
             typedArray.recycle();
         }
         speedOfArc = speedOfDegree / 4;

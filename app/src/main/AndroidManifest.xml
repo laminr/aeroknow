@@ -13,7 +13,8 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar"
-        tools:replace="android:icon">
+        tools:replace="android:icon"
+        >
         <activity
             android:name=".MainActivity">
             <intent-filter>

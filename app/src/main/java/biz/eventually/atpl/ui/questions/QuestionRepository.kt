@@ -10,6 +10,7 @@ import biz.eventually.atpl.data.dao.QuestionDao
 import biz.eventually.atpl.data.db.LastCall
 import biz.eventually.atpl.data.db.Question
 import biz.eventually.atpl.data.dto.QuestionView
+import biz.eventually.atpl.ui.BaseRepository
 import biz.eventually.atpl.ui.source.QuestionsManager
 import biz.eventually.atpl.utils.hasInternetConnection
 import com.google.firebase.perf.metrics.AddTrace
@@ -21,11 +22,8 @@ import javax.inject.Singleton
  * Created by thibault on 20/03/17.
  */
 @Singleton
-class QuestionRepository @Inject constructor(private val dataProvider: DataProvider, private val dao: QuestionDao) : RxBaseManager() {
+class QuestionRepository @Inject constructor(private val dataProvider: DataProvider, private val dao: QuestionDao) : BaseRepository() {
 
-    private var status: MutableLiveData<NetworkStatus> = MutableLiveData()
-
-    fun networkStatus(): LiveData<NetworkStatus> = status
 
 //    @AddTrace(name = "getSubjects", enabled = true)
 //    fun getSubjects(sourceId: Long): LiveData<List<SubjectView>> {
@@ -51,7 +49,7 @@ class QuestionRepository @Inject constructor(private val dataProvider: DataProvi
                     analyseData(topicId, questionsWeb)
                 }, { _ ->
 //                    error()
-                    Log.d(QuestionsManager.TAG, "getQuestions: ")
+//                    Log.d(QuestionsManager.TAG, "getQuestions: ")
                 })
     }
 
@@ -73,7 +71,7 @@ class QuestionRepository @Inject constructor(private val dataProvider: DataProvi
 
                     then(focus)
                 }, { _ ->
-                    Log.d(QuestionsManager.TAG, "updateFocus: " + error)
+//                    Log.d(QuestionsManager.TAG, "updateFocus: " + error)
                     error()
                 })
     }
@@ -84,13 +82,15 @@ class QuestionRepository @Inject constructor(private val dataProvider: DataProvi
                     .subscribeOn(scheduler.network)
                     ?.observeOn(scheduler.main)
                     ?.subscribe({ question ->
-                        question?.let {
-                            if (it.idWeb != -1L) {
-                                dao.insert(it)
-                            }
+                        dao.findById(question.idWeb)?.let {
+                            it.good = question.good
+                            it.wrong = question.wrong
+
+                            dao.update(it)
                         }
+
                     }, { error ->
-                        Log.d(QuestionsManager.TAG, "updateFollow: " + error)
+//                        Log.d(QuestionsManager.TAG, "updateFollow: " + error)
                     })
         }
     }
@@ -107,19 +107,20 @@ class QuestionRepository @Inject constructor(private val dataProvider: DataProvi
                     it.answers = qWeb.answers
                     it.img = qWeb.img
                     it.focus = qWeb.focus
-                    it.follow = qWeb.follow
+                    it.good = qWeb.good
+                    it.wrong = qWeb.wrong
 
                     dao.update(it)
                 }
             }
             // New
             else {
-                qWeb.topicId = topicId.toInt()
+                qWeb.topicId = topicId
                 dao.insert(qWeb)
             }
         }
 
         // update time reference
-        if (questionsWeb.isNotEmpty()) LastCall().update("${LastCall.TYPE_TOPIC}_$topicId", Date().time)
+        if (questionsWeb.isNotEmpty()) LastCall("${LastCall.TYPE_TOPIC}_$topicId", Date().time).update()
     }
 }

@@ -12,8 +12,8 @@ import biz.eventually.atpl.data.db.Topic
  */
 class QuestionView(
         @Embedded
-        var question: Question,
+        var question: Question = Question(-1, -1, "", ""),
 
         @Relation(parentColumn = "idWeb", entityColumn = "question_id", entity = Answer::class)
-        var answers: List<Topic>
+        var answers: List<Answer>? = null
 )

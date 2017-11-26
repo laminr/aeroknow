@@ -26,11 +26,12 @@ import biz.eventually.atpl.data.model.Follow
 class Question(@PrimaryKey
                var idWeb: Long,
                @ColumnInfo(name = "topic_id")
-               var topicId: Int,
+               var topicId: Long,
                var label: String,
                var img: String = "",
                var focus: Boolean? = null,
-               var follow: Follow? = null
+               var good: Int = 0,
+               var wrong: Int = 0
 ) : Comparable<Question>, Parcelable {
 
     @Ignore
@@ -45,29 +46,35 @@ class Question(@PrimaryKey
 
     constructor(parcel: Parcel) : this(
             parcel.readLong(),
-            parcel.readInt(),
+            parcel.readLong(),
             parcel.readString(),
             parcel.readString(),
             parcel.readValue(Boolean::class.java.classLoader) as? Boolean,
-            parcel.readParcelable(Follow::class.java.classLoader)) {
+            parcel.readInt(),
+            parcel.readInt()) {
         answers = parcel.createTypedArrayList(Answer)
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeLong(idWeb)
-        parcel.writeInt(topicId)
+        parcel.writeLong(topicId)
         parcel.writeString(label)
         parcel.writeString(img)
         parcel.writeValue(focus)
-        parcel.writeParcelable(follow, flags)
+        parcel.writeInt(good)
+        parcel.writeInt(wrong)
         parcel.writeTypedList(answers)
     }
 
-    override fun describeContents(): Int = 0
+    override fun describeContents(): Int {
+        return 0
+    }
 
     companion object CREATOR : Parcelable.Creator<Question> {
         override fun createFromParcel(parcel: Parcel): Question = Question(parcel)
 
         override fun newArray(size: Int): Array<Question?> = arrayOfNulls(size)
     }
+
+
 }

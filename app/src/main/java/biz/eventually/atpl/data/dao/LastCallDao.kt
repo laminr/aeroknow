@@ -10,6 +10,6 @@ import biz.eventually.atpl.data.db.LastCall
 @Dao
 abstract class LastCallDao : BaseDao<LastCall> {
 
-    @Query("SELECT * FROM lastCall WHERE idWeb = :id")
+    @Query("SELECT * FROM last_call WHERE type = :type")
     abstract fun findByType(type: String): LastCall?
 }
