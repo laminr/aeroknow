@@ -27,8 +27,6 @@ import cn.pedant.SweetAlert.SweetAlertDialog
 import com.crashlytics.android.answers.Answers
 import com.crashlytics.android.answers.ContentViewEvent
 import com.google.firebase.perf.metrics.AddTrace
-import com.vicpin.krealmextensions.query
-import com.vicpin.krealmextensions.querySorted
 import io.fabric.sdk.android.Fabric
 import io.realm.Sort
 import kotlinx.android.synthetic.main.activity_subject.*
@@ -47,7 +45,7 @@ class SubjectActivity : BaseComponentActivity() {
     @Inject
     lateinit var subjectViewModelFactory: ViewModelFactory<SubjectRepository>
 
-    private lateinit var viewModel: SubjectViewModel
+    private lateinit var mViewModel: SubjectViewModel
 
     private var mAdapter: SubjectAdapter = SubjectAdapter(this::onItemClick)
 
@@ -56,7 +54,7 @@ class SubjectActivity : BaseComponentActivity() {
         super.onCreate(savedInstanceState)
         AtplApplication.component.inject(this)
 
-        viewModel = ViewModelProviders.of(this, subjectViewModelFactory).get(SubjectViewModel::class.java)
+        mViewModel = ViewModelProviders.of(this, subjectViewModelFactory).get(SubjectViewModel::class.java)
 
         Fabric.with(this, Answers())
 
@@ -72,12 +70,12 @@ class SubjectActivity : BaseComponentActivity() {
 
         mSourceId = intent.extras.getLong(IntentIdentifier.SOURCE_ID)
 
-        viewModel.setSourceId(mSourceId)
-        viewModel.subjects.observe(this, Observer<List<SubjectView>> {
+        mViewModel.setSourceId(mSourceId)
+        mViewModel.subjects.observe(this, Observer<List<SubjectView>> {
             displaySubjects(it ?: listOf())
         })
 
-        viewModel.networkStatus.observe(this, Observer<NetworkStatus> {
+        mViewModel.networkStatus.observe(this, Observer<NetworkStatus> {
             when (it) {
                 NetworkStatus.LOADING -> subject_rotate.start()
                 else -> subject_rotate.stop()
@@ -212,7 +210,7 @@ class SubjectActivity : BaseComponentActivity() {
         // FIXME: Handle the silent param
 //        if (!silent) subject_rotate.start()
         if (mSourceId > 0) {
-            viewModel.setSourceId(mSourceId)
+            mViewModel.setSourceId(mSourceId)
         } else {
             showHideError(R.string.dialog_title_error)
         }

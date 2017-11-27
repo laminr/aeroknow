@@ -1,6 +1,8 @@
 package biz.eventually.atpl.ui.questions
 
 import android.app.Activity
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
@@ -15,13 +17,16 @@ import biz.eventually.atpl.AtplApplication
 import biz.eventually.atpl.BuildConfig
 import biz.eventually.atpl.R
 import biz.eventually.atpl.common.IntentIdentifier
+import biz.eventually.atpl.data.NetworkStatus
 import biz.eventually.atpl.data.db.Question
 import biz.eventually.atpl.data.db.Topic
 import biz.eventually.atpl.ui.BaseActivity
+import biz.eventually.atpl.ui.ViewModelFactory
 import biz.eventually.atpl.ui.source.QuestionsManager
-import biz.eventually.atpl.utils.*
+import biz.eventually.atpl.utils.Prefields
 import biz.eventually.atpl.utils.Prefields.PREF_TIMER_NBR
 import biz.eventually.atpl.utils.Prefields.PREF_TOKEN
+import biz.eventually.atpl.utils.prefsGetValue
 import cn.pedant.SweetAlert.SweetAlertDialog
 import com.github.pwittchen.swipe.library.Swipe
 import com.github.pwittchen.swipe.library.SwipeListener
@@ -29,6 +34,7 @@ import com.squareup.picasso.Picasso
 import com.tapadoo.alerter.Alerter
 import kotlinx.android.synthetic.main.activity_questions.*
 import org.jetbrains.anko.share
+import javax.inject.Inject
 
 class QuestionsActivity : BaseActivity<QuestionsManager>() {
 
@@ -52,6 +58,11 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
     private var mMenuShare: MenuItem? = null
 
     private var mSwipe: Swipe? = null
+
+    @Inject
+    lateinit var questionViewModelFactory: ViewModelFactory<QuestionRepository>
+
+    private lateinit var mViewModel: QuestionViewModel
 
     // answer ticked results for stat
     private val mStatistic = mutableMapOf<Long, Int>()
@@ -92,11 +103,23 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
         val topicId = intent.extras.getInt(IntentIdentifier.TOPIC)
         val startFirst = intent.extras.getBoolean(IntentIdentifier.TOPIC_STARRED, false)
 
-//        mTopic = Topic().queryFirst({ query -> query.equalTo("idWeb", topicId) })
+        mViewModel = ViewModelProviders.of(this, questionViewModelFactory).get(QuestionViewModel::class.java)
+        mViewModel.question.observe(this, Observer<Question> {
+            // double "it" --> crazyyyyy
+            it?.let { displayQuestion(it) }
+        })
+
+        mViewModel.networkStatus.observe(this, Observer<NetworkStatus> {
+            when(it) {
+                NetworkStatus.LOADING -> question_rotate.start()
+                NetworkStatus.SUCCESS -> question_rotate.stop()
+                else -> run({})
+            }
+        })
 
         mTopic?.apply {
-            question_rotate.start()
-            manager.getQuestions(idWeb, startFirst, { t -> questionsLoaded(t) }, { loadError() })
+            // FIXME: handling rotation
+            mViewModel.getQuestions(idWeb, startFirst)
 
             supportActionBar?.title = name
         }
@@ -128,6 +151,7 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
             checkbox.setOnClickListener { onAnswerClick(mQuestionCardView[index], index) }
         }
 
+        // FIXME:
         question_previous.setOnClickListener {
             mMenuShare?.isVisible = false
             if (mAnswerIndexTick > -1) {
@@ -139,14 +163,19 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
                 // server following
                 if (question_follow.isChecked) {
                     mHadChange = true
-                    manager.updateFollow(mQuestions[mCurrentQuestion].idWeb, isGood)
+
+//                    manager.updateFollow(mQuestions[mCurrentQuestion].idWeb, isGood)
+                    mViewModel.updateFollow(isGood)
                 }
             }
 
             if (mCurrentQuestion >= 1) mCurrentQuestion -= 1
-            displayQuestion()
+
+            // FIXME:
+//            displayQuestion()
         }
 
+        // FIXME:
         question_next.setOnClickListener {
             mMenuShare?.isVisible = false
 
@@ -157,13 +186,16 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
 
                 if (question_follow.isChecked) {
                     mHadChange = true
-                    manager.updateFollow(mQuestions[mCurrentQuestion].idWeb, isGood)
+                    TODO()
+//                    manager.updateFollow(mQuestions[mCurrentQuestion].idWeb, isGood)
+                    mViewModel.updateFollow(isGood)
                 }
             }
 
             if (mCurrentQuestion < mQuestions.size - 1) mCurrentQuestion += 1
-            displayQuestion()
 
+            // FIXME:
+//            displayQuestion()
         }
 
         question_last.setOnClickListener {
@@ -177,7 +209,8 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
                 // if follow request
                 if (question_follow.isChecked) {
                     mHadChange = true
-                    manager.updateFollow(mQuestions[mCurrentQuestion].idWeb, isGood)
+//                    manager.updateFollow(mQuestions[mCurrentQuestion].idWeb, isGood)
+                    mViewModel.updateFollow(isGood)
                 }
             }
 
@@ -331,12 +364,14 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
                 .show()
     }
 
+    // FIXME:
     private fun shuffleQuestions() {
-        mQuestions = shuffle(mQuestions) as MutableList<Question>
-        mCurrentQuestion = 0
-        displayQuestion()
+//        mQuestions = shuffle(mQuestions) as MutableList<Question>
+//        mCurrentQuestion = 0
+//        displayQuestion()
     }
 
+    // FIXME:
     private fun questionsLoaded(questions: List<Question>): Unit {
 
         mQuestions = questions.toMutableList()
@@ -350,7 +385,7 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
 
         if (mQuestions.size > 0) {
             mMenuShuffle?.isVisible = true
-            displayQuestion()
+//            displayQuestion()
         }
 
     }
@@ -359,7 +394,7 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
         question_rotate.stop()
     }
 
-    private fun displayQuestion() {
+    private fun displayQuestion(question: Question) {
 
         mTimer?.cancel()
         mAnswerIndexTick = -1
@@ -374,42 +409,42 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
         resetCheckbox()
 
         // check following crash report ???
-        if (mQuestions.size > 0 && mCurrentQuestion >= 0 && mCurrentQuestion <= mQuestions.size) {
-            mQuestions[mCurrentQuestion].apply {
-                question_label.setBackgroundColor(transparentColor)
-                question_label.loadDataWithBaseURL(null, label, mMime, mEncoding, null)
-                println(label)
+//        if (mQuestions.size > 0 && mCurrentQuestion >= 0 && mCurrentQuestion <= mQuestions.size) {
+        mQuestions[mCurrentQuestion].apply {
+            question_label.setBackgroundColor(transparentColor)
+            question_label.loadDataWithBaseURL(null, label, mMime, mEncoding, null)
+            println(label)
 
-                val questionAnswerTextView = listOf<TextView>(
-                        question_answer_1_text,
-                        question_answer_2_text,
-                        question_answer_3_text,
-                        question_answer_4_text
-                )
+            val questionAnswerTextView = listOf<TextView>(
+                    question_answer_1_text,
+                    question_answer_2_text,
+                    question_answer_3_text,
+                    question_answer_4_text
+            )
 
-                for (i in 0 until answers.count()) {
-                    questionAnswerTextView[i].text = answers[i].value
-                }
-
-                if (mHasToken) {
-                    displayFollowAndFocus()
-                    attachFocusListener()
-                }
-
-                displayFollowCount()
-
-                imgList.forEach { img ->
-                    val imgContainer = ImageView(applicationContext)
-                    Picasso.with(applicationContext)
-                            .load(BuildConfig.API_ATPL_IMG + img)
-                            .into(imgContainer)
-
-                    question_imgs.addView(imgContainer)
-                }
-
-                if (mWithCountDown) launchCountDown()
+            for (i in 0 until answers.count()) {
+                questionAnswerTextView[i].text = answers[i].value
             }
+
+            if (mHasToken) {
+                displayFollowAndFocus()
+                attachFocusListener()
+            }
+
+            displayFollowCount()
+
+            imgList.forEach { img ->
+                val imgContainer = ImageView(applicationContext)
+                Picasso.with(applicationContext)
+                        .load(BuildConfig.API_ATPL_IMG + img)
+                        .into(imgContainer)
+
+                question_imgs.addView(imgContainer)
+            }
+
+            if (mWithCountDown) launchCountDown()
         }
+//        }
 
         mQuestions.isNotEmpty().apply {
             question_range.text = "${mCurrentQuestion + 1} / ${mQuestions.count()}"
@@ -466,7 +501,8 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
             question_care.setImageDrawable(ContextCompat.getDrawable(this@QuestionsActivity, R.drawable.ic_cached_black))
             question_care.setColorFilter(ContextCompat.getColor(applicationContext, R.color.colorGrey))
 
-            manager.updateFocus(mQuestions[mCurrentQuestion].idWeb, true, this::onFocusSaves, this::onSavingError)
+//            manager.updateFocus(mQuestions[mCurrentQuestion].idWeb, true, this::onFocusSaves, this::onSavingError)
+            mViewModel.updateFocus(true, this::onFocusSaves, this::onSavingError)
 
             displayFollowAndFocus()
         }
@@ -478,7 +514,8 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
             question_dontcare.setImageDrawable(ContextCompat.getDrawable(this@QuestionsActivity, R.drawable.ic_cached_black))
             question_dontcare.setColorFilter(ContextCompat.getColor(applicationContext, R.color.colorGrey))
 
-            manager.updateFocus(mQuestions[mCurrentQuestion].idWeb, false, this::onFocusSaves, this::onSavingError)
+//            manager.updateFocus(mQuestions[mCurrentQuestion].idWeb, false, this::onFocusSaves, this::onSavingError)
+            mViewModel.updateFocus(false, this::onFocusSaves, this::onSavingError)
 
             displayFollowAndFocus()
         }

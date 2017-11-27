@@ -11,6 +11,7 @@ import javax.inject.Singleton
 
 /**
  * Created by Thibault de Lambilly on 26/11/2017.
+ *
  */
 @Singleton
 class QuestionViewModel @Inject constructor(val dao: QuestionRepository) : ViewModel() {
@@ -27,5 +28,17 @@ class QuestionViewModel @Inject constructor(val dao: QuestionRepository) : ViewM
             data.postValue(mQuestions[it])
             return@switchMap data
         }
+    }
+
+    fun getQuestions(topicId: Long, starFist: Boolean) {
+
+    }
+
+    fun updateFollow(good: Boolean) {
+
+    }
+
+    fun updateFocus(good: Boolean, then: (state: Boolean?) -> Unit, error: () -> Unit) {
+
     }
 }

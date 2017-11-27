@@ -2,6 +2,8 @@ package biz.eventually.atpl.ui
 
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
+import biz.eventually.atpl.ui.questions.QuestionRepository
+import biz.eventually.atpl.ui.questions.QuestionViewModel
 import biz.eventually.atpl.ui.source.SourceRepository
 import biz.eventually.atpl.ui.source.SourceViewModel
 import biz.eventually.atpl.ui.subject.SubjectRepository
@@ -25,6 +27,10 @@ class ViewModelFactory<REPO> @Inject constructor(private val sRepo: REPO) : View
 
         if (modelClass.isAssignableFrom(SourceViewModel::class.java)) {
             return SourceViewModel(sRepo as SourceRepository) as T
+        }
+
+        if (modelClass.isAssignableFrom(QuestionViewModel::class.java)) {
+            return QuestionViewModel(sRepo as QuestionRepository) as T
         }
 
         throw IllegalArgumentException("Unknown ViewModel class")
