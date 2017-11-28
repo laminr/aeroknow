@@ -24,8 +24,8 @@ class QuestionsManager @Inject constructor(private val dataProvider: DataProvide
 //        val TAG = "QuestionsManager"
 //    }
 //
-//    @AddTrace(name = "getQuestions", enabled = true)
-//    fun getQuestions(topicId: Long, starFist: Boolean, display: (qs: List<Question>) -> Unit, error: () -> Unit) {
+//    @AddTrace(name = "launchTest", enabled = true)
+//    fun launchTest(topicId: Long, starFist: Boolean, display: (qs: List<Question>) -> Unit, error: () -> Unit) {
 //
 //        val questionsDb = Question().query({ s -> s.equalTo("topicId", topicId) }).toMutableList()
 //
@@ -39,7 +39,7 @@ class QuestionsManager @Inject constructor(private val dataProvider: DataProvide
 //                        display(questionsDb)
 //                    }, { _ ->
 //                        error()
-//                        Log.d(TAG, "getQuestions: " + error)
+//                        Log.d(TAG, "launchTest: " + error)
 //                    })
 //        } else {
 //            display(questionsDb)

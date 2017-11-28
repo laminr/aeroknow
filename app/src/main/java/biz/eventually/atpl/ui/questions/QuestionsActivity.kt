@@ -39,11 +39,10 @@ import javax.inject.Inject
 class QuestionsActivity : BaseActivity<QuestionsManager>() {
 
     private var mTopic: Topic? = null
-    private var mQuestions = mutableListOf<Question>()
+    //    private var mQuestions = mutableListOf<Question>()
+    private var mCurrentQuestion = Question(-1, -1, "", "")
 
-    private var mCurrentQuestion: Int = 0
     private var mShowAnswer = false
-    private var mAnswerIndexTick = -1
 
     private var transparentColor: Int = 0x00000000
     private var mTimer: CountDownTimer? = null
@@ -51,7 +50,12 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
 
     private var isLight: Boolean = true
 
+    /**
+     * Flag to determined if any question as been done with the following stats request
+     * to refresh the Subject screen while going back
+     */
     private var mHadChange = false
+
     private var mHasToken = false
 
     private var mMenuShuffle: MenuItem? = null
@@ -100,17 +104,22 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
         /***
          * Data
          */
-        val topicId = intent.extras.getInt(IntentIdentifier.TOPIC)
+        val topicId = intent.extras.getLong(IntentIdentifier.TOPIC)
         val startFirst = intent.extras.getBoolean(IntentIdentifier.TOPIC_STARRED, false)
 
         mViewModel = ViewModelProviders.of(this, questionViewModelFactory).get(QuestionViewModel::class.java)
+        mViewModel.launchTest(topicId, startFirst)
+
         mViewModel.question.observe(this, Observer<Question> {
             // double "it" --> crazyyyyy
-            it?.let { displayQuestion(it) }
+            it?.let {
+                mCurrentQuestion = it
+                displayQuestion()
+            }
         })
 
         mViewModel.networkStatus.observe(this, Observer<NetworkStatus> {
-            when(it) {
+            when (it) {
                 NetworkStatus.LOADING -> question_rotate.start()
                 NetworkStatus.SUCCESS -> question_rotate.stop()
                 else -> run({})
@@ -118,9 +127,7 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
         })
 
         mTopic?.apply {
-            // FIXME: handling rotation
-            mViewModel.getQuestions(idWeb, startFirst)
-
+            mViewModel.launchTest(idWeb, startFirst)
             supportActionBar?.title = name
         }
 
@@ -151,77 +158,47 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
             checkbox.setOnClickListener { onAnswerClick(mQuestionCardView[index], index) }
         }
 
-        // FIXME:
         question_previous.setOnClickListener {
             mMenuShare?.isVisible = false
-            if (mAnswerIndexTick > -1) {
-                val isGood = mQuestions[mCurrentQuestion].answers[mAnswerIndexTick].good
 
-                // local stats
-                mStatistic.put(mQuestions[mCurrentQuestion].idWeb, if (isGood) 1 else 0)
-
-                // server following
-                if (question_follow.isChecked) {
-                    mHadChange = true
-
-//                    manager.updateFollow(mQuestions[mCurrentQuestion].idWeb, isGood)
-                    mViewModel.updateFollow(isGood)
-                }
-            }
-
-            if (mCurrentQuestion >= 1) mCurrentQuestion -= 1
-
-            // FIXME:
-//            displayQuestion()
+            val checked = question_follow.isChecked
+            mViewModel.previous(checked)?.let {
+                mStatistic.put(mCurrentQuestion.idWeb, if (it) 1 else 0)
+                if (checked) mHadChange = true
+                mMenuShare?.isVisible = true
+            } ?: run({ mMenuShare?.isVisible = true })
         }
 
-        // FIXME:
         question_next.setOnClickListener {
             mMenuShare?.isVisible = false
 
-            if (mAnswerIndexTick > -1 && mCurrentQuestion < mQuestions.size) {
-                val isGood = mQuestions[mCurrentQuestion].answers[mAnswerIndexTick].good
-                // local stats
-                mStatistic.put(mQuestions[mCurrentQuestion].idWeb, if (isGood) 1 else 0)
-
-                if (question_follow.isChecked) {
-                    mHadChange = true
-                    TODO()
-//                    manager.updateFollow(mQuestions[mCurrentQuestion].idWeb, isGood)
-                    mViewModel.updateFollow(isGood)
-                }
-            }
-
-            if (mCurrentQuestion < mQuestions.size - 1) mCurrentQuestion += 1
-
-            // FIXME:
-//            displayQuestion()
+            val checked = question_follow.isChecked
+            mViewModel.next(checked)?.let {
+                mStatistic.put(mCurrentQuestion.idWeb, if (it) 1 else 0)
+                if (checked) mHadChange = true
+                mMenuShare?.isVisible = true
+            } ?: run({ mMenuShare?.isVisible = false })
         }
 
         question_last.setOnClickListener {
             mMenuShare?.isVisible = false
 
-            if (mAnswerIndexTick > -1) {
-                val isGood = mQuestions[mCurrentQuestion].answers[mAnswerIndexTick].good
-                // local stats
-                mStatistic.put(mQuestions[mCurrentQuestion].idWeb, if (isGood) 1 else 0)
+            val checked = question_follow.isChecked
+            mViewModel.next(checked)?.let {
+                mStatistic.put(mCurrentQuestion.idWeb, if (it) 1 else 0)
 
-                // if follow request
-                if (question_follow.isChecked) {
-                    mHadChange = true
-//                    manager.updateFollow(mQuestions[mCurrentQuestion].idWeb, isGood)
-                    mViewModel.updateFollow(isGood)
-                }
-            }
+                if (checked) mHadChange = true
+                mMenuShare?.isVisible = true
+
+                // show stats of result
+                showLocalStats()
+            } ?: run({ mMenuShare?.isVisible = false })
 
             it.visibility = View.GONE
-            // show stats of result
-
-            showLocalStats()
         }
 
         question_follow.setOnCheckedChangeListener { _, isChecked ->
-            question_last.visibility = if (isChecked && mCurrentQuestion == mQuestions.size - 1) View.VISIBLE else View.GONE
+            question_last.visibility = if (isChecked && mViewModel.isLastQuestion()) View.VISIBLE else View.GONE
         }
 
         mSwipe = Swipe()
@@ -289,20 +266,14 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
 
         val txt = StringBuilder()
 
-        when (mCurrentQuestion) {
-            in 0 until mQuestions.size -> {
-                txt.append(mQuestions[mCurrentQuestion].label)
-                        .append("\n")
-                        .append("\n")
+        txt.append(mCurrentQuestion.label)
+                .append("\n")
+                .append("\n")
 
-                mQuestions[mCurrentQuestion].answers.forEach { answer ->
-                    val line = if (answer.good) "+" else "-"
-                    txt.append("$line ${answer.value}")
-                    txt.append("\n")
-                }
-            }
-            else -> {
-            }
+        mCurrentQuestion.answers.forEach { answer ->
+            val line = if (answer.good) "+" else "-"
+            txt.append("$line ${answer.value}")
+            txt.append("\n")
         }
 
         return txt.toString()
@@ -371,33 +342,9 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
 //        displayQuestion()
     }
 
-    // FIXME:
-    private fun questionsLoaded(questions: List<Question>): Unit {
-
-        mQuestions = questions.toMutableList()
-
-        // shuffle answer
-//        mQuestions.forEach { q ->
-//            Collections.shuffle(q.answers)
-//        }
-
-        question_rotate.stop()
-
-        if (mQuestions.size > 0) {
-            mMenuShuffle?.isVisible = true
-//            displayQuestion()
-        }
-
-    }
-
-    private fun loadError() {
-        question_rotate.stop()
-    }
-
-    private fun displayQuestion(question: Question) {
+    private fun displayQuestion() {
 
         mTimer?.cancel()
-        mAnswerIndexTick = -1
 
         if (question_imgs.childCount > 0) {
             question_imgs.removeAllViews()
@@ -408,9 +355,7 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
         initAnswerCardDisplay()
         resetCheckbox()
 
-        // check following crash report ???
-//        if (mQuestions.size > 0 && mCurrentQuestion >= 0 && mCurrentQuestion <= mQuestions.size) {
-        mQuestions[mCurrentQuestion].apply {
+        mCurrentQuestion.apply {
             question_label.setBackgroundColor(transparentColor)
             question_label.loadDataWithBaseURL(null, label, mMime, mEncoding, null)
             println(label)
@@ -444,20 +389,19 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
 
             if (mWithCountDown) launchCountDown()
         }
-//        }
 
-        mQuestions.isNotEmpty().apply {
-            question_range.text = "${mCurrentQuestion + 1} / ${mQuestions.count()}"
+        val currentIndex = mViewModel.getCurrentIndex()
+        val count = mViewModel.getTestSize()
+        if (count > -1) {
+            question_range.text = "${currentIndex + 1} / ${mViewModel.getTestSize()}"
+
+            question_next.visibility = if (currentIndex < count - 1) View.VISIBLE else View.GONE
+            question_last.visibility = if (currentIndex == count - 1) View.VISIBLE else View.GONE
         }
 
-        question_previous.visibility = if (mCurrentQuestion > 0) View.VISIBLE else View.GONE
+        question_previous.visibility = if (currentIndex > 0) View.VISIBLE else View.GONE
 
-        mQuestions.let {
-            question_next.visibility = if (mCurrentQuestion < it.count() - 1) View.VISIBLE else View.GONE
-            question_last.visibility = if (mCurrentQuestion == it.count() - 1) View.VISIBLE else View.GONE
-        }
-
-        mMenuShare?.isVisible = true
+        mMenuShare?.isVisible = mCurrentQuestion.idWeb > -1
     }
 
     private fun launchCountDown() {
@@ -501,8 +445,7 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
             question_care.setImageDrawable(ContextCompat.getDrawable(this@QuestionsActivity, R.drawable.ic_cached_black))
             question_care.setColorFilter(ContextCompat.getColor(applicationContext, R.color.colorGrey))
 
-//            manager.updateFocus(mQuestions[mCurrentQuestion].idWeb, true, this::onFocusSaves, this::onSavingError)
-            mViewModel.updateFocus(true, this::onFocusSaves, this::onSavingError)
+            mViewModel.updateFocus(true, this::onFocusSaves)
 
             displayFollowAndFocus()
         }
@@ -514,15 +457,14 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
             question_dontcare.setImageDrawable(ContextCompat.getDrawable(this@QuestionsActivity, R.drawable.ic_cached_black))
             question_dontcare.setColorFilter(ContextCompat.getColor(applicationContext, R.color.colorGrey))
 
-//            manager.updateFocus(mQuestions[mCurrentQuestion].idWeb, false, this::onFocusSaves, this::onSavingError)
-            mViewModel.updateFocus(false, this::onFocusSaves, this::onSavingError)
+            mViewModel.updateFocus(false, this::onFocusSaves)
 
             displayFollowAndFocus()
         }
     }
 
     private fun onFocusSaves(state: Boolean?) {
-        mQuestions[mCurrentQuestion].focus = state
+        mCurrentQuestion.focus = state
 
         question_care.isEnabled = true
         question_care.setImageDrawable(ContextCompat.getDrawable(this@QuestionsActivity, R.drawable.ic_star))
@@ -548,7 +490,7 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
         question_dontcare.visibility = View.VISIBLE
         question_care.visibility = View.VISIBLE
 
-        when (mQuestions[mCurrentQuestion].focus) {
+        when (mCurrentQuestion.focus) {
             null -> {
                 question_care.setColorFilter(ContextCompat.getColor(applicationContext, R.color.colorGrey))
                 question_dontcare.setColorFilter(ContextCompat.getColor(applicationContext, R.color.colorGrey))
@@ -566,8 +508,8 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
 
     private fun displayFollowCount() {
 
-        val good = mQuestions[mCurrentQuestion].good
-        val wrong = mQuestions[mCurrentQuestion].wrong
+        val good = mCurrentQuestion.good
+        val wrong = mCurrentQuestion.wrong
 
         if (good == 0 && wrong == 0) {
             question_good_img.visibility = View.GONE
@@ -610,7 +552,7 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
     private fun onAnswerClick(view: View, index: Int) {
 
         mShowAnswer = !mShowAnswer
-        mAnswerIndexTick = if (mShowAnswer) index else -1
+        mViewModel.tickAnswer(if (mShowAnswer) index else -1)
 
         if (mShowAnswer) {
             resetCheckbox()
@@ -636,7 +578,7 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
         val group = (card as ViewGroup).getChildAt(0) as ViewGroup
         var box: CheckBox? = null
 
-        (0..(group.childCount - 1)).forEach { i ->
+        (0 until group.childCount).forEach { i ->
             if (group.getChildAt(i) is CheckBox) {
                 box = group.getChildAt(i) as CheckBox
             }
@@ -646,17 +588,15 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
     }
 
     private fun showAnswer() {
-        if (mCurrentQuestion >= 0 && mCurrentQuestion < mQuestions.size) {
-            mQuestions[mCurrentQuestion].answers.let {
-                (0 until it.count())
-                        .filter { i -> it[i].good }
-                        .forEach { i ->
-                            mQuestionCardView[i].background = if (it[i].good)
-                                ContextCompat.getDrawable(applicationContext, R.drawable.answer_right)
-                            else
-                                ContextCompat.getDrawable(applicationContext, R.drawable.answer_wrong)
-                        }
-            }
+        mCurrentQuestion.answers.let {
+            (0 until it.count())
+                    .filter { i -> it[i].good }
+                    .forEach { i ->
+                        mQuestionCardView[i].background = if (it[i].good)
+                            ContextCompat.getDrawable(applicationContext, R.drawable.answer_right)
+                        else
+                            ContextCompat.getDrawable(applicationContext, R.drawable.answer_wrong)
+                    }
         }
     }
 }

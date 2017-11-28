@@ -114,12 +114,13 @@ class SubjectActivity : BaseComponentActivity() {
 
                     it.topics.forEach { topic ->
                         updateTopicLine(topic.idWeb, true)
-                        questionManager.getQuestions(topic.idWeb, false, fun(_: List<Question>) {
-                            updateTopicLine(topic.idWeb, hasOffline = true)
-                            if (++count == max) updateTopicLine(subjectId, false)
-                        }, {
-                            if (++count == max) updateTopicLine(subjectId, false)
-                        })
+                        // FIXME:
+//                        questionManager.launchTest(topic.idWeb, false, fun(_: List<Question>) {
+//                            updateTopicLine(topic.idWeb, hasOffline = true)
+//                            if (++count == max) updateTopicLine(subjectId, false)
+//                        }, {
+//                            if (++count == max) updateTopicLine(subjectId, false)
+//                        })
                     }
                 }
             }
@@ -129,14 +130,15 @@ class SubjectActivity : BaseComponentActivity() {
             var openActivity = true
 
             if (!hasInternetConnection()) {
-                if (Question().query({ query -> query.equalTo("topicId", topic.idWeb) }).count() == 0) {
-                    openActivity = false
-
-                    SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
-                            .setTitleText(getString(R.string.msg_offline_title))
-                            .setContentText(getString(R.string.error_offline_no_data))
-                            .show()
-                }
+                // FIXME:
+//                if (Question().query({ query -> query.equalTo("topicId", topic.idWeb) }).count() == 0) {
+//                    openActivity = false
+//
+//                    SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
+//                            .setTitleText(getString(R.string.msg_offline_title))
+//                            .setContentText(getString(R.string.error_offline_no_data))
+//                            .show()
+//                }
             }
 
             if (openActivity) {
@@ -230,14 +232,15 @@ class SubjectActivity : BaseComponentActivity() {
 
     private fun gatherWhoHasOfflineData() {
         launch(UI) {
-            val topicIds = Question().querySorted("topicId", Sort.ASCENDING).groupBy { it.topicId }
-            mAdapter.getList().forEachIndexed { index, topicDto ->
-                val doesHasOffline = topicDto.topic.idWeb.toInt() in topicIds.keys
-                if (doesHasOffline != topicDto.hasOfflineData) {
-                    topicDto.hasOfflineData = doesHasOffline
-                    mAdapter.notifyItemChanged(index)
-                }
-            }
+            // FIXME:
+//            val topicIds = Question().querySorted("topicId", Sort.ASCENDING).groupBy { it.topicId }
+//            mAdapter.getList().forEachIndexed { index, topicDto ->
+//                val doesHasOffline = topicDto.topic.idWeb.toInt() in topicIds.keys
+//                if (doesHasOffline != topicDto.hasOfflineData) {
+//                    topicDto.hasOfflineData = doesHasOffline
+//                    mAdapter.notifyItemChanged(index)
+//                }
+//            }
         }
     }
 

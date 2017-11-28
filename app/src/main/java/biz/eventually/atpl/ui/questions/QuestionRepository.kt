@@ -1,19 +1,14 @@
 package biz.eventually.atpl.ui.questions
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
-import android.util.Log
-import biz.eventually.atpl.common.RxBaseManager
 import biz.eventually.atpl.data.DataProvider
 import biz.eventually.atpl.data.NetworkStatus
 import biz.eventually.atpl.data.dao.QuestionDao
 import biz.eventually.atpl.data.db.LastCall
 import biz.eventually.atpl.data.db.Question
-import biz.eventually.atpl.data.dto.QuestionView
 import biz.eventually.atpl.ui.BaseRepository
-import biz.eventually.atpl.ui.source.QuestionsManager
 import biz.eventually.atpl.utils.hasInternetConnection
 import com.google.firebase.perf.metrics.AddTrace
+import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -32,28 +27,22 @@ class QuestionRepository @Inject constructor(private val dataProvider: DataProvi
 //        return dao.findBySourceId(sourceId)
 //    }
 
-    @AddTrace(name = "getQuestions", enabled = true)
-    fun getQuestions(topicId: Long, starFist: Boolean): LiveData<List<QuestionView>> {
+    @AddTrace(name = "launchTest", enabled = true)
+    fun getQuestions(topicId: Long, starFist: Boolean, then: (data: List<Question>) -> Unit) {
 
-        if (hasInternetConnection()) getWebData(topicId, starFist)
-        return dao.findByTopicId(topicId)
+        // has Network: request data
+        if (hasInternetConnection()) {
+            getWebData(topicId, starFist, {
+                then(getDataFromDb(topicId))
+            })
+        }
+        // No network: taking in database
+        else {
+            then(getDataFromDb(topicId))
+        }
     }
 
-    private fun getWebData(topicId: Long, starFist: Boolean) {
-
-        dataProvider
-                .dataGetTopicQuestions(topicId, starFist)
-                .subscribeOn(scheduler.network)
-                ?.observeOn(scheduler.main)
-                ?.subscribe({ questionsWeb ->
-                    analyseData(topicId, questionsWeb)
-                }, { _ ->
-//                    error()
-//                    Log.d(QuestionsManager.TAG, "getQuestions: ")
-                })
-    }
-
-    fun updateFocus(questionId: Long, care: Boolean, then: (state: Boolean?) -> Unit, error: () -> Unit) {
+    fun updateFocus(questionId: Long, care: Boolean, then: (state: Boolean?) -> Unit) {
         dataProvider.updateFocus(questionId, care)
                 .subscribeOn(scheduler.network)
                 ?.observeOn(scheduler.main)
@@ -70,13 +59,13 @@ class QuestionRepository @Inject constructor(private val dataProvider: DataProvi
                     }
 
                     then(focus)
-                }, { _ ->
-//                    Log.d(QuestionsManager.TAG, "updateFocus: " + error)
-                    error()
+                }, { e ->
+                    Timber.d("Question -> updateFocus: " + e)
+                    then(null)
                 })
     }
 
-    fun updateFollow(questionId: Long, good: Boolean) {
+    fun updateFollow(questionId: Long, good: Boolean, then: (question: Question?) -> Unit) {
         if (hasInternetConnection()) {
             dataProvider.updateFollow(questionId, good)
                     .subscribeOn(scheduler.network)
@@ -89,10 +78,44 @@ class QuestionRepository @Inject constructor(private val dataProvider: DataProvi
                             dao.update(it)
                         }
 
-                    }, { error ->
-//                        Log.d(QuestionsManager.TAG, "updateFollow: " + error)
+                        then(question)
+
+                    }, { e ->
+                        Timber.d("Question -> updateFollow: " + e)
+                        then(null)
                     })
         }
+    }
+
+    private fun getDataFromDb(topicId: Long) : List<Question> {
+        return dao.findByTopicId(topicId).map { Question(
+                it.question.idWeb,
+                topicId,
+                it.question.label,
+                it.question.img,
+                it.question.focus,
+                it.question.good,
+                it.question.wrong
+        ).apply {
+            answers = it.answers ?: listOf()
+        } }
+    }
+
+    private fun getWebData(topicId: Long, starFist: Boolean, then: () -> Unit) {
+
+        status.postValue(NetworkStatus.LOADING)
+        dataProvider
+                .dataGetTopicQuestions(topicId, starFist)
+                .subscribeOn(scheduler.network)
+                ?.observeOn(scheduler.main)
+                ?.subscribe({ questionsWeb ->
+                    analyseData(topicId, questionsWeb)
+                    then()
+                    status.postValue(NetworkStatus.SUCCESS)
+                }, { e ->
+                    status.postValue(NetworkStatus.ERROR)
+                    Timber.d("launchTest -> WebData: " + e)
+                })
     }
 
     private fun analyseData(topicId: Long, questionsWeb: List<Question>) {

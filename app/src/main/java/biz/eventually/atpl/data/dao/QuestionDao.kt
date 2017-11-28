@@ -20,7 +20,7 @@ abstract class QuestionDao : BaseDao<Question> {
 
     @Transaction // good practice with POJO w/ @Relation Object to ensure consistency
     @Query("SELECT * FROM question WHERE topic_id = :topicId")
-    abstract fun findByTopicId(topicId: Long): LiveData<List<QuestionView>>
+    abstract fun findByTopicId(topicId: Long): List<QuestionView>
 
 
     @Query("SELECT idWeb FROM question")
