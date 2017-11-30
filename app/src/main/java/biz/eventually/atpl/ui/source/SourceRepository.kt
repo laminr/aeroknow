@@ -81,7 +81,7 @@ class SourceRepository @Inject constructor(private val dataProvider: DataProvide
             }
 
             // update time reference
-            if (sWeb.isNotEmpty()) LastCall().update(LastCall.TYPE_SOURCE, Date().time)
+            if (sWeb.isNotEmpty()) LastCall(LastCall.TYPE_SOURCE, Date().time).update()
         }
     }
 }

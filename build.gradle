@@ -10,7 +10,7 @@ buildscript {
     }
 
     ext.versions = [
-            kotlin    : '1.1.61',
+            kotlin    : '1.2.0',
             support   : '27.0.1',
             leakCanary: '1.5.4',
             retrofit  : '2.2.0',
@@ -23,8 +23,8 @@ buildscript {
     ]
 
     repositories {
+        google()
         jcenter()
-        maven { url "https://maven.google.com" }
         maven { url 'https://maven.fabric.io/public' }
     }
     dependencies {
@@ -43,11 +43,11 @@ buildscript {
 
 allprojects {
     repositories {
+        google()
         jcenter()
         mavenCentral()
         maven { url "https://jitpack.io" }
         maven { url 'https://maven.fabric.io/public' }
-        maven { url "https://maven.google.com" }
     }
 }
 

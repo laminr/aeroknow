@@ -6,7 +6,6 @@ import android.arch.lifecycle.Transformations
 import android.arch.lifecycle.ViewModel
 import biz.eventually.atpl.data.NetworkStatus
 import biz.eventually.atpl.data.db.Question
-import kotlinx.android.synthetic.main.activity_questions.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -79,7 +78,7 @@ class QuestionViewModel @Inject constructor(val repository: QuestionRepository) 
      * returning if ever the answer to the question was good.
      */
     fun previous(follow: Boolean): Boolean? {
-        var isGood : Boolean? =  null
+        var isGood: Boolean? = null
 
         if (mAnswerIndexTick > -1) {
             isGood = mCurrentQuestion.answers[mAnswerIndexTick].good
@@ -120,7 +119,7 @@ class QuestionViewModel @Inject constructor(val repository: QuestionRepository) 
         return isGood
     }
 
-    fun getTestSize() : Int  = mQuestions.size
-    fun getCurrentIndex() : Int  = mPosition.value ?: -1
-    fun isLastQuestion() : Boolean = getCurrentIndex() == getTestSize() - 1
+    fun getTestSize(): Int = mQuestions.size
+    fun getCurrentIndex(): Int = mPosition.value ?: -1
+    fun isLastQuestion(): Boolean = getCurrentIndex() == getTestSize() - 1
 }
