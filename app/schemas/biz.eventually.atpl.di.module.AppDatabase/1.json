@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "0cdc2037df8643c464a70dfc0bb139c8",
+    "identityHash": "4a05708f8cff512bbf7e21c9e74b9092",
     "entities": [
       {
         "tableName": "source",
@@ -162,7 +162,7 @@
       },
       {
         "tableName": "question",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`idWeb` INTEGER NOT NULL, `topic_id` INTEGER NOT NULL, `label` TEXT NOT NULL, `img` TEXT NOT NULL, `focus` INTEGER, `good` INTEGER NOT NULL, `wrong` INTEGER NOT NULL, PRIMARY KEY(`idWeb`), FOREIGN KEY(`topic_id`) REFERENCES `topic`(`idWeb`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`idWeb` INTEGER NOT NULL, `topic_id` INTEGER NOT NULL, `label` TEXT NOT NULL, `img` TEXT NOT NULL, `focus` INTEGER, `good` INTEGER NOT NULL, `wrong` INTEGER NOT NULL, PRIMARY KEY(`idWeb`), FOREIGN KEY(`topic_id`) REFERENCES `topic`(`idWeb`) ON UPDATE CASCADE ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "idWeb",
@@ -227,7 +227,7 @@
           {
             "table": "topic",
             "onDelete": "CASCADE",
-            "onUpdate": "NO ACTION",
+            "onUpdate": "CASCADE",
             "columns": [
               "topic_id"
             ],
@@ -331,7 +331,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"0cdc2037df8643c464a70dfc0bb139c8\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"4a05708f8cff512bbf7e21c9e74b9092\")"
     ]
   }
 }

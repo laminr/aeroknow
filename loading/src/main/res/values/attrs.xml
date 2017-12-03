@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="LoadingRotateLoading">
+    <declare-styleable name="RotateLoading">
         <attr name="loading_width" format="dimension"/>
         <attr name="loading_color" format="color"/>
         <attr name="loading_shadow_position" format="integer"/>

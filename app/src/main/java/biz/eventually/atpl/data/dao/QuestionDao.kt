@@ -1,9 +1,8 @@
 package biz.eventually.atpl.data.dao
 
 import android.arch.lifecycle.LiveData
-import android.arch.persistence.room.Dao
-import android.arch.persistence.room.Query
-import android.arch.persistence.room.Transaction
+import android.arch.persistence.room.*
+import biz.eventually.atpl.data.db.Answer
 import biz.eventually.atpl.data.db.Question
 import biz.eventually.atpl.data.db.Subject
 import biz.eventually.atpl.data.dto.QuestionView
@@ -28,4 +27,10 @@ abstract class QuestionDao : BaseDao<Question> {
 
     @Query("SELECT * FROM question WHERE idWeb = :idWeb")
     abstract fun findById(idWeb: Long): Question?
+
+    @Insert
+    internal abstract fun insertAnswers(answers: List<Answer>)
+
+    @Update
+    internal abstract fun updateAnswers(answer: List<Answer>)
 }

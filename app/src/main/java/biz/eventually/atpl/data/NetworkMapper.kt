@@ -47,6 +47,6 @@ fun toAppQuestion(topicId: Long, from: QuestionNetwork) = Question(
             from.focus,
             from.follow?.good ?: 0,
             from.follow?.wrong ?: 0
-    )
+    ).apply { answers = toAppAnswers(from.id, from.answers)}
 
 fun toAppQuestions(topicId: Long, from: List<QuestionNetwork>?) = from?.map { toAppQuestion(topicId, it) } ?: listOf()

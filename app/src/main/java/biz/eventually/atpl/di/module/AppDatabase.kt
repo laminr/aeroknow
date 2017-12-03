@@ -10,7 +10,14 @@ import biz.eventually.atpl.data.db.*
 /**
  * Created by Thibault de Lambilly on 17/10/17.
  */
-@Database(entities = arrayOf( Source::class, Subject::class, Topic::class, Question::class, Answer::class, LastCall::class ), version = 1)
+@Database(entities = [
+    Source::class,
+    Subject::class,
+    Topic::class,
+    Question::class,
+    Answer::class,
+    LastCall::class
+], version = 1)
 @TypeConverters(AtplTypeConverter::class)
 abstract class AppDatabase : RoomDatabase() {
 

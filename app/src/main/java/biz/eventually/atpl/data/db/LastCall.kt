@@ -14,8 +14,8 @@ import javax.inject.Inject
 @Entity(tableName = "last_call")
 class LastCall(val type: String) {
 
-    @Ignore
     @Inject
+    @Ignore
     lateinit var dao : LastCallDao
 
     companion object {

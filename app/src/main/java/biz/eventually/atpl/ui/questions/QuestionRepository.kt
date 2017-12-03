@@ -8,6 +8,7 @@ import biz.eventually.atpl.data.db.Question
 import biz.eventually.atpl.ui.BaseRepository
 import biz.eventually.atpl.utils.hasInternetConnection
 import com.google.firebase.perf.metrics.AddTrace
+import org.jetbrains.anko.doAsync
 import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
@@ -15,25 +16,18 @@ import javax.inject.Singleton
 
 /**
  * Created by thibault on 20/03/17.
+ *
  */
 @Singleton
 class QuestionRepository @Inject constructor(private val dataProvider: DataProvider, private val dao: QuestionDao) : BaseRepository() {
-
-
-//    @AddTrace(name = "getSubjects", enabled = true)
-//    fun getSubjects(sourceId: Long): LiveData<List<SubjectView>> {
-//
-//        if (hasInternetConnection()) getWebData(sourceId)
-//        return dao.findBySourceId(sourceId)
-//    }
 
     @AddTrace(name = "launchTest", enabled = true)
     fun getQuestions(topicId: Long, starFist: Boolean, then: (data: List<Question>) -> Unit) {
 
         // has Network: request data
         if (hasInternetConnection()) {
-            getWebData(topicId, starFist, {
-                then(getDataFromDb(topicId))
+            getWebData(topicId, starFist, { data ->
+                then(data)
             })
         }
         // No network: taking in database
@@ -41,6 +35,25 @@ class QuestionRepository @Inject constructor(private val dataProvider: DataProvi
             then(getDataFromDb(topicId))
         }
     }
+
+    private fun getWebData(topicId: Long, starFist: Boolean, then: (data: List<Question>) -> Unit) {
+
+        status.postValue(NetworkStatus.LOADING)
+        dataProvider
+                .dataGetTopicQuestions(topicId, starFist)
+                .subscribeOn(scheduler.network)
+                .map { question -> analyseData(topicId, question) }
+                .map { getDataFromDb(topicId) }
+                .observeOn(scheduler.main)
+                .subscribe({ data ->
+                    status.postValue(NetworkStatus.SUCCESS)
+                    then(data)
+                }, { e ->
+                    status.postValue(NetworkStatus.ERROR)
+                    Timber.d("launchTest -> WebData: " + e)
+                })
+    }
+
 
     fun updateFocus(questionId: Long, care: Boolean, then: (state: Boolean?) -> Unit) {
         dataProvider.updateFocus(questionId, care)
@@ -87,63 +100,52 @@ class QuestionRepository @Inject constructor(private val dataProvider: DataProvi
         }
     }
 
-    private fun getDataFromDb(topicId: Long) : List<Question> {
-        return dao.findByTopicId(topicId).map { Question(
-                it.question.idWeb,
-                topicId,
-                it.question.label,
-                it.question.img,
-                it.question.focus,
-                it.question.good,
-                it.question.wrong
-        ).apply {
-            answers = it.answers ?: listOf()
-        } }
+    private fun getDataFromDb(topicId: Long): List<Question> {
+        return dao.findByTopicId(topicId).map {
+            Question(
+                    it.question.idWeb,
+                    topicId,
+                    it.question.label,
+                    it.question.img,
+                    it.question.focus,
+                    it.question.good,
+                    it.question.wrong
+            ).apply {
+                answers = it.answers ?: listOf()
+            }
+        }
     }
 
-    private fun getWebData(topicId: Long, starFist: Boolean, then: () -> Unit) {
-
-        status.postValue(NetworkStatus.LOADING)
-        dataProvider
-                .dataGetTopicQuestions(topicId, starFist)
-                .subscribeOn(scheduler.network)
-                ?.observeOn(scheduler.main)
-                ?.subscribe({ questionsWeb ->
-                    analyseData(topicId, questionsWeb)
-                    then()
-                    status.postValue(NetworkStatus.SUCCESS)
-                }, { e ->
-                    status.postValue(NetworkStatus.ERROR)
-                    Timber.d("launchTest -> WebData: " + e)
-                })
-    }
 
     private fun analyseData(topicId: Long, questionsWeb: List<Question>) {
 
-        val questionsId = dao.getIds()
+//        doAsync {
+            val questionsId = dao.getIds()
 
-        questionsWeb.forEach { qWeb ->
-            // Update
-            if (qWeb.idWeb in questionsId) {
-                dao.findById(qWeb.idWeb)?.let {
-                    it.label = qWeb.label
-                    it.answers = qWeb.answers
-                    it.img = qWeb.img
-                    it.focus = qWeb.focus
-                    it.good = qWeb.good
-                    it.wrong = qWeb.wrong
+            questionsWeb.forEach { qWeb ->
+                // Update
+                if (qWeb.idWeb in questionsId) {
+                    dao.findById(qWeb.idWeb)?.let {
+                        it.label = qWeb.label
+                        it.img = qWeb.img
+                        it.focus = qWeb.focus
+                        it.good = qWeb.good
+                        it.wrong = qWeb.wrong
 
-                    dao.update(it)
+                        dao.update(it)
+                        dao.updateAnswers(qWeb.answers)
+                    }
+                }
+                // New
+                else {
+                    qWeb.topicId = topicId
+                    dao.insert(qWeb)
+                    dao.insertAnswers(qWeb.answers)
                 }
             }
-            // New
-            else {
-                qWeb.topicId = topicId
-                dao.insert(qWeb)
-            }
-        }
 
-        // update time reference
-        if (questionsWeb.isNotEmpty()) LastCall("${LastCall.TYPE_TOPIC}_$topicId", Date().time).update()
+            // update time reference
+//            if (questionsWeb.isNotEmpty()) LastCall("${LastCall.TYPE_TOPIC}_$topicId", Date().time).update()
+//        }
     }
 }

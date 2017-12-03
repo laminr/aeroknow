@@ -10,17 +10,15 @@ import android.os.Parcelable
  */
 @Entity(
         tableName = "answer",
-        indices = arrayOf(Index(value = "question_id", name = "idx_answer_question_id")),
-        foreignKeys = arrayOf(
-                ForeignKey(
-                        entity = Question::class,
-                        parentColumns = arrayOf("idWeb"),
-                        childColumns = arrayOf("question_id"),
-                        onUpdate = ForeignKey.CASCADE,
-                        onDelete = ForeignKey.CASCADE
+        indices = [Index(value = ["question_id"], name = "idx_answer_question_id")],
+        foreignKeys = [ForeignKey(
+                entity = Question::class,
+                parentColumns = ["idWeb"],
+                childColumns = ["question_id"],
+                onUpdate = ForeignKey.CASCADE,
+                onDelete = ForeignKey.CASCADE
 
-                )
-        )
+        )]
 )
 class Answer(@PrimaryKey
              @ColumnInfo(name = "idWeb")

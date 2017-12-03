@@ -11,17 +11,15 @@ import biz.eventually.atpl.data.model.Follow
  */
 @Entity(
         tableName = "question",
-        indices = arrayOf(Index(value = "topic_id", name = "idx_question_topic_id")),
-        foreignKeys = arrayOf(
-                ForeignKey(
-                        entity = Topic::class,
-                        parentColumns = arrayOf("idWeb"),
-                        childColumns = arrayOf("topic_id"),
-                        onUpdate = ForeignKey.NO_ACTION,
-                        onDelete = ForeignKey.CASCADE
+        indices = [Index(value = ["topic_id"], name = "idx_question_topic_id")],
+        foreignKeys = [ForeignKey(
+                entity = Topic::class,
+                parentColumns = ["idWeb"],
+                childColumns = ["topic_id"],
+                onUpdate = ForeignKey.CASCADE,
+                onDelete = ForeignKey.CASCADE
 
-                )
-        )
+        )]
 )
 class Question(@PrimaryKey
                var idWeb: Long,

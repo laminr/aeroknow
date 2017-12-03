@@ -39,8 +39,7 @@ import javax.inject.Inject
 class QuestionsActivity : BaseActivity<QuestionsManager>() {
 
     private var mTopic: Topic? = null
-    //    private var mQuestions = mutableListOf<Question>()
-    private var mCurrentQuestion = Question(-1, -1, "", "")
+    private var mData = QuestionState(Question(-1, -1, "", ""), 0, 0)
 
     private var mShowAnswer = false
 
@@ -110,10 +109,10 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
         mViewModel = ViewModelProviders.of(this, questionViewModelFactory).get(QuestionViewModel::class.java)
         mViewModel.launchTest(topicId, startFirst)
 
-        mViewModel.question.observe(this, Observer<Question> {
+        mViewModel.question.observe(this, Observer<QuestionState> {
             // double "it" --> crazyyyyy
             it?.let {
-                mCurrentQuestion = it
+                mData = it
                 displayQuestion()
             }
         })
@@ -163,7 +162,7 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
 
             val checked = question_follow.isChecked
             mViewModel.previous(checked)?.let {
-                mStatistic.put(mCurrentQuestion.idWeb, if (it) 1 else 0)
+                mStatistic.put(mData.question.idWeb, if (it) 1 else 0)
                 if (checked) mHadChange = true
                 mMenuShare?.isVisible = true
             } ?: run({ mMenuShare?.isVisible = true })
@@ -174,7 +173,7 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
 
             val checked = question_follow.isChecked
             mViewModel.next(checked)?.let {
-                mStatistic.put(mCurrentQuestion.idWeb, if (it) 1 else 0)
+                mStatistic.put(mData.question.idWeb, if (it) 1 else 0)
                 if (checked) mHadChange = true
                 mMenuShare?.isVisible = true
             } ?: run({ mMenuShare?.isVisible = false })
@@ -185,7 +184,7 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
 
             val checked = question_follow.isChecked
             mViewModel.next(checked)?.let {
-                mStatistic.put(mCurrentQuestion.idWeb, if (it) 1 else 0)
+                mStatistic.put(mData.question.idWeb, if (it) 1 else 0)
 
                 if (checked) mHadChange = true
                 mMenuShare?.isVisible = true
@@ -198,7 +197,7 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
         }
 
         question_follow.setOnCheckedChangeListener { _, isChecked ->
-            question_last.visibility = if (isChecked && mViewModel.isLastQuestion()) View.VISIBLE else View.GONE
+            question_last.visibility = if (isChecked && mData.isLast) View.VISIBLE else View.GONE
         }
 
         mSwipe = Swipe()
@@ -266,11 +265,11 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
 
         val txt = StringBuilder()
 
-        txt.append(mCurrentQuestion.label)
+        txt.append(mData.question.label)
                 .append("\n")
                 .append("\n")
 
-        mCurrentQuestion.answers.forEach { answer ->
+        mData.question.answers.forEach { answer ->
             val line = if (answer.good) "+" else "-"
             txt.append("$line ${answer.value}")
             txt.append("\n")
@@ -278,23 +277,6 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
 
         return txt.toString()
     }
-
-//    override fun onSaveInstanceState(outState: Bundle?) {
-//        super.onSaveInstanceState(outState)
-//        outState?.let {
-//            it.putParcelable(StateIdentifier.TOPIC, mTopic)
-//            it.putInt(StateIdentifier.QUEST_CURRENT, mCurrentQuestion)
-//        }
-//    }
-
-//    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
-//        super.onRestoreInstanceState(savedInstanceState)
-//        savedInstanceState?.let {
-//            mTopic = it.getParcelable(StateIdentifier.TOPIC)
-//            mQuestions = mTopic?.questions as MutableList<Question>
-//            mCurrentQuestion = it.getInt(StateIdentifier.QUEST_CURRENT)
-//        }
-//    }
 
     override fun onBackPressed() {
 
@@ -338,7 +320,7 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
     // FIXME:
     private fun shuffleQuestions() {
 //        mQuestions = shuffle(mQuestions) as MutableList<Question>
-//        mCurrentQuestion = 0
+//        mData = 0
 //        displayQuestion()
     }
 
@@ -355,10 +337,9 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
         initAnswerCardDisplay()
         resetCheckbox()
 
-        mCurrentQuestion.apply {
+        mData.question.apply {
             question_label.setBackgroundColor(transparentColor)
             question_label.loadDataWithBaseURL(null, label, mMime, mEncoding, null)
-            println(label)
 
             val questionAnswerTextView = listOf<TextView>(
                     question_answer_1_text,
@@ -390,10 +371,10 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
             if (mWithCountDown) launchCountDown()
         }
 
-        val currentIndex = mViewModel.getCurrentIndex()
-        val count = mViewModel.getTestSize()
+        val currentIndex = mData.index
+        val count = mData.size
         if (count > -1) {
-            question_range.text = "${currentIndex + 1} / ${mViewModel.getTestSize()}"
+            question_range.text = "${currentIndex + 1} / $count"
 
             question_next.visibility = if (currentIndex < count - 1) View.VISIBLE else View.GONE
             question_last.visibility = if (currentIndex == count - 1) View.VISIBLE else View.GONE
@@ -401,7 +382,7 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
 
         question_previous.visibility = if (currentIndex > 0) View.VISIBLE else View.GONE
 
-        mMenuShare?.isVisible = mCurrentQuestion.idWeb > -1
+        mMenuShare?.isVisible = mData.question.idWeb > -1
     }
 
     private fun launchCountDown() {
@@ -464,7 +445,7 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
     }
 
     private fun onFocusSaves(state: Boolean?) {
-        mCurrentQuestion.focus = state
+        mData.question.focus = state
 
         question_care.isEnabled = true
         question_care.setImageDrawable(ContextCompat.getDrawable(this@QuestionsActivity, R.drawable.ic_star))
@@ -490,7 +471,7 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
         question_dontcare.visibility = View.VISIBLE
         question_care.visibility = View.VISIBLE
 
-        when (mCurrentQuestion.focus) {
+        when (mData.question.focus) {
             null -> {
                 question_care.setColorFilter(ContextCompat.getColor(applicationContext, R.color.colorGrey))
                 question_dontcare.setColorFilter(ContextCompat.getColor(applicationContext, R.color.colorGrey))
@@ -508,8 +489,8 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
 
     private fun displayFollowCount() {
 
-        val good = mCurrentQuestion.good
-        val wrong = mCurrentQuestion.wrong
+        val good = mData.question.good
+        val wrong = mData.question.wrong
 
         if (good == 0 && wrong == 0) {
             question_good_img.visibility = View.GONE
@@ -588,7 +569,7 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
     }
 
     private fun showAnswer() {
-        mCurrentQuestion.answers.let {
+        mData.question.answers.let {
             (0 until it.count())
                     .filter { i -> it[i].good }
                     .forEach { i ->
