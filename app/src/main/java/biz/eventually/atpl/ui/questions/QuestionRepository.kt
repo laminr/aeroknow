@@ -2,6 +2,7 @@ package biz.eventually.atpl.ui.questions
 
 import biz.eventually.atpl.data.DataProvider
 import biz.eventually.atpl.data.NetworkStatus
+import biz.eventually.atpl.data.dao.LastCallDao
 import biz.eventually.atpl.data.dao.QuestionDao
 import biz.eventually.atpl.data.db.LastCall
 import biz.eventually.atpl.data.db.Question
@@ -19,7 +20,7 @@ import javax.inject.Singleton
  *
  */
 @Singleton
-class QuestionRepository @Inject constructor(private val dataProvider: DataProvider, private val dao: QuestionDao) : BaseRepository() {
+class QuestionRepository @Inject constructor(private val dataProvider: DataProvider, private val dao: QuestionDao, private val lastCallDao: LastCallDao) : BaseRepository() {
 
     @AddTrace(name = "launchTest", enabled = true)
     fun getQuestions(topicId: Long, starFist: Boolean, then: (data: List<Question>) -> Unit) {
@@ -56,26 +57,37 @@ class QuestionRepository @Inject constructor(private val dataProvider: DataProvi
 
 
     fun updateFocus(questionId: Long, care: Boolean, then: (state: Boolean?) -> Unit) {
-        dataProvider.updateFocus(questionId, care)
-                .subscribeOn(scheduler.network)
-                ?.observeOn(scheduler.main)
-                ?.subscribe({ focusInt ->
-                    val focus = when (focusInt) {
-                        0 -> false
-                        1 -> true
-                        else -> null
-                    }
+        if (hasInternetConnection()) {
+            dataProvider.updateFocus(questionId, care)
+                    .subscribeOn(scheduler.network)
+                    ?.observeOn(scheduler.main)
+                    ?.subscribe({ focusInt ->
+                        val focus = when (focusInt) {
+                            0 -> false
+                            1 -> true
+                            else -> null
+                        }
 
-                    dao.findById(questionId)?.let {
-                        it.focus = focus
-                        dao.update(it)
-                    }
+                        dao.findById(questionId)?.let {
+                            it.focus = focus
+                            dao.update(it)
+                        }
 
-                    then(focus)
-                }, { e ->
-                    Timber.d("Question -> updateFocus: " + e)
-                    then(null)
-                })
+                        then(focus)
+                    }, { e ->
+                        Timber.d("Question -> updateFocus: " + e)
+                        then(null)
+                    })
+        } else {
+            doAsync {
+                dao.findById(questionId)?.let {
+                    it.focus = if (it.focus == care) null else care
+
+                    dao.update(it)
+                    then(it.focus)
+                }
+            }
+        }
     }
 
     fun updateFollow(questionId: Long, good: Boolean, then: (question: Question?) -> Unit) {
@@ -90,13 +102,23 @@ class QuestionRepository @Inject constructor(private val dataProvider: DataProvi
 
                             dao.update(it)
                         }
-
                         then(question)
-
                     }, { e ->
                         Timber.d("Question -> updateFollow: " + e)
                         then(null)
                     })
+        } else {
+            doAsync {
+                dao.findById(questionId)?.let {
+                    when (good) {
+                        true -> it.good += 1
+                        false -> it.wrong += 1
+                    }
+
+                    dao.update(it)
+                    then(it)
+                }
+            }
         }
     }
 
@@ -119,33 +141,33 @@ class QuestionRepository @Inject constructor(private val dataProvider: DataProvi
 
     private fun analyseData(topicId: Long, questionsWeb: List<Question>) {
 
-//        doAsync {
-            val questionsId = dao.getIds()
+        val questionsId = dao.getIds()
 
-            questionsWeb.forEach { qWeb ->
-                // Update
-                if (qWeb.idWeb in questionsId) {
-                    dao.findById(qWeb.idWeb)?.let {
-                        it.label = qWeb.label
-                        it.img = qWeb.img
-                        it.focus = qWeb.focus
-                        it.good = qWeb.good
-                        it.wrong = qWeb.wrong
+        questionsWeb.forEach { qWeb ->
+            // Update
+            if (qWeb.idWeb in questionsId) {
+                dao.findById(qWeb.idWeb)?.let {
+                    it.label = qWeb.label
+                    it.img = qWeb.img
+                    it.focus = qWeb.focus
+                    it.good = qWeb.good
+                    it.wrong = qWeb.wrong
 
-                        dao.update(it)
-                        dao.updateAnswers(qWeb.answers)
-                    }
-                }
-                // New
-                else {
-                    qWeb.topicId = topicId
-                    dao.insert(qWeb)
-                    dao.insertAnswers(qWeb.answers)
+                    dao.update(it)
+                    dao.updateAnswers(qWeb.answers)
                 }
             }
+            // New
+            else {
+                qWeb.topicId = topicId
+                dao.insert(qWeb)
+                dao.insertAnswers(qWeb.answers)
+            }
+        }
 
-            // update time reference
-//            if (questionsWeb.isNotEmpty()) LastCall("${LastCall.TYPE_TOPIC}_$topicId", Date().time).update()
-//        }
+        // update time reference
+        if (questionsWeb.isNotEmpty()) {
+            lastCallDao.updateOrInsert(LastCall("${LastCall.TYPE_TOPIC}_$topicId", Date().time))
+        }
     }
 }

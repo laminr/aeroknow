@@ -317,11 +317,8 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
                 .show()
     }
 
-    // FIXME:
     private fun shuffleQuestions() {
-//        mQuestions = shuffle(mQuestions) as MutableList<Question>
-//        mData = 0
-//        displayQuestion()
+        mViewModel.shuffle()
     }
 
     private fun displayQuestion() {

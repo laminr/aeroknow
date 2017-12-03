@@ -51,25 +51,26 @@ class QuestionViewModel @Inject constructor(val repository: QuestionRepository) 
     }
 
     private fun updateFollow(good: Boolean) {
-        val currentIndex = mPosition
+        val index = mPosition.value ?: -1
 
         question.value?.let {
-            repository.updateFollow(it.question.idWeb, good, fun(question: Question?) {
+            repository.updateFollow(it.question.idWeb, good) { question ->
                 question?.let {
-                    currentIndex.value?.let {
+                    if (index > -1) {
+                        // updating the question data in case of return on it
                         when (good) {
-                            true -> mQuestions[it].good += 1
-                            false -> mQuestions[it].wrong += 1
+                            true -> mQuestions[index].good = question.good
+                            false -> mQuestions[index].wrong = question.wrong
                         }
                     }
                 }
-            })
+            }
         }
     }
 
     fun updateFocus(good: Boolean, then: (state: Boolean?) -> Unit) {
         question.value?.let {
-            repository.updateFocus(it.question.idWeb, good, then)
+            repository.updateFocus(it.question.idWeb, good) { care -> then(care) }
         }
     }
 
@@ -121,6 +122,11 @@ class QuestionViewModel @Inject constructor(val repository: QuestionRepository) 
         }
 
         return isGood
+    }
+
+    fun shuffle() {
+        mQuestions = mQuestions.shuffled()
+        mPosition.value = 0
     }
 
 }

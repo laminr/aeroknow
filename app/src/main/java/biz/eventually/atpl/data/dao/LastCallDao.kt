@@ -12,4 +12,12 @@ abstract class LastCallDao : BaseDao<LastCall> {
 
     @Query("SELECT * FROM last_call WHERE type = :type")
     abstract fun findByType(type: String): LastCall?
+
+    fun updateOrInsert(call: LastCall) {
+        findByType(call.type)?.let {
+            update(it)
+        }.run {
+            insert(call)
+        }
+    }
 }
