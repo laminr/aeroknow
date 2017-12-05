@@ -6,17 +6,17 @@ import android.arch.persistence.room.*
  * Created by Thibault de Lambilly on 17/10/17.
  */
 @Dao
-interface BaseDao<in T> {
+abstract interface BaseDao<in T> {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(type: T): Long
+    abstract fun insert(type: T): Long
 
     @Insert
-    fun insert(vararg obj: T)
+    abstract fun insert(vararg obj: T)
 
     @Update
-    fun update(type: T)
+    abstract fun update(type: T)
 
     @Delete
-    fun delete(type: T)
+    abstract  fun delete(type: T)
 }

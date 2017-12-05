@@ -153,15 +153,13 @@ class QuestionRepository @Inject constructor(private val dataProvider: DataProvi
                     it.good = qWeb.good
                     it.wrong = qWeb.wrong
 
-                    dao.update(it)
-                    dao.updateAnswers(qWeb.answers)
+                    dao.updateQuestionAndAnswers(it)
                 }
             }
             // New
             else {
                 qWeb.topicId = topicId
-                dao.insert(qWeb)
-                dao.insertAnswers(qWeb.answers)
+                dao.insertQuestionAndAnswers(qWeb)
             }
         }
 

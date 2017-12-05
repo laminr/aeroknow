@@ -10,6 +10,7 @@ import biz.eventually.atpl.data.dto.SubjectView
 
 /**
  * Created by Thibault de Lambilly on 17/10/17.
+ *
  */
 @Dao
 abstract class QuestionDao : BaseDao<Question> {
@@ -33,4 +34,17 @@ abstract class QuestionDao : BaseDao<Question> {
 
     @Update
     internal abstract fun updateAnswers(answer: List<Answer>)
-}
+
+    fun insertQuestionAndAnswers(question: Question) : Long {
+        val id = insert(question)
+        question.answers.forEach { it.questionId = id }
+        insertAnswers(question.answers)
+
+        return id
+    }
+
+    fun updateQuestionAndAnswers(question: Question) {
+        update(question)
+        updateAnswers(question.answers)
+    }
+ }
