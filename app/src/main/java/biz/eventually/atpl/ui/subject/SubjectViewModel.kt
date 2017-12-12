@@ -8,6 +8,7 @@ import biz.eventually.atpl.data.NetworkStatus
 import biz.eventually.atpl.data.db.Topic
 import biz.eventually.atpl.data.dto.SubjectView
 import biz.eventually.atpl.data.dto.TopicView
+import biz.eventually.atpl.ui.questions.QuestionRepository
 import javax.inject.Inject
 import javax.inject.Singleton
 

@@ -19,9 +19,12 @@ import biz.eventually.atpl.data.dto.SubjectView
 import biz.eventually.atpl.data.dto.TopicView
 import biz.eventually.atpl.ui.BaseComponentActivity
 import biz.eventually.atpl.ui.ViewModelFactory
+import biz.eventually.atpl.ui.questions.QuestionRepository
+import biz.eventually.atpl.ui.questions.QuestionViewModel
 import biz.eventually.atpl.ui.questions.QuestionsActivity
 import biz.eventually.atpl.ui.source.QuestionsManager
 import biz.eventually.atpl.utils.hasInternetConnection
+import cn.pedant.SweetAlert.SweetAlertDialog
 import com.crashlytics.android.answers.Answers
 import com.crashlytics.android.answers.ContentViewEvent
 import com.google.firebase.perf.metrics.AddTrace
@@ -42,7 +45,11 @@ class SubjectActivity : BaseComponentActivity() {
     @Inject
     lateinit var subjectViewModelFactory: ViewModelFactory<SubjectRepository>
 
+    @Inject
+    lateinit var questionViewModelFactory: ViewModelFactory<QuestionRepository>
+
     private lateinit var mViewModel: SubjectViewModel
+    private lateinit var mQViewModel: QuestionViewModel
 
     private var mAdapter: SubjectAdapter = SubjectAdapter(this::onItemClick)
 
@@ -52,6 +59,7 @@ class SubjectActivity : BaseComponentActivity() {
         AtplApplication.component.inject(this)
 
         mViewModel = ViewModelProviders.of(this, subjectViewModelFactory).get(SubjectViewModel::class.java)
+        mQViewModel = ViewModelProviders.of(this, questionViewModelFactory).get(QuestionViewModel::class.java)
 
         Fabric.with(this, Answers())
 
@@ -79,6 +87,14 @@ class SubjectActivity : BaseComponentActivity() {
             }
         })
 
+        mQViewModel.updateLine.observe(this, Observer<Triple<Long, Boolean, Boolean>> { it ->
+            it?.let {
+                val (idWeb, isSync, hasOffline) = it
+                updateTopicLine(idWeb, isSync, hasOffline)
+            }
+        })
+
+
         val mLayoutManager = LinearLayoutManager(applicationContext)
         subject_subject_list.layoutManager = mLayoutManager
         subject_subject_list.itemAnimator = DefaultItemAnimator()
@@ -91,21 +107,18 @@ class SubjectActivity : BaseComponentActivity() {
 
     private fun transform(subjects: List<SubjectView>?): List<TopicView> {
         val topics = mutableListOf<TopicView>()
+        val ids = mViewModel.getTopicIdWithQuestion()
 
-        //
-            val ids = mViewModel.getTopicIdWithQuestion()
+        subjects?.forEach { t ->
+            // header
+            val titleTopic = Topic((t.subject.idWeb * -1), t.subject.idWeb, t.subject.name)
+            topics.add(TopicView(titleTopic))
 
-            subjects?.forEach { t ->
-                // header
-                val titleTopic = Topic((t.subject.idWeb * -1), t.subject.idWeb, t.subject.name)
-                topics.add(TopicView(titleTopic))
-
-                // line of topics
-                topics.addAll(t.topics.map {
-                    TopicView(it, hasOfflineData = it.idWeb in ids)
-                })
-            }
-        //}
+            // line of topics
+            topics.addAll(t.topics.map {
+                TopicView(it, hasOfflineData = it.idWeb in ids)
+            })
+        }
 
         return topics
     }
@@ -122,9 +135,12 @@ class SubjectActivity : BaseComponentActivity() {
                     .putCustomAttribute("Download offline", "${topic.idWeb}: ${topic.name}")
             )
 
-            mTopicViewList.forEach {
+            mViewModel.subjects.value?.let {
+                mQViewModel.getDataForSubject(topic.idWeb * -1, it)
+            }
+//            mTopicViewList.forEach {
                 // here the topic is in fact a Subject, w/ idWeb = idWeb * -1
-                if (it.topic.idWeb == (topic.idWeb * -1)) {
+//                if (it.topic.idWeb == (topic.idWeb * -1)) {
 
 //                    var count = 0
 //                    val subjectId = topic.idWeb
@@ -140,23 +156,21 @@ class SubjectActivity : BaseComponentActivity() {
 //                            if (++count == max) updateTopicLine(subjectId, false)
 //                        })
 //                    }
-                }
-            }
+//                }
+//            }
         }
         // display questions for subject
         else {
             var openActivity = true
 
             if (!hasInternetConnection()) {
-                // FIXME:
-//                if (Question().query({ query -> query.equalTo("topicId", topic.idWeb) }).count() == 0) {
-//                    openActivity = false
-//
-//                    SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
-//                            .setTitleText(getString(R.string.msg_offline_title))
-//                            .setContentText(getString(R.string.error_offline_no_data))
-//                            .show()
-//                }
+                if (topic.questions == 0) {
+                    openActivity = false
+                    SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
+                            .setTitleText(getString(R.string.msg_offline_title))
+                            .setContentText(getString(R.string.error_offline_no_data))
+                            .show()
+                }
             }
 
             if (openActivity) {
@@ -199,7 +213,6 @@ class SubjectActivity : BaseComponentActivity() {
 
     override fun onRestart() {
         super.onRestart()
-        gatherWhoHasOfflineData()
     }
 
     private fun displaySubjects(topics: List<TopicView>) {
@@ -230,20 +243,6 @@ class SubjectActivity : BaseComponentActivity() {
                     mAdapter.notifyItemChanged(index)
                 }
             }
-        }
-    }
-
-    private fun gatherWhoHasOfflineData() {
-        launch(UI) {
-            // FIXME:
-//            val topicIds = Question().querySorted("topicId", Sort.ASCENDING).groupBy { it.topicId }
-//            mAdapter.getList().forEachIndexed { index, topicDto ->
-//                val doesHasOffline = topicDto.topic.idWeb.toInt() in topicIds.keys
-//                if (doesHasOffline != topicDto.hasOfflineData) {
-//                    topicDto.hasOfflineData = doesHasOffline
-//                    mAdapter.notifyItemChanged(index)
-//                }
-//            }
         }
     }
 

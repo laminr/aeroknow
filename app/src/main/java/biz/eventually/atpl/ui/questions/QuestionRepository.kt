@@ -27,9 +27,9 @@ class QuestionRepository @Inject constructor(private val dataProvider: DataProvi
 
         // has Network: request data
         if (hasInternetConnection()) {
-            getWebData(topicId, starFist, { data ->
+            getWebData(topicId, starFist) { data ->
                 then(data)
-            })
+            }
         }
         // No network: taking in database
         else {
@@ -37,9 +37,9 @@ class QuestionRepository @Inject constructor(private val dataProvider: DataProvi
         }
     }
 
-    private fun getWebData(topicId: Long, starFist: Boolean, then: (data: List<Question>) -> Unit) {
+    fun getWebData(topicId: Long, starFist: Boolean, silent: Boolean = false, then: (data: List<Question>) -> Unit) {
 
-        status.postValue(NetworkStatus.LOADING)
+        if (!silent) status.postValue(NetworkStatus.LOADING)
         dataProvider
                 .dataGetTopicQuestions(topicId, starFist)
                 .subscribeOn(scheduler.network)
@@ -47,10 +47,10 @@ class QuestionRepository @Inject constructor(private val dataProvider: DataProvi
                 .map { getDataFromDb(topicId) }
                 .observeOn(scheduler.main)
                 .subscribe({ data ->
-                    status.postValue(NetworkStatus.SUCCESS)
+                    if (!silent)  status.postValue(NetworkStatus.SUCCESS)
                     then(data)
                 }, { e ->
-                    status.postValue(NetworkStatus.ERROR)
+                    if (!silent)  status.postValue(NetworkStatus.ERROR)
                     Timber.d("launchTest -> WebData: " + e)
                 })
     }

@@ -6,6 +6,8 @@ import android.arch.lifecycle.Transformations
 import android.arch.lifecycle.ViewModel
 import biz.eventually.atpl.data.NetworkStatus
 import biz.eventually.atpl.data.db.Question
+import biz.eventually.atpl.data.dto.SubjectView
+import biz.eventually.atpl.data.dto.TopicView
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -15,6 +17,9 @@ import javax.inject.Singleton
  */
 @Singleton
 class QuestionViewModel @Inject constructor(val repository: QuestionRepository) : ViewModel() {
+
+    // topicId: Long, isSync: Boolean, hasOffline: Boolean
+    var updateLine : MutableLiveData<Triple<Long, Boolean, Boolean>> = MutableLiveData()
 
     var networkStatus: LiveData<NetworkStatus> = repository.networkStatus()
 
@@ -50,10 +55,21 @@ class QuestionViewModel @Inject constructor(val repository: QuestionRepository) 
         })
     }
 
-    fun getDownloadQuestion(subjecId: Long) {
+    fun getDataForSubject(subjectId : Long, subjects: List<SubjectView>) {
 
+        subjects.forEach {
+            // here the topic is in fact a Subject, w/ idWeb = idWeb * -1
+            if (it.subject.idWeb == subjectId) {
+                it.topics.forEach { topic ->
+                    val id = topic.idWeb
+                    updateLine.postValue(Triple(id, true, true))
+                    repository.getWebData(id, false, true) {
+                        updateLine.postValue(Triple(id, false, true))
+                    }
+                }
+            }
+        }
     }
-
     private fun updateFollow(good: Boolean) {
         val index = mPosition.value ?: -1
 
