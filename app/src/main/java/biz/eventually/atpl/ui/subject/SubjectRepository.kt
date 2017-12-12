@@ -112,4 +112,6 @@ class SubjectRepository @Inject constructor(private val dataProvider: DataProvid
             if (subWeb.isNotEmpty()) LastCall(LastCall.TYPE_SUBJECT, Date().time).update()
         }
     }
+
+    fun getTopicIdWithQuestion(): List<Long> = topicDao.getTopicIdWithQuestion()
 }

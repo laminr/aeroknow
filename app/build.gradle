@@ -61,7 +61,6 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-
     signingConfigs {
         release {
             storeFile file(keystoreProperties['storeFile'])

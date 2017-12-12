@@ -8,10 +8,8 @@ import io.realm.annotations.Ignore
  */
 @Entity(
         tableName = "topic",
-        indices= arrayOf(Index(value = "subject_id", name = "idx_topic_subject_id")),
-        foreignKeys = arrayOf(
-                ForeignKey(entity = Subject::class, parentColumns = arrayOf("idWeb"), childColumns = arrayOf("subject_id"))
-        )
+        indices= [Index(value = "subject_id", name = "idx_topic_subject_id")],
+        foreignKeys = [ForeignKey(entity = Subject::class, parentColumns = arrayOf("idWeb"), childColumns = arrayOf("subject_id"))]
 )
 class Topic(
         @PrimaryKey

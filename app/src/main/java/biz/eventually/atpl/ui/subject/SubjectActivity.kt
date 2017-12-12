@@ -17,18 +17,15 @@ import biz.eventually.atpl.data.NetworkStatus
 import biz.eventually.atpl.data.db.Topic
 import biz.eventually.atpl.data.dto.SubjectView
 import biz.eventually.atpl.data.dto.TopicView
-import biz.eventually.atpl.data.db.Question
 import biz.eventually.atpl.ui.BaseComponentActivity
 import biz.eventually.atpl.ui.ViewModelFactory
 import biz.eventually.atpl.ui.questions.QuestionsActivity
 import biz.eventually.atpl.ui.source.QuestionsManager
 import biz.eventually.atpl.utils.hasInternetConnection
-import cn.pedant.SweetAlert.SweetAlertDialog
 import com.crashlytics.android.answers.Answers
 import com.crashlytics.android.answers.ContentViewEvent
 import com.google.firebase.perf.metrics.AddTrace
 import io.fabric.sdk.android.Fabric
-import io.realm.Sort
 import kotlinx.android.synthetic.main.activity_subject.*
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
@@ -39,7 +36,7 @@ class SubjectActivity : BaseComponentActivity() {
     @Inject
     lateinit var questionManager: QuestionsManager
 
-    private var mSubjectList: List<SubjectView> = listOf()
+    private var mTopicViewList: List<TopicView> = listOf()
     private var mSourceId: Long = 0
 
     @Inject
@@ -72,7 +69,7 @@ class SubjectActivity : BaseComponentActivity() {
 
         mViewModel.setSourceId(mSourceId)
         mViewModel.subjects.observe(this, Observer<List<SubjectView>> {
-            displaySubjects(it ?: listOf())
+            displaySubjects(transform(it))
         })
 
         mViewModel.networkStatus.observe(this, Observer<NetworkStatus> {
@@ -92,6 +89,27 @@ class SubjectActivity : BaseComponentActivity() {
         }
     }
 
+    private fun transform(subjects: List<SubjectView>?): List<TopicView> {
+        val topics = mutableListOf<TopicView>()
+
+        //
+            val ids = mViewModel.getTopicIdWithQuestion()
+
+            subjects?.forEach { t ->
+                // header
+                val titleTopic = Topic((t.subject.idWeb * -1), t.subject.idWeb, t.subject.name)
+                topics.add(TopicView(titleTopic))
+
+                // line of topics
+                topics.addAll(t.topics.map {
+                    TopicView(it, hasOfflineData = it.idWeb in ids)
+                })
+            }
+        //}
+
+        return topics
+    }
+
     private fun onItemClick(topic: Topic, startFirst: Boolean = false) {
 
         // Subject
@@ -104,24 +122,24 @@ class SubjectActivity : BaseComponentActivity() {
                     .putCustomAttribute("Download offline", "${topic.idWeb}: ${topic.name}")
             )
 
-            mSubjectList.forEach {
+            mTopicViewList.forEach {
                 // here the topic is in fact a Subject, w/ idWeb = idWeb * -1
-                if (it.subject.idWeb == (topic.idWeb * -1)) {
+                if (it.topic.idWeb == (topic.idWeb * -1)) {
 
-                    var count = 0
-                    val subjectId = topic.idWeb
-                    val max = it.topics.count()
+//                    var count = 0
+//                    val subjectId = topic.idWeb
+//                    val max = it.topics.count()
 
-                    it.topics.forEach { topic ->
-                        updateTopicLine(topic.idWeb, true)
-                        // FIXME:
+//                    it.topics.forEach { topic ->
+//                        updateTopicLine(topic.idWeb, true)
+//                        // FIXME:
 //                        questionManager.launchTest(topic.idWeb, false, fun(_: List<Question>) {
 //                            updateTopicLine(topic.idWeb, hasOffline = true)
 //                            if (++count == max) updateTopicLine(subjectId, false)
 //                        }, {
 //                            if (++count == max) updateTopicLine(subjectId, false)
 //                        })
-                    }
+//                    }
                 }
             }
         }
@@ -184,27 +202,12 @@ class SubjectActivity : BaseComponentActivity() {
         gatherWhoHasOfflineData()
     }
 
-    private fun displaySubjects(subjects: List<SubjectView>) {
-        mSubjectList = subjects
-        mSubjectList.let {
-            val topics = mutableListOf<TopicView>()
+    private fun displaySubjects(topics: List<TopicView>) {
+        mTopicViewList = topics
+        mAdapter.bind(mTopicViewList)
+        mAdapter.notifyDataSetChanged()
 
-            it.forEach { t ->
-                // header
-                val titleTopic = Topic((t.subject.idWeb * -1), t.subject.idWeb, t.subject.name)
-                topics.add(TopicView(titleTopic))
-
-                // line of topics
-                topics.addAll(t.topics.map { TopicView(it) })
-            }
-
-            mAdapter.bind(topics)
-            mAdapter.notifyDataSetChanged()
-
-            gatherWhoHasOfflineData()
-        }
-
-        showHideError(if (mSubjectList.isEmpty()) View.VISIBLE else View.GONE)
+        showHideError(if (mTopicViewList.isEmpty()) View.VISIBLE else View.GONE)
     }
 
     @AddTrace(name = "loadDataSubject", enabled = true)

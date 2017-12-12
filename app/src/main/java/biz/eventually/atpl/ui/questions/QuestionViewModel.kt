@@ -50,6 +50,10 @@ class QuestionViewModel @Inject constructor(val repository: QuestionRepository) 
         })
     }
 
+    fun getDownloadQuestion(subjecId: Long) {
+
+    }
+
     private fun updateFollow(good: Boolean) {
         val index = mPosition.value ?: -1
 

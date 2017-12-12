@@ -9,6 +9,7 @@ import biz.eventually.atpl.data.db.Topic
 
 /**
  * Created by Thibault de Lambilly on 17/10/17.
+ *
  */
 @Dao
 abstract class TopicDao : BaseDao<Topic> {
@@ -27,4 +28,10 @@ abstract class TopicDao : BaseDao<Topic> {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertAll(type: List<Topic>)
+
+    @Query("SELECT topic.idWeb " +
+            "FROM topic " +
+            "INNER JOIN question ON question.topic_id = topic.idWeb " +
+            "GROUP BY topic.idWeb")
+    abstract fun getTopicIdWithQuestion() : List<Long>
 }

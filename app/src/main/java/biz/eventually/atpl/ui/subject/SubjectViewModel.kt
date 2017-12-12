@@ -5,7 +5,9 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Transformations
 import android.arch.lifecycle.ViewModel
 import biz.eventually.atpl.data.NetworkStatus
+import biz.eventually.atpl.data.db.Topic
 import biz.eventually.atpl.data.dto.SubjectView
+import biz.eventually.atpl.data.dto.TopicView
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -27,4 +29,6 @@ class SubjectViewModel @Inject constructor(val repository: SubjectRepository) : 
     fun setSourceId(sourceId: Long) {
         this.sourceId.value = sourceId
     }
+
+    fun getTopicIdWithQuestion() = repository.getTopicIdWithQuestion()
 }
