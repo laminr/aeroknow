@@ -59,14 +59,18 @@ class QuestionViewModel @Inject constructor(val repository: QuestionRepository) 
 
         subjects.forEach {
             // here the topic is in fact a Subject, w/ idWeb = idWeb * -1
-            if (it.subject.idWeb == subjectId) {
+            if (it.subject.idWeb == (subjectId * -1)) {
                 it.topics.forEach { topic ->
                     val id = topic.idWeb
-                    updateLine.postValue(Triple(id, true, true))
+                    // show sync on the line
+                    updateLine.value = Triple(id, true, true)
                     repository.getWebData(id, false, true) {
-                        updateLine.postValue(Triple(id, false, true))
+                        // sync done for that line
+                        updateLine.value = Triple(id, false, true)
                     }
                 }
+                // show the subject button download
+                updateLine.postValue(Triple(subjectId, false, true))
             }
         }
     }

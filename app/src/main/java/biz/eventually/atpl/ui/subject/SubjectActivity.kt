@@ -136,28 +136,8 @@ class SubjectActivity : BaseComponentActivity() {
             )
 
             mViewModel.subjects.value?.let {
-                mQViewModel.getDataForSubject(topic.idWeb * -1, it)
+                mQViewModel.getDataForSubject(topic.idWeb, it)
             }
-//            mTopicViewList.forEach {
-                // here the topic is in fact a Subject, w/ idWeb = idWeb * -1
-//                if (it.topic.idWeb == (topic.idWeb * -1)) {
-
-//                    var count = 0
-//                    val subjectId = topic.idWeb
-//                    val max = it.topics.count()
-
-//                    it.topics.forEach { topic ->
-//                        updateTopicLine(topic.idWeb, true)
-//                        // FIXME:
-//                        questionManager.launchTest(topic.idWeb, false, fun(_: List<Question>) {
-//                            updateTopicLine(topic.idWeb, hasOffline = true)
-//                            if (++count == max) updateTopicLine(subjectId, false)
-//                        }, {
-//                            if (++count == max) updateTopicLine(subjectId, false)
-//                        })
-//                    }
-//                }
-//            }
         }
         // display questions for subject
         else {
