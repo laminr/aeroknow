@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animated-vector
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:drawable="@drawable/ic_atr"
+    >
+
+    <target android:name="atr_propellers_r"
+        android:animation="@animator/rotation_clockwise"
+        />
+
+    <target android:name="atr_propellers_l"
+        android:animation="@animator/rotation_cclockwise"
+        />
+
+</animated-vector>

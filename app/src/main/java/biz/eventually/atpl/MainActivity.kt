@@ -5,6 +5,7 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.support.graphics.drawable.AnimatedVectorDrawableCompat
 import android.support.v4.content.ContextCompat
 import biz.eventually.atpl.data.db.Source
 import biz.eventually.atpl.ui.BaseActivity
@@ -49,6 +50,9 @@ class MainActivity : BaseActivity<SourceRepository>() {
 
     private fun start() {
 
+        var animation: AnimatedVectorDrawableCompat? = AnimatedVectorDrawableCompat.create(applicationContext, R.drawable.props_rotation)
+        splash_logo.setImageDrawable(animation)
+
         object : CountDownTimer(2000, 1000) {
             override fun onFinish() {
                 viewModel.sources.observe(this@MainActivity, Observer<List<Source>> {
@@ -59,6 +63,10 @@ class MainActivity : BaseActivity<SourceRepository>() {
 
             override fun onTick(millisUntilFinished: Long) {}
         }.start()
+    }
+
+    private fun startAnimation() {
+
     }
 
     private fun handleIntent(intent: Intent) {

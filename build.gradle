@@ -11,12 +11,12 @@ buildscript {
 
     ext.versions = [
             kotlin    : '1.2.10',
-            support   : '27.0.1',
+            support   : '27.0.2',
             leakCanary: '1.5.4',
             retrofit  : '2.2.0',
             okhttp    : '3.6.0',
             dagger    : '2.11',
-            firebase  : '11.6.0',
+            firebase  : '11.6.2',
             anko      : '0.10.1',
             room      : '1.0.0',
             livecycle : '1.0.0'

@@ -1,5 +1,9 @@
 <resources>
     <string name="app_name" translatable="false">Aero Knowledge</string>
+
+    <string name="prop_right" translatable="false">prop-right</string>
+    <string name="prop_left" translatable="false">prop-left</string>
+
     <string name="action_settings">Settings</string>
     <string name="title_activity_subject">Subjects</string>
     <string name="sum_symbol">Σ</string>

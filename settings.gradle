@@ -1,1 +1,1 @@
-include ':app', ':loading', ':atr-loading'
+include ':app', ':loading'
