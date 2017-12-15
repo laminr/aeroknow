@@ -32,6 +32,8 @@ import io.fabric.sdk.android.Fabric
 import kotlinx.android.synthetic.main.activity_subject.*
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 import javax.inject.Inject
 
 class SubjectActivity : BaseComponentActivity() {
@@ -77,7 +79,12 @@ class SubjectActivity : BaseComponentActivity() {
 
         mViewModel.setSourceId(mSourceId)
         mViewModel.subjects.observe(this, Observer<List<SubjectView>> {
-            displaySubjects(transform(it))
+            doAsync {
+                val data = transform(it)
+                uiThread {
+                    displaySubjects(data)
+                }
+            }
         })
 
         mViewModel.networkStatus.observe(this, Observer<NetworkStatus> {
@@ -106,7 +113,9 @@ class SubjectActivity : BaseComponentActivity() {
     }
 
     private fun transform(subjects: List<SubjectView>?): List<TopicView> {
+
         val topics = mutableListOf<TopicView>()
+
         val ids = mViewModel.getTopicIdWithQuestion()
 
         subjects?.forEach { t ->
@@ -119,6 +128,7 @@ class SubjectActivity : BaseComponentActivity() {
                 TopicView(it, hasOfflineData = it.idWeb in ids)
             })
         }
+
 
         return topics
     }

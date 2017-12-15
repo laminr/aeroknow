@@ -24,9 +24,9 @@ class DatabaseModule {
     fun provideDatabase(context: Context) : AppDatabase {
         val builder = Room.databaseBuilder(context, AppDatabase::class.java,  "aeroknow.db").fallbackToDestructiveMigration()
 
-        if (Debug.isDebuggerConnected()) {
-            builder.allowMainThreadQueries()
-        }
+//        if (Debug.isDebuggerConnected()) {
+//            builder.allowMainThreadQueries()
+//        }
         return builder.build()
     }
 
