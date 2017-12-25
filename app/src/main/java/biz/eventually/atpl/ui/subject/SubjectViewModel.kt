@@ -31,5 +31,9 @@ class SubjectViewModel @Inject constructor(val repository: SubjectRepository) : 
         this.sourceId.value = sourceId
     }
 
+    fun refresh() {
+        this.sourceId = sourceId
+    }
+
     fun getTopicIdWithQuestion() = repository.getTopicIdWithQuestion()
 }

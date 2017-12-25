@@ -13,8 +13,8 @@ apply plugin: 'io.fabric'
 //Check dependencies to update --> ./gradlew dependencyUpdates
 
 ext {
-    majorVersion = "0"
-    minorVersion = "20"
+    majorVersion = "1"
+    minorVersion = "0"
     patchVersion = "0"
 }
 
@@ -96,7 +96,7 @@ android {
 
             zipAlignEnabled true
             applicationIdSuffix '.release'
-            versionNameSuffix '-beta'
+            versionNameSuffix '-rc1'
 
             signingConfig signingConfigs.release
         }

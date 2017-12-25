@@ -10,6 +10,7 @@ import biz.eventually.atpl.ui.BaseRepository
 import biz.eventually.atpl.utils.hasInternetConnection
 import com.google.firebase.perf.metrics.AddTrace
 import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
@@ -33,7 +34,12 @@ class QuestionRepository @Inject constructor(private val dataProvider: DataProvi
         }
         // No network: taking in database
         else {
-            then(getDataFromDb(topicId))
+            doAsync {
+                val data = getDataFromDb(topicId)
+                uiThread {
+                    then(data)
+                }
+            }
         }
     }
 
@@ -47,10 +53,10 @@ class QuestionRepository @Inject constructor(private val dataProvider: DataProvi
                 .map { getDataFromDb(topicId) }
                 .observeOn(scheduler.main)
                 .subscribe({ data ->
-                    if (!silent)  status.postValue(NetworkStatus.SUCCESS)
+                    if (!silent) status.postValue(NetworkStatus.SUCCESS)
                     then(data)
                 }, { e ->
-                    if (!silent)  status.postValue(NetworkStatus.ERROR)
+                    if (!silent) status.postValue(NetworkStatus.ERROR)
                     Timber.d("launchTest -> WebData: " + e)
                 })
     }
@@ -114,7 +120,6 @@ class QuestionRepository @Inject constructor(private val dataProvider: DataProvi
                         true -> it.good += 1
                         false -> it.wrong += 1
                     }
-
                     dao.update(it)
                     then(it)
                 }

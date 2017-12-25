@@ -29,9 +29,11 @@ class SourceRepository @Inject constructor(private val dataProvider: DataProvide
 
     @AddTrace(name = "getSources", enabled = true)
     fun getSources(): LiveData<List<Source>> {
-
-        if (hasInternetConnection()) getWebData()
         return dao.getAll()
+    }
+
+    fun updateData() {
+        if (hasInternetConnection()) getWebData()
     }
 
     fun networkStatus(): LiveData<NetworkStatus> {

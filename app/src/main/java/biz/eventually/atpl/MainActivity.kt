@@ -50,8 +50,10 @@ class MainActivity : BaseActivity<SourceRepository>() {
 
     private fun start() {
 
-        var animation: AnimatedVectorDrawableCompat? = AnimatedVectorDrawableCompat.create(applicationContext, R.drawable.props_rotation)
+        val animation: AnimatedVectorDrawableCompat? = AnimatedVectorDrawableCompat.create(applicationContext, R.drawable.props_rotation)
         splash_logo.setImageDrawable(animation)
+        animation?.start()
+        viewModel.refreshData()
 
         object : CountDownTimer(2000, 1000) {
             override fun onFinish() {

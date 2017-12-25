@@ -9,6 +9,8 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.Toolbar
 import android.view.MenuItem
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import biz.eventually.atpl.AtplApplication
 import biz.eventually.atpl.R
 import biz.eventually.atpl.common.IntentIdentifier
@@ -89,8 +91,14 @@ class SubjectActivity : BaseComponentActivity() {
 
         mViewModel.networkStatus.observe(this, Observer<NetworkStatus> {
             when (it) {
-                NetworkStatus.LOADING -> subject_rotate.start()
-                else -> subject_rotate.stop()
+                NetworkStatus.LOADING -> {
+                    subject_refresh.visibility = GONE
+                    subject_rotate.start()
+                }
+                else -> {
+                    subject_refresh.visibility = VISIBLE
+                    subject_rotate.stop()
+                }
             }
         })
 
@@ -201,10 +209,6 @@ class SubjectActivity : BaseComponentActivity() {
         }
     }
 
-    override fun onRestart() {
-        super.onRestart()
-    }
-
     private fun displaySubjects(topics: List<TopicView>) {
         mTopicViewList = topics
         mAdapter.bind(mTopicViewList)
@@ -216,7 +220,6 @@ class SubjectActivity : BaseComponentActivity() {
     @AddTrace(name = "loadDataSubject", enabled = true)
     private fun loadData(silent: Boolean = false) {
         // FIXME: Handle the silent param
-//        if (!silent) subject_rotate.start()
         if (mSourceId > 0) {
             mViewModel.setSourceId(mSourceId)
         } else {

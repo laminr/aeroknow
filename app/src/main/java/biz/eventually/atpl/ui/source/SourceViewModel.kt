@@ -18,6 +18,6 @@ class SourceViewModel @Inject constructor(val repository: SourceRepository) : Vi
     var networkStatus: LiveData<NetworkStatus> = repository.networkStatus()
 
     fun refreshData() {
-        sources = repository.getSources()
+        repository.updateData()
     }
 }
