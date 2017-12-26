@@ -64,7 +64,7 @@ class QuestionViewModel @Inject constructor(val repository: QuestionRepository) 
                     val id = topic.idWeb
                     // show sync on the line
                     updateLine.value = Triple(id, true, true)
-                    repository.getWebData(id, false, true) {
+                    repository.getWebData(id, false, true, true) {
                         // sync done for that line
                         updateLine.value = Triple(id, false, true)
                     }

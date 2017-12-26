@@ -24,7 +24,6 @@ import biz.eventually.atpl.ui.ViewModelFactory
 import biz.eventually.atpl.ui.questions.QuestionRepository
 import biz.eventually.atpl.ui.questions.QuestionViewModel
 import biz.eventually.atpl.ui.questions.QuestionsActivity
-import biz.eventually.atpl.ui.source.QuestionsManager
 import biz.eventually.atpl.utils.hasInternetConnection
 import cn.pedant.SweetAlert.SweetAlertDialog
 import com.crashlytics.android.answers.Answers
@@ -39,9 +38,6 @@ import org.jetbrains.anko.uiThread
 import javax.inject.Inject
 
 class SubjectActivity : BaseComponentActivity() {
-
-    @Inject
-    lateinit var questionManager: QuestionsManager
 
     private var mTopicViewList: List<TopicView> = listOf()
     private var mSourceId: Long = 0
@@ -206,6 +202,8 @@ class SubjectActivity : BaseComponentActivity() {
 
         if (requestCode == REFRESH_SUBJECT && resultCode == RESULT_OK) {
             loadData(true)
+        } else {
+            mViewModel.refresh(mSourceId)
         }
     }
 
@@ -219,9 +217,8 @@ class SubjectActivity : BaseComponentActivity() {
 
     @AddTrace(name = "loadDataSubject", enabled = true)
     private fun loadData(silent: Boolean = false) {
-        // FIXME: Handle the silent param
         if (mSourceId > 0) {
-            mViewModel.setSourceId(mSourceId)
+            mViewModel.setSourceId(mSourceId, silent)
         } else {
             showHideError(R.string.dialog_title_error)
         }

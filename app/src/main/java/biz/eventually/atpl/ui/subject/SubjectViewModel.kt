@@ -27,12 +27,13 @@ class SubjectViewModel @Inject constructor(val repository: SubjectRepository) : 
         repository.getSubjects(it)
     }
 
-    fun setSourceId(sourceId: Long) {
+    fun setSourceId(sourceId: Long, isSilent : Boolean = false) {
+        repository.getWebData(sourceId, isSilent)
         this.sourceId.value = sourceId
     }
 
-    fun refresh() {
-        this.sourceId = sourceId
+    fun refresh(sourceId: Long) {
+        this.sourceId.value = sourceId
     }
 
     fun getTopicIdWithQuestion() = repository.getTopicIdWithQuestion()

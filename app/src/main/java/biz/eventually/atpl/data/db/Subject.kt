@@ -8,16 +8,14 @@ import android.arch.persistence.room.*
  */
 @Entity(
         tableName = "subject",
-        indices = arrayOf(Index(value = "source_id", name = "idx_subject_source_id")),
-        foreignKeys = arrayOf(
-                ForeignKey(
-                        entity = Source::class,
-                        parentColumns = arrayOf("idWeb"),
-                        childColumns = arrayOf("source_id"),
-                        onUpdate = ForeignKey.CASCADE,
-                        onDelete = ForeignKey.CASCADE
-                )
-        )
+        indices = [Index(value = ["source_id"], name = "idx_subject_source_id")],
+        foreignKeys = [ForeignKey(
+                entity = Source::class,
+                parentColumns = ["idWeb"],
+                childColumns = ["source_id"],
+                onUpdate = ForeignKey.CASCADE,
+                onDelete = ForeignKey.CASCADE
+        )]
 )
 class Subject(
 

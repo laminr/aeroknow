@@ -58,13 +58,13 @@ class DatabaseModule {
      */
     @Singleton
     @Provides
-    fun provideSourceRepository(dataProvider: DataProvider, dao: SourceDao): SourceRepository =
-            SourceRepository(dataProvider, dao)
+    fun provideSourceRepository(dataProvider: DataProvider, dao: SourceDao, lastDao: LastCallDao): SourceRepository =
+            SourceRepository(dataProvider, dao, lastDao)
 
     @Singleton
     @Provides
-    fun provideSubjectRepository(dataProvider: DataProvider, dao: SubjectDao,tDao: TopicDao): SubjectRepository =
-            SubjectRepository(dataProvider, dao, tDao)
+    fun provideSubjectRepository(dataProvider: DataProvider, dao: SubjectDao,tDao: TopicDao, lastDao: LastCallDao): SubjectRepository =
+            SubjectRepository(dataProvider, dao, tDao, lastDao)
 
     @Singleton
     @Provides

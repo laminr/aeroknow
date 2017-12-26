@@ -1,11 +1,10 @@
 package biz.eventually.atpl.ui.subject
 
 import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
 import biz.eventually.atpl.R
-import biz.eventually.atpl.common.RxBaseManager
 import biz.eventually.atpl.data.DataProvider
 import biz.eventually.atpl.data.NetworkStatus
+import biz.eventually.atpl.data.dao.LastCallDao
 import biz.eventually.atpl.data.dao.SubjectDao
 import biz.eventually.atpl.data.dao.TopicDao
 import biz.eventually.atpl.data.db.LastCall
@@ -19,6 +18,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.schedulers.Schedulers
 import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
@@ -29,30 +29,34 @@ import javax.inject.Singleton
  *
  */
 @Singleton
-class SubjectRepository @Inject constructor(private val dataProvider: DataProvider, private val dao: SubjectDao, private val topicDao: TopicDao) : BaseRepository() {
+class SubjectRepository @Inject constructor(private val dataProvider: DataProvider, private val dao: SubjectDao, private val topicDao: TopicDao, private val lastCallDao: LastCallDao) : BaseRepository() {
 
     @AddTrace(name = "getSubjects", enabled = true)
     fun getSubjects(sourceId: Long): LiveData<List<SubjectView>> {
-
-        if (hasInternetConnection()) getWebData(sourceId)
         return dao.findBySourceId(sourceId)
     }
 
-    private fun getWebData(sourceId: Long) {
-
-        status.postValue(NetworkStatus.LOADING)
-        disposables += dataProvider
-                .dataGetSubjects(sourceId)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ subWeb ->
-                    analyseData(subWeb, sourceId)
-                    status.postValue(NetworkStatus.SUCCESS)
-                }, { e ->
-                    Timber.d("getSources: " + e)
-                    status.postValue(NetworkStatus.ERROR)
-                    error(R.string.error_network_error)
-                })
+    fun getWebData(sourceId: Long, isSilent: Boolean = false) {
+        if (hasInternetConnection()){
+            doAsync {
+                val lastCall = lastCallDao.findByType("${LastCall.TYPE_SOURCE}_$sourceId")?.updatedAt ?: 0L
+                uiThread {
+                    if (!isSilent) status.postValue(NetworkStatus.LOADING)
+                    disposables += dataProvider
+                            .dataGetSubjects(sourceId, lastCall)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe({ subWeb ->
+                                analyseData(subWeb, sourceId)
+                                if (!isSilent) status.postValue(NetworkStatus.SUCCESS)
+                            }, { e ->
+                                Timber.d("getSources: " + e)
+                                if (!isSilent) status.postValue(NetworkStatus.ERROR)
+                                error(R.string.error_network_error)
+                            })
+                }
+            }
+        }
     }
 
     private fun analyseData(subWeb: List<Subject>, sourceId: Long) {
@@ -109,7 +113,7 @@ class SubjectRepository @Inject constructor(private val dataProvider: DataProvid
             }
 
             // update time reference
-            if (subWeb.isNotEmpty()) LastCall(LastCall.TYPE_SUBJECT, Date().time).update()
+            lastCallDao.updateOrInsert(LastCall("${LastCall.TYPE_SOURCE}_$sourceId", Date().time))
         }
     }
 

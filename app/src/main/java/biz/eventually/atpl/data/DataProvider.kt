@@ -1,6 +1,8 @@
 package biz.eventually.atpl.data
 
 import android.content.Context
+import biz.eventually.atpl.data.dao.LastCallDao
+import biz.eventually.atpl.data.db.LastCall
 import biz.eventually.atpl.data.db.Source
 import biz.eventually.atpl.data.model.Follow
 import biz.eventually.atpl.data.db.Question
@@ -19,25 +21,22 @@ import javax.inject.Singleton
  *
  */
 @Singleton
-class DataProvider @Inject constructor(private val sourceService: SourceService, val context: Context) {
+class DataProvider @Inject constructor(private val sourceService: SourceService, val context: Context, val lastCallDao: LastCallDao) {
 
-    fun dataGetSources() : Observable<List<Source>> {
-        val lastCall = 0L //LastCall().queryFirst({ query -> query.equalTo("idWeb", LastCall.TYPE_SOURCE) })?.updated
-        return sourceService.loadSources(lastCall ?: 0).map { api -> toAppSources(api.data) }
+    fun dataGetSources(lastCall: Long = 0L) : Observable<List<Source>> {
+        return sourceService.loadSources(lastCall).map { api -> toAppSources(api.data) }
     }
 
-    fun dataGetSubjects(sourceId: Long) : Observable<List<Subject>> {
-        val lastCall = 0L //LastCall().queryFirst({ query -> query.equalTo("idWeb", LastCall.TYPE_SUBJECT) })?.updated
+    fun dataGetSubjects(sourceId: Long, lastCall: Long = 0L) : Observable<List<Subject>> {
         val token = prefsGetString(context , PREF_TOKEN) ?: ""
-        return sourceService.loadSubjects(sourceId, lastCall ?: 0, token).map { api -> toAppSubjects(sourceId, api.data) }
+        return sourceService.loadSubjects(sourceId, lastCall, token).map { api -> toAppSubjects(sourceId, api.data) }
     }
 
-    fun dataGetTopicQuestions(topicId: Long, startFirst: Boolean) : Observable<List<Question>> {
-        val lastCall = 0L // LastCall().queryFirst({ query -> query.equalTo("idWeb", "${LastCall.TYPE_TOPIC}_$topicId") })?.updated
+    fun dataGetTopicQuestions(topicId: Long, startFirst: Boolean, lastCall: Long = 0L) : Observable<List<Question>> {
         val token = prefsGetValue(PREF_TOKEN, "")
         val questions = when (startFirst) {
-            true -> sourceService.loadQuestionsStarred(topicId, lastCall ?: 0, token)
-            false -> sourceService.loadQuestions(topicId, lastCall ?: 0, token)
+            true -> sourceService.loadQuestionsStarred(topicId, lastCall, token)
+            false -> sourceService.loadQuestions(topicId, lastCall, token)
         }
 
         return questions.map { response ->

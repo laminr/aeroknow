@@ -20,9 +20,8 @@ import biz.eventually.atpl.common.IntentIdentifier
 import biz.eventually.atpl.data.NetworkStatus
 import biz.eventually.atpl.data.db.Question
 import biz.eventually.atpl.data.db.Topic
-import biz.eventually.atpl.ui.BaseActivity
+import biz.eventually.atpl.ui.BaseComponentActivity
 import biz.eventually.atpl.ui.ViewModelFactory
-import biz.eventually.atpl.ui.source.QuestionsManager
 import biz.eventually.atpl.utils.Prefields
 import biz.eventually.atpl.utils.Prefields.PREF_TIMER_NBR
 import biz.eventually.atpl.utils.Prefields.PREF_TOKEN
@@ -36,7 +35,7 @@ import kotlinx.android.synthetic.main.activity_questions.*
 import org.jetbrains.anko.share
 import javax.inject.Inject
 
-class QuestionsActivity : BaseActivity<QuestionsManager>() {
+class QuestionsActivity : BaseComponentActivity() {
 
     private var mTopic: Topic? = null
     private var mData = QuestionState(Question(-1, -1, "", ""), 0, 0)
@@ -110,7 +109,6 @@ class QuestionsActivity : BaseActivity<QuestionsManager>() {
         mViewModel.launchTest(topicId, startFirst)
 
         mViewModel.question.observe(this, Observer<QuestionState> {
-            // double "it" --> crazyyyyy
             it?.let {
                 mData = it
                 displayQuestion()

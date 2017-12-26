@@ -43,22 +43,27 @@ class QuestionRepository @Inject constructor(private val dataProvider: DataProvi
         }
     }
 
-    fun getWebData(topicId: Long, starFist: Boolean, silent: Boolean = false, then: (data: List<Question>) -> Unit) {
+    fun getWebData(topicId: Long, starFist: Boolean, fromScratch: Boolean = false, silent: Boolean = false, then: (data: List<Question>) -> Unit) {
 
-        if (!silent) status.postValue(NetworkStatus.LOADING)
-        dataProvider
-                .dataGetTopicQuestions(topicId, starFist)
-                .subscribeOn(scheduler.network)
-                .map { question -> analyseData(topicId, question) }
-                .map { getDataFromDb(topicId) }
-                .observeOn(scheduler.main)
-                .subscribe({ data ->
-                    if (!silent) status.postValue(NetworkStatus.SUCCESS)
-                    then(data)
-                }, { e ->
-                    if (!silent) status.postValue(NetworkStatus.ERROR)
-                    Timber.d("launchTest -> WebData: " + e)
-                })
+        doAsync {
+            val lastCall = if (fromScratch) 0L else lastCallDao.findByType("${LastCall.TYPE_TOPIC}_$topicId")?.updatedAt ?: 0L
+            uiThread {
+                if (!silent) status.postValue(NetworkStatus.LOADING)
+                dataProvider
+                        .dataGetTopicQuestions(topicId, starFist, lastCall)
+                        .subscribeOn(scheduler.network)
+                        .map { question -> analyseData(topicId, question) }
+                        .map { getDataFromDb(topicId) }
+                        .observeOn(scheduler.main)
+                        .subscribe({ data ->
+                            if (!silent) status.postValue(NetworkStatus.SUCCESS)
+                            then(data)
+                        }, { e ->
+                            if (!silent) status.postValue(NetworkStatus.ERROR)
+                            Timber.d("launchTest -> WebData: " + e)
+                        })
+            }
+        }
     }
 
 

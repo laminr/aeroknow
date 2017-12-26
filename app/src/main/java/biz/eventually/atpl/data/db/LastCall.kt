@@ -14,10 +14,6 @@ import javax.inject.Inject
 @Entity(tableName = "last_call")
 class LastCall(val type: String) {
 
-    @Inject
-    @Ignore
-    lateinit var dao : LastCallDao
-
     companion object {
         val COL_NAME = "name"
 
@@ -35,15 +31,5 @@ class LastCall(val type: String) {
     @Ignore
     constructor(type: String, updatedAt: Long): this(type) {
         this.updatedAt = updatedAt
-    }
-
-    fun findByType(type: String) : LastCall? = dao.findByType(type)
-
-    fun update() {
-        dao.findByType(type)?.let {
-            it.updatedAt = updatedAt
-            dao.update(it)
-        } ?: dao.insert(LastCall(type).apply { updatedAt = this.updatedAt })
-
     }
 }
