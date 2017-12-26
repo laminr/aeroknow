@@ -14,10 +14,10 @@ abstract class LastCallDao : BaseDao<LastCall> {
     abstract fun findByType(type: String): LastCall?
 
     fun updateOrInsert(call: LastCall) {
-        findByType(call.type)?.let {
-            update(it)
-        }.run {
+//        findByType(call.type)?.let {
+//            update(it)
+//        } ?: run {
             insert(call)
-        }
+//        }
     }
 }

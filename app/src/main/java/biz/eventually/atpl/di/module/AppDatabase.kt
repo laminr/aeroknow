@@ -17,7 +17,7 @@ import biz.eventually.atpl.data.db.*
     Question::class,
     Answer::class,
     LastCall::class
-], version = 1)
+], version = 2)
 @TypeConverters(AtplTypeConverter::class)
 abstract class AppDatabase : RoomDatabase() {
 

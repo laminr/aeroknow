@@ -4,29 +4,28 @@ import android.app.Application
 import android.graphics.Typeface
 import android.support.multidex.BuildConfig
 import android.support.multidex.MultiDex
-import biz.eventually.atpl.data.db.checkRealmVersion
 import biz.eventually.atpl.di.AppComponent
 import com.facebook.stetho.Stetho
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.squareup.leakcanary.LeakCanary
-import io.realm.Realm
 import timber.log.Timber
 
 /**
  * Created by Thibault de Lambilly on 18/03/2017.
+ *
  */
 
 class AtplApplication : Application() {
 
-    private lateinit var mFirebaseAnalytics : FirebaseAnalytics
+    private lateinit var mFirebaseAnalytics: FirebaseAnalytics
 
     companion object {
         lateinit var component: AppComponent
         lateinit var instance: AtplApplication
-        lateinit var tangerine : Typeface
+        lateinit var tangerine: Typeface
 
         fun get(): Application {
-            return  instance
+            return instance
         }
     }
 
@@ -40,10 +39,6 @@ class AtplApplication : Application() {
 
         // Firebase Analytics
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this)
-
-        // Initialize Realm
-        Realm.init(this)
-        checkRealmVersion()
 
         MultiDex.install(this)
 

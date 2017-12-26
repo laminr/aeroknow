@@ -12,19 +12,12 @@ import javax.inject.Inject
  *
  */
 @Entity(tableName = "last_call")
-class LastCall(val type: String) {
+class LastCall(@PrimaryKey val type: String) {
 
     companion object {
-        val COL_NAME = "name"
-
         val TYPE_SOURCE = "source"
-        val TYPE_SUBJECT = "subject"
         val TYPE_TOPIC = "topic"
-        val TYPE_QUESTION = "question"
     }
-
-    @PrimaryKey
-    var id : String = ""
 
     var updatedAt: Long = Date().time
 

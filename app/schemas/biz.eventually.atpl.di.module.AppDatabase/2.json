@@ -1,0 +1,331 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 2,
+    "identityHash": "5791613aa1887f42deb9d8b9cd00a43e",
+    "entities": [
+      {
+        "tableName": "source",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`idWeb` INTEGER, `name` TEXT NOT NULL, PRIMARY KEY(`idWeb`))",
+        "fields": [
+          {
+            "fieldPath": "idWeb",
+            "columnName": "idWeb",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "idWeb"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "subject",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`idWeb` INTEGER NOT NULL, `source_id` INTEGER NOT NULL, `name` TEXT NOT NULL, PRIMARY KEY(`idWeb`), FOREIGN KEY(`source_id`) REFERENCES `source`(`idWeb`) ON UPDATE CASCADE ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "idWeb",
+            "columnName": "idWeb",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sourceId",
+            "columnName": "source_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "idWeb"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [
+          {
+            "name": "idx_subject_source_id",
+            "unique": false,
+            "columnNames": [
+              "source_id"
+            ],
+            "createSql": "CREATE  INDEX `idx_subject_source_id` ON `${TABLE_NAME}` (`source_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "source",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "source_id"
+            ],
+            "referencedColumns": [
+              "idWeb"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "topic",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`mean` REAL NOT NULL, `idWeb` INTEGER NOT NULL, `subject_id` INTEGER NOT NULL, `name` TEXT NOT NULL, `questions` INTEGER NOT NULL, `follow` INTEGER NOT NULL, `focus` INTEGER NOT NULL, PRIMARY KEY(`idWeb`), FOREIGN KEY(`subject_id`) REFERENCES `subject`(`idWeb`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "fields": [
+          {
+            "fieldPath": "mean",
+            "columnName": "mean",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "idWeb",
+            "columnName": "idWeb",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "subjectId",
+            "columnName": "subject_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "questions",
+            "columnName": "questions",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "follow",
+            "columnName": "follow",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "focus",
+            "columnName": "focus",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "idWeb"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [
+          {
+            "name": "idx_topic_subject_id",
+            "unique": false,
+            "columnNames": [
+              "subject_id"
+            ],
+            "createSql": "CREATE  INDEX `idx_topic_subject_id` ON `${TABLE_NAME}` (`subject_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "subject",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "subject_id"
+            ],
+            "referencedColumns": [
+              "idWeb"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "question",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`idWeb` INTEGER NOT NULL, `topic_id` INTEGER NOT NULL, `label` TEXT NOT NULL, `img` TEXT NOT NULL, `focus` INTEGER, `good` INTEGER NOT NULL, `wrong` INTEGER NOT NULL, PRIMARY KEY(`idWeb`), FOREIGN KEY(`topic_id`) REFERENCES `topic`(`idWeb`) ON UPDATE CASCADE ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "idWeb",
+            "columnName": "idWeb",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "topicId",
+            "columnName": "topic_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "label",
+            "columnName": "label",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "img",
+            "columnName": "img",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "focus",
+            "columnName": "focus",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "good",
+            "columnName": "good",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "wrong",
+            "columnName": "wrong",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "idWeb"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [
+          {
+            "name": "idx_question_topic_id",
+            "unique": false,
+            "columnNames": [
+              "topic_id"
+            ],
+            "createSql": "CREATE  INDEX `idx_question_topic_id` ON `${TABLE_NAME}` (`topic_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "topic",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "topic_id"
+            ],
+            "referencedColumns": [
+              "idWeb"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "answer",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`idWeb` INTEGER NOT NULL, `question_id` INTEGER NOT NULL, `value` TEXT NOT NULL, `good` INTEGER NOT NULL, PRIMARY KEY(`idWeb`), FOREIGN KEY(`question_id`) REFERENCES `question`(`idWeb`) ON UPDATE CASCADE ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "idWeb",
+            "columnName": "idWeb",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "questionId",
+            "columnName": "question_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "value",
+            "columnName": "value",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "good",
+            "columnName": "good",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "idWeb"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [
+          {
+            "name": "idx_answer_question_id",
+            "unique": false,
+            "columnNames": [
+              "question_id"
+            ],
+            "createSql": "CREATE  INDEX `idx_answer_question_id` ON `${TABLE_NAME}` (`question_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "question",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "question_id"
+            ],
+            "referencedColumns": [
+              "idWeb"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "last_call",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`updatedAt` INTEGER NOT NULL, `type` TEXT NOT NULL, PRIMARY KEY(`type`))",
+        "fields": [
+          {
+            "fieldPath": "updatedAt",
+            "columnName": "updatedAt",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "type",
+            "columnName": "type",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "type"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"5791613aa1887f42deb9d8b9cd00a43e\")"
+    ]
+  }
+}
