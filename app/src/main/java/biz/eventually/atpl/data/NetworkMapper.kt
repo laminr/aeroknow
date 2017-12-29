@@ -1,17 +1,12 @@
 package biz.eventually.atpl.data
 
-import biz.eventually.atpl.data.db.Source
-import biz.eventually.atpl.data.db.Subject
+import biz.eventually.atpl.data.db.*
 import biz.eventually.atpl.data.dto.SubjectView
-import biz.eventually.atpl.data.db.Answer
-import biz.eventually.atpl.data.model.Follow
-import biz.eventually.atpl.data.db.Question
-import biz.eventually.atpl.data.db.Topic
 import biz.eventually.atpl.data.network.*
-import io.realm.RealmList
 
 /**
- * Created by thibault on 21/03/17.
+ * Created by Thibault de Lambilly on 21/03/17.
+ *
  */
 
 fun toAppSources(from: List<SourceNetwork>?) = from?.map({ Source(it.id, it.name) }) ?: listOf()
@@ -37,16 +32,14 @@ fun toAppAnswers(questionId: Long, from: List<AnswerNetwork>?): List<Answer> {
     return from?.map { Answer(it.id, questionId, it.value, it.good) } ?: listOf()
 }
 
-fun toAppFollow(from: FollowNetwork?) = Follow(from?.good ?: 0, from?.wrong ?: 0)
-
 fun toAppQuestion(topicId: Long, from: QuestionNetwork) = Question(
-            from.id,
-            topicId,
-            from.label,
-            from.img ?: "",
-            from.focus,
-            from.follow?.good ?: 0,
-            from.follow?.wrong ?: 0
-    ).apply { answers = toAppAnswers(from.id, from.answers)}
+        from.id,
+        topicId,
+        from.label,
+        from.img ?: "",
+        from.focus,
+        from.follow?.good ?: 0,
+        from.follow?.wrong ?: 0
+).apply { answers = toAppAnswers(from.id, from.answers) }
 
 fun toAppQuestions(topicId: Long, from: List<QuestionNetwork>?) = from?.map { toAppQuestion(topicId, it) } ?: listOf()

@@ -3,7 +3,6 @@ package biz.eventually.atpl.data.db
 import android.arch.persistence.room.*
 import android.os.Parcel
 import android.os.Parcelable
-import biz.eventually.atpl.data.model.Follow
 
 /**
  * Created by Thibault de Lambilly on 20/03/17.

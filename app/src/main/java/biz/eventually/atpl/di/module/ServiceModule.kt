@@ -7,7 +7,7 @@ import retrofit2.Retrofit
 import javax.inject.Singleton
 
 /**
- * Created by thibault on 21/03/17.
+ * Created by Thibault de Lambilly on 21/03/17.
  */
 @Module
 class ServiceModule {

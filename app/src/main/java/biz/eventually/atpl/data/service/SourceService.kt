@@ -8,7 +8,7 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 /**
- * Created by thibault on 21/03/17.
+ * Created by Thibault de Lambilly on 21/03/17.
  */
 interface SourceService {
 

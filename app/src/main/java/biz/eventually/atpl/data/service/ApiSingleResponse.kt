@@ -1,7 +1,7 @@
 package biz.eventually.atpl.data.service
 
 /**
- * Created by thibault on 21/03/17.
+ * Created by Thibault de Lambilly on 21/03/17.
  */
 class ApiSingleResponse<T> {
 

@@ -4,7 +4,7 @@ import biz.eventually.atpl.utils.AppRxSchedulers
 import io.reactivex.disposables.CompositeDisposable
 
 /**
- * Created by thibault on 22/03/17.
+ * Created by Thibault de Lambilly on 22/03/17.
  */
 open class RxBaseManager {
 

@@ -5,7 +5,7 @@ import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
 
 /**
- * Created by thibault on 20/03/17.
+ * Created by Thibault de Lambilly on 20/03/17.
  */
 @Entity(tableName = "source")
 data class Source(

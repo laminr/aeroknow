@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 2,
-    "identityHash": "5791613aa1887f42deb9d8b9cd00a43e",
+    "identityHash": "c9788e15989ee65991bb0c3df137568f",
     "entities": [
       {
         "tableName": "source",
@@ -85,14 +85,8 @@
       },
       {
         "tableName": "topic",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`mean` REAL NOT NULL, `idWeb` INTEGER NOT NULL, `subject_id` INTEGER NOT NULL, `name` TEXT NOT NULL, `questions` INTEGER NOT NULL, `follow` INTEGER NOT NULL, `focus` INTEGER NOT NULL, PRIMARY KEY(`idWeb`), FOREIGN KEY(`subject_id`) REFERENCES `subject`(`idWeb`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`idWeb` INTEGER NOT NULL, `subject_id` INTEGER NOT NULL, `name` TEXT NOT NULL, `questions` INTEGER NOT NULL, `follow` INTEGER NOT NULL, `focus` INTEGER NOT NULL, PRIMARY KEY(`idWeb`), FOREIGN KEY(`subject_id`) REFERENCES `subject`(`idWeb`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
-          {
-            "fieldPath": "mean",
-            "columnName": "mean",
-            "affinity": "REAL",
-            "notNull": true
-          },
           {
             "fieldPath": "idWeb",
             "columnName": "idWeb",
@@ -325,7 +319,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"5791613aa1887f42deb9d8b9cd00a43e\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"c9788e15989ee65991bb0c3df137568f\")"
     ]
   }
 }

@@ -12,7 +12,7 @@ import biz.eventually.atpl.data.db.Source
 import kotlinx.android.synthetic.main.item_source.*
 
 /**
- * Created by thibault on 20/03/17.
+ * Created by Thibault de Lambilly on 20/03/17.
  */
 class SourceAdapter(
         context: Context,

@@ -1,5 +1,6 @@
 package biz.eventually.atpl.ui.questions
 
+import android.widget.Toast
 import biz.eventually.atpl.data.DataProvider
 import biz.eventually.atpl.data.NetworkStatus
 import biz.eventually.atpl.data.dao.LastCallDao
@@ -17,7 +18,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 /**
- * Created by thibault on 20/03/17.
+ * Created by Thibault de Lambilly on 20/03/17.
  *
  */
 @Singleton
@@ -71,32 +72,36 @@ class QuestionRepository @Inject constructor(private val dataProvider: DataProvi
         if (hasInternetConnection()) {
             dataProvider.updateFocus(questionId, care)
                     .subscribeOn(scheduler.network)
-                    ?.observeOn(scheduler.main)
-                    ?.subscribe({ focusInt ->
+                    .observeOn(scheduler.main)
+                    .subscribe({ focusInt ->
                         val focus = when (focusInt) {
                             0 -> false
                             1 -> true
                             else -> null
                         }
 
-                        dao.findById(questionId)?.let {
-                            it.focus = focus
-                            dao.update(it)
-                        }
+                        doAsync {
+                            dao.findById(questionId)?.let {
+                                it.focus = focus
+                                dao.update(it)
+                            }
 
-                        then(focus)
+                            uiThread {
+                                then(focus)
+                            }
+                        }
                     }, { e ->
                         Timber.d("Question -> updateFocus: " + e)
                         then(null)
                     })
         } else {
             doAsync {
-                dao.findById(questionId)?.let {
+                val db = dao.findById(questionId)?.also {
                     it.focus = if (it.focus == care) null else care
 
                     dao.update(it)
-                    then(it.focus)
                 }
+                uiThread { then(db?.focus) }
             }
         }
     }

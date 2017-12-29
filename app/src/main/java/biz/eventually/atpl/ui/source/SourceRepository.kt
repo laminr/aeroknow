@@ -22,7 +22,8 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 /**
- * Created by thibault on 20/03/17.
+ * Created by Thibault de Lambilly on 20/03/17.
+ *
  */
 @Singleton
 class SourceRepository @Inject constructor(private val dataProvider: DataProvider, private val dao: SourceDao, private val lastCallDao: LastCallDao) : RxBaseManager() {

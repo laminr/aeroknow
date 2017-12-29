@@ -96,7 +96,7 @@ android {
 
             zipAlignEnabled true
             applicationIdSuffix '.release'
-            versionNameSuffix '-rc1'
+            versionNameSuffix '-rc2'
 
             signingConfig signingConfigs.release
         }
@@ -161,10 +161,6 @@ dependencies {
 
     implementation "com.squareup.okhttp3:okhttp:${versions.okhttp}"
     implementation "com.squareup.okhttp3:logging-interceptor:${versions.okhttp}"
-
-    // REALM Extension
-    implementation 'com.github.vicpinm:krealmextensions:1.1.5'
-    implementation 'com.github.vicpinm:krealmextensions-rxjava:1.1.5'
 
     // Room
     implementation "android.arch.persistence.room:runtime:${versions.room}"
