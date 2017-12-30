@@ -4,6 +4,7 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
+import android.support.annotation.IntegerRes
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.Toolbar
@@ -88,11 +89,15 @@ class SubjectActivity : BaseComponentActivity() {
         mViewModel.networkStatus.observe(this, Observer<NetworkStatus> {
             when (it) {
                 NetworkStatus.LOADING -> {
-                    subject_refresh.visibility = GONE
+                    showHideError(GONE)
                     subject_rotate.start()
                 }
+                NetworkStatus.SUCCESS -> {
+                    showHideError(GONE)
+                    subject_rotate.stop()
+                }
                 else -> {
-                    subject_refresh.visibility = VISIBLE
+                    showHideError(VISIBLE)
                     subject_rotate.stop()
                 }
             }
@@ -236,7 +241,7 @@ class SubjectActivity : BaseComponentActivity() {
         }
     }
 
-    private fun showHideError(show: Int) {
+    private fun showHideError(@IntegerRes show: Int) {
         subject_error.visibility = show
         subject_refresh.visibility = show
     }
