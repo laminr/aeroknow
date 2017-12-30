@@ -96,7 +96,7 @@ android {
 
             zipAlignEnabled true
             applicationIdSuffix '.release'
-            versionNameSuffix '-rc2'
+            versionNameSuffix ''
 
             signingConfig signingConfigs.release
         }
