@@ -10,6 +10,7 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.squareup.leakcanary.LeakCanary
 import timber.log.Timber
 
+
 /**
  * Created by Thibault de Lambilly on 18/03/2017.
  *

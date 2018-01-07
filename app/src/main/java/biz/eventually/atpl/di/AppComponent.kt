@@ -10,13 +10,13 @@ import javax.inject.Singleton
  */
 
 @Singleton
-@Component(modules = arrayOf(
-        AppModule::class,
-        HttpModule::class,
-        ServiceModule::class,
-        DatabaseModule::class,
-        ViewModelModule::class
-))
+@Component(modules = [
+    AppModule::class,
+    HttpModule::class,
+    ServiceModule::class,
+    DatabaseModule::class,
+    ViewModelModule::class
+])
 interface AppComponent : AppGraph {
 
     /**

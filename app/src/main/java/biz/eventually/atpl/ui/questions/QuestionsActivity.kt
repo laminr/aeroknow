@@ -29,11 +29,14 @@ import biz.eventually.atpl.utils.prefsGetValue
 import cn.pedant.SweetAlert.SweetAlertDialog
 import com.github.pwittchen.swipe.library.Swipe
 import com.github.pwittchen.swipe.library.SwipeListener
+import com.squareup.picasso.Callback
+import com.squareup.picasso.NetworkPolicy
 import com.squareup.picasso.Picasso
 import com.tapadoo.alerter.Alerter
 import kotlinx.android.synthetic.main.activity_questions.*
 import org.jetbrains.anko.share
 import javax.inject.Inject
+
 
 class QuestionsActivity : BaseComponentActivity() {
 
@@ -356,9 +359,19 @@ class QuestionsActivity : BaseComponentActivity() {
 
             imgList.forEach { img ->
                 val imgContainer = ImageView(applicationContext)
+                // https://www.codeday.top/2017/07/31/31373.html
                 Picasso.with(applicationContext)
                         .load(BuildConfig.API_ATPL_IMG + img)
-                        .into(imgContainer)
+                        .networkPolicy(NetworkPolicy.OFFLINE)
+                        .into(imgContainer, object : Callback {
+                            override fun onSuccess() {}
+
+                            override fun onError() {
+                                Picasso.with(applicationContext)
+                                        .load(BuildConfig.API_ATPL_IMG + img)
+                                        .into(imgContainer)
+                            }
+                        })
 
                 question_imgs.addView(imgContainer)
             }

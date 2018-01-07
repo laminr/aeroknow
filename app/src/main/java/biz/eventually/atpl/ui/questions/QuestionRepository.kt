@@ -1,6 +1,6 @@
 package biz.eventually.atpl.ui.questions
 
-import android.widget.Toast
+import android.annotation.SuppressLint
 import biz.eventually.atpl.data.DataProvider
 import biz.eventually.atpl.data.NetworkStatus
 import biz.eventually.atpl.data.dao.LastCallDao
@@ -44,6 +44,7 @@ class QuestionRepository @Inject constructor(private val dataProvider: DataProvi
         }
     }
 
+    @SuppressLint("CheckResult")
     fun getWebData(topicId: Long, starFist: Boolean, fromScratch: Boolean = false, silent: Boolean = false, then: (data: List<Question>) -> Unit) {
 
         doAsync {
@@ -67,7 +68,7 @@ class QuestionRepository @Inject constructor(private val dataProvider: DataProvi
         }
     }
 
-
+    @SuppressLint("CheckResult")
     fun updateFocus(questionId: Long, care: Boolean, then: (state: Boolean?) -> Unit) {
         if (hasInternetConnection()) {
             dataProvider.updateFocus(questionId, care)
@@ -106,6 +107,7 @@ class QuestionRepository @Inject constructor(private val dataProvider: DataProvi
         }
     }
 
+    @SuppressLint("CheckResult")
     fun updateFollow(questionId: Long, good: Boolean, then: (question: Question?) -> Unit) {
         if (hasInternetConnection()) {
             dataProvider.updateFollow(questionId, good)
@@ -135,6 +137,10 @@ class QuestionRepository @Inject constructor(private val dataProvider: DataProvi
                 }
             }
         }
+    }
+
+    fun getTopicQuestionWithImage(topicId: Long): List<Question> {
+        return dao.getQuestionWithImage(topicId)
     }
 
     private fun getDataFromDb(topicId: Long): List<Question> {

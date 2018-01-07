@@ -4,12 +4,17 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Transformations
 import android.arch.lifecycle.ViewModel
+import android.widget.ImageView
+import biz.eventually.atpl.AtplApplication
+import biz.eventually.atpl.BuildConfig
 import biz.eventually.atpl.data.NetworkStatus
 import biz.eventually.atpl.data.db.Question
 import biz.eventually.atpl.data.dto.SubjectView
-import biz.eventually.atpl.data.dto.TopicView
+import com.squareup.picasso.Picasso
+import org.jetbrains.anko.doAsync
 import javax.inject.Inject
 import javax.inject.Singleton
+
 
 /**
  * Created by Thibault de Lambilly on 26/11/2017.
@@ -19,7 +24,7 @@ import javax.inject.Singleton
 class QuestionViewModel @Inject constructor(val repository: QuestionRepository) : ViewModel() {
 
     // topicId: Long, isSync: Boolean, hasOffline: Boolean
-    var updateLine : MutableLiveData<Triple<Long, Boolean, Boolean>> = MutableLiveData()
+    var updateLine: MutableLiveData<Triple<Long, Boolean, Boolean>> = MutableLiveData()
 
     var networkStatus: LiveData<NetworkStatus> = repository.networkStatus()
 
@@ -51,11 +56,22 @@ class QuestionViewModel @Inject constructor(val repository: QuestionRepository) 
                 mQuestions = data
                 mQuestionState.size = data.size
                 mPosition.value = 0
+
+                doAsync { checkExistingPics(mQuestions) }
             }
         })
     }
 
-    fun getDataForSubject(subjectId : Long, subjects: List<SubjectView>) {
+    private fun checkExistingPics(questions: List<Question>) {
+        // https://www.codeday.top/2017/07/31/31373.html
+        val withPics = questions.filter { q -> q.img.isNotEmpty() }
+        val imageViewContainer = ImageView(AtplApplication.get())
+        withPics.forEach {
+            Picasso.with(AtplApplication.get()).load(BuildConfig.API_ATPL_IMG + it).into(imageViewContainer)
+        }
+    }
+
+    fun getDataForSubject(subjectId: Long, subjects: List<SubjectView>) {
 
         subjects.forEach {
             // here the topic is in fact a Subject, w/ idWeb = idWeb * -1
@@ -67,6 +83,11 @@ class QuestionViewModel @Inject constructor(val repository: QuestionRepository) 
                     repository.getWebData(id, false, true, true) {
                         // sync done for that line
                         updateLine.value = Triple(id, false, true)
+
+                        // download offline image
+                        doAsync {
+                            checkExistingPics(repository.getTopicQuestionWithImage(id))
+                        }
                     }
                 }
                 // show the subject button download
@@ -74,6 +95,7 @@ class QuestionViewModel @Inject constructor(val repository: QuestionRepository) 
             }
         }
     }
+
     private fun updateFollow(good: Boolean) {
         val index = mPosition.value ?: -1
 

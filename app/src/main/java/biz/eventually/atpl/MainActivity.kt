@@ -6,7 +6,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.support.graphics.drawable.AnimatedVectorDrawableCompat
-import android.support.v4.content.ContextCompat
 import biz.eventually.atpl.data.db.Source
 import biz.eventually.atpl.ui.BaseActivity
 import biz.eventually.atpl.ui.ViewModelFactory
@@ -17,8 +16,8 @@ import biz.eventually.atpl.utils.Prefields
 import biz.eventually.atpl.utils.prefsPutString
 import cn.pedant.SweetAlert.SweetAlertDialog
 import com.crashlytics.android.Crashlytics
+import com.crashlytics.android.core.CrashlyticsCore
 import io.fabric.sdk.android.Fabric
-import kotlinx.android.synthetic.main.activity_questions.*
 import kotlinx.android.synthetic.main.activity_splash.*
 import org.jetbrains.anko.startActivity
 import javax.inject.Inject
@@ -33,7 +32,11 @@ class MainActivity : BaseActivity<SourceRepository>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Fabric.with(this, Crashlytics())
+
+        val crashKit = Crashlytics.Builder()
+                .core(CrashlyticsCore.Builder().disabled(android.support.multidex.BuildConfig.DEBUG).build())
+                .build()
+        Fabric.with(this, crashKit)
 
         setContentView(R.layout.activity_splash)
         AtplApplication.component.inject(this)

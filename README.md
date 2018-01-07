@@ -10,14 +10,20 @@ It includes:
   - [Square Retrofit][retrofitLink] as HTTP Client
   - [Square Moshi][moshiLink] for JSON parsing
   - [Square Picasso][picassoLink] for Image display
-  - [Realm][realmLink] to store user progression
-  - [Realm Extension][realmExtLink] extension by Víctor Manuel Pineda Murcia to help with Realm
+  - [Google Room][roomLink] to handle offline
   - [GuillotineMenu-Android][GuillotineLink] by Yalantis for a "guillotine" style screen appearance
 
+
+Been Used:
+  - [Realm][realmLink] to store user progression
+  - [Realm Extension][realmExtLink] extension by Víctor Manuel Pineda Murcia to help with Realm
+
 # Current
-  - 1st screen : Source list
-  - 2nd screen : Subject and Topic for a source
-  - 3rd screen : Questions campaign screen for a topic
+  - Source list
+  - Subject and Topic for a source
+  - Questions campaign screen for a topic
+  - About page 
+  - Parameters screen
 
 # Get the app at Google Play
 [Aero Know at Google Play](https://play.google.com/store/apps/details?id=biz.eventually.atpl.release)
@@ -28,9 +34,6 @@ You need to create your keystore.properties at the root of the project. A file k
 A fabric.properties file must be as well created at the root of APP folder. A file fabric.properties.temp is present to get the requested format
 
 Continuous work in progress ;-)
-
-# Under work
-Offline version with use of Realm
 
 # Known bug
 ... (none reported yet, yahooo)
@@ -52,4 +55,5 @@ MIT
    [realmLink]: <https://realm.io/>
    [realmExtLink]: <https://github.com/vicpinm/Kotlin-Realm-Extensions>
    [GuillotineLink]: <https://github.com/Yalantis/GuillotineMenu-Android>
+   [roomLink]: <https://developer.android.com/topic/libraries/architecture/room.html>
 
