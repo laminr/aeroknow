@@ -28,6 +28,13 @@ fun prefsPutString(context: Context, key: String, value: String) {
     editor.apply()
 }
 
+fun prefsPutInt(context: Context, key: String, value: Int) {
+    val pref = PreferenceManager.getDefaultSharedPreferences(context)
+    val editor = pref.edit()
+    editor.putInt(key, value)
+    editor.apply()
+}
+
 inline fun <reified T> prefsGetValue(key: String, defValue: T): T {
     val pref = PreferenceManager.getDefaultSharedPreferences(AtplApplication.get())
     return when(T::class) {

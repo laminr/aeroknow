@@ -39,7 +39,8 @@ class SubjectRepository @Inject constructor(private val dataProvider: DataProvid
     fun getWebData(sourceId: Long, isSilent: Boolean = false) {
         if (hasInternetConnection()){
             doAsync {
-                val lastCall = lastCallDao.findByType("${LastCall.TYPE_SOURCE}_$sourceId")?.updatedAt ?: 0L
+                // always from scratch...
+                val lastCall =  0L
                 uiThread {
                     if (!isSilent) status.postValue(NetworkStatus.LOADING)
                     disposables += dataProvider

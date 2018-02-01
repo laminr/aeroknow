@@ -11,13 +11,17 @@ class SettingsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
 
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO);
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO)
 
         if (savedInstanceState == null) {
-            val preferenceFragment = SettingsFragment()
-            val ft = supportFragmentManager.beginTransaction()
-            ft.add(R.id.pref_container, preferenceFragment)
-            ft.commit()
+//            val preferenceFragment = SettingsFragment()
+//            val ft = supportFragmentManager.beginTransaction()
+//            ft.add(R.id.pref_container, preferenceFragment)
+//            ft.commit()
+
+            fragmentManager.beginTransaction()
+                    .replace(android.R.id.content, SettingsFragment())
+                    .commit()
         }
     }
 }
