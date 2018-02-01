@@ -10,7 +10,7 @@ buildscript {
     }
 
     ext.versions = [
-            kotlin    : '1.2.10',
+            kotlin    : '1.2.20',
             support   : '27.0.2',
             leakCanary: '1.5.4',
             retrofit  : '2.2.0',
