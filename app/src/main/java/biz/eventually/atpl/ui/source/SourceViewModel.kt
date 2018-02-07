@@ -9,6 +9,7 @@ import javax.inject.Singleton
 
 /**
  * Created by Thibault de Lambilly on 18/10/17.
+ *
  */
 @Singleton
 class SourceViewModel @Inject constructor(val repository: SourceRepository) : ViewModel() {

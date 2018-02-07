@@ -53,7 +53,6 @@ class SubjectRepository @Inject constructor(private val dataProvider: DataProvid
                             }, { e ->
                                 Timber.d("getSources: " + e)
                                 if (!isSilent) status.postValue(NetworkStatus.ERROR)
-                                error(R.string.error_network_error)
                             })
                 }
             }
