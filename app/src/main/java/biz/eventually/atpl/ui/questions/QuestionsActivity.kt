@@ -397,7 +397,7 @@ class QuestionsActivity : BaseComponentActivity() {
 
         question_time.setTextColor(ContextCompat.getColor(applicationContext, R.color.colorGrey))
 
-        val seconds = (prefsGetValue(PREF_TIMER_NBR, 60) * 1000).toLong()
+        val seconds = prefsGetValue(PREF_TIMER_NBR, "60").toLong() * 1000
         mTimer = object : CountDownTimer(seconds, 1000) {
             override fun onFinish() {
                 question_time.text = ""
