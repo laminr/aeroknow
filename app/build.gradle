@@ -15,7 +15,7 @@ apply plugin: 'io.fabric'
 ext {
     majorVersion = "1"
     minorVersion = "0"
-    patchVersion = "2"
+    patchVersion = "3"
 }
 
 // Load keystore
@@ -147,14 +147,14 @@ dependencies {
     implementation 'com.github.pwittchen:swipe:0.1.0'
 
     // koltin corountine
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.19.1'
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:0.19.1"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:${versions.coroutines}"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:${versions.coroutines}"
 
     //RxJava dependencies
-    implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
-    implementation 'io.reactivex.rxjava2:rxjava:2.1.5'
-    implementation 'org.reactivestreams:reactive-streams:1.0.1'
-    implementation 'io.reactivex.rxjava2:rxkotlin:2.1.0'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
+    implementation 'io.reactivex.rxjava2:rxjava:2.1.10'
+    implementation 'org.reactivestreams:reactive-streams:1.0.2'
+    implementation 'io.reactivex.rxjava2:rxkotlin:2.2.0'
     implementation 'com.squareup.moshi:moshi:1.5.0'
     implementation 'com.squareup.picasso:picasso:2.5.2'
 

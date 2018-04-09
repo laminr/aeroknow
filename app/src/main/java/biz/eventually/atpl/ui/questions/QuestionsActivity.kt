@@ -336,8 +336,9 @@ class QuestionsActivity : BaseComponentActivity() {
         resetCheckbox()
 
         mData.question.apply {
+            // reset the background, if ever it has turned to yellow
             question_label.setBackgroundColor(transparentColor)
-            question_label.loadDataWithBaseURL(null, label, mMime, mEncoding, null)
+            question_label.loadData(label, mMime, mEncoding)
 
             val questionAnswerTextView = listOf<TextView>(
                     question_answer_1_text,

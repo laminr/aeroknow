@@ -225,7 +225,7 @@ class SubjectActivity : BaseComponentActivity() {
         if (mSourceId > 0) {
             mViewModel.setSourceId(mSourceId, silent)
         } else {
-            showHideError(R.string.dialog_title_error)
+            showHideError(View.GONE)
         }
     }
 
