@@ -4,22 +4,22 @@ buildscript {
 
     ext {
         compileSdkVersion = 27
-        buildToolsVersion = '26.0.2'
+        buildToolsVersion = '27.0.3'
 
         targetSdkVersion = 27
     }
 
     ext.versions = [
-            kotlin    : '1.2.21',
-            support   : '27.0.2',
+            kotlin    : '1.2.31',
+            support   : '27.1.0',
             leakCanary: '1.5.4',
             retrofit  : '2.2.0',
             okhttp    : '3.6.0',
             dagger    : '2.11',
-            firebase  : '11.8.0',
+            firebase  : '12.0.1',
             anko      : '0.10.1',
             room      : '1.0.0',
-            livecycle : '1.0.0'
+            livecycle : '1.1.1'
     ]
 
     repositories {
@@ -28,11 +28,12 @@ buildscript {
         maven { url 'https://maven.fabric.io/public' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.1'
+        classpath 'com.android.tools.build:gradle:3.1.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}"
 
         classpath 'com.google.gms:google-services:3.1.1'
-        classpath 'io.fabric.tools:gradle:1.25.0'
+        classpath 'io.fabric.tools:gradle:1.25.2'
+
         classpath('com.google.firebase:firebase-plugins:1.1.0') {
             exclude group: 'com.google.guava', module: 'guava-jdk5'
         }

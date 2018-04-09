@@ -1,6 +1,7 @@
 package biz.eventually.atpl
 
 import android.app.Application
+import android.content.Context
 import android.graphics.Typeface
 import android.support.multidex.BuildConfig
 import android.support.multidex.MultiDex
@@ -30,6 +31,11 @@ class AtplApplication : Application() {
         }
     }
 
+    override fun attachBaseContext(base: Context?) {
+        super.attachBaseContext(base)
+        MultiDex.install(this)
+    }
+
     override fun onCreate() {
         super.onCreate()
 
@@ -40,8 +46,6 @@ class AtplApplication : Application() {
 
         // Firebase Analytics
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this)
-
-        MultiDex.install(this)
 
         Stetho.initializeWithDefaults(this)
         Timber.plant(Timber.DebugTree())

@@ -21,6 +21,9 @@ import io.fabric.sdk.android.Fabric
 import kotlinx.android.synthetic.main.activity_splash.*
 import org.jetbrains.anko.startActivity
 import javax.inject.Inject
+import android.os.Build
+
+
 
 class MainActivity : BaseActivity<SourceRepository>() {
 
@@ -53,9 +56,12 @@ class MainActivity : BaseActivity<SourceRepository>() {
 
     private fun start() {
 
-        val animation: AnimatedVectorDrawableCompat? = AnimatedVectorDrawableCompat.create(applicationContext, R.drawable.props_rotation)
-        splash_logo.setImageDrawable(animation)
-        animation?.start()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            val animation: AnimatedVectorDrawableCompat? = AnimatedVectorDrawableCompat.create(applicationContext, R.drawable.props_rotation)
+            splash_logo.setImageDrawable(animation)
+            animation?.start()
+        }
+
         viewModel.refreshData()
 
         object : CountDownTimer(2000, 1000) {

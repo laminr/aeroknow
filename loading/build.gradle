@@ -6,8 +6,8 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
-        minSdkVersion 11
-        targetSdkVersion 26
+        minSdkVersion 16
+        targetSdkVersion 27
         versionCode 1
         versionName "1.0.5"
     }
@@ -24,5 +24,5 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
 }

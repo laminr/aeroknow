@@ -16,22 +16,23 @@ class SubjectAdapter(val onClick: (dto: Topic, startFirst: Boolean) -> Unit) : R
 
     var name: TextView? = null
     private var mTopics = mutableListOf<TopicView>()
-    private var mParent: ViewGroup? = null
+    private lateinit var mParent: ViewGroup
 
-    override fun onBindViewHolder(holder: SubjectViewHolder?, position: Int) {
-        holder?.apply {
+    override fun onBindViewHolder(holder: SubjectViewHolder, position: Int) {
+        holder.apply {
             bind(mTopics[position])
         }
     }
 
-    override fun getItemCount(): Int {
-        return mTopics.count()
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SubjectViewHolder {
+        mParent = parent
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_subject_row, parent, false)
+        return SubjectViewHolder(view, onClick)
+
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): SubjectViewHolder {
-        mParent = parent
-        val view = LayoutInflater.from(parent?.context).inflate(R.layout.item_subject_row, parent, false)
-        return SubjectViewHolder(view, onClick)
+    override fun getItemCount(): Int {
+        return mTopics.count()
     }
 
     fun bind(topics: List<TopicView>) {
