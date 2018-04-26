@@ -1,5 +1,6 @@
 package biz.eventually.atpl.ui.about
 
+import android.os.Build
 import android.os.Bundle
 import android.support.graphics.drawable.AnimatedVectorDrawableCompat
 import android.support.v7.app.AppCompatActivity
@@ -23,9 +24,11 @@ class AboutActivity : AppCompatActivity() {
 
         about_home.setOnClickListener { super.onBackPressed() }
 
-        animation = AnimatedVectorDrawableCompat.create(applicationContext, R.drawable.props_rotation)
-        about_logo.setImageDrawable(animation)
-        animation?.start()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            animation = AnimatedVectorDrawableCompat.create(applicationContext, R.drawable.props_rotation)
+            about_logo.setImageDrawable(animation)
+            animation?.start()
+        }
 
         about_name.setOnClickListener {
             when (animation?.isRunning) {

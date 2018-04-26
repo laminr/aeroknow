@@ -131,7 +131,8 @@ class QuestionViewModel @Inject constructor(val repository: QuestionRepository) 
     fun previous(follow: Boolean): Boolean? {
         var isGood: Boolean? = null
 
-        if (mAnswerIndexTick > -1) {
+        // adding check size while investigating for a crash...
+        if (mAnswerIndexTick > -1 && mAnswerIndexTick < mQuestionState.question.answers.size) {
             isGood = mQuestionState.question.answers[mAnswerIndexTick].good
 
             // server following

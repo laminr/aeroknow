@@ -13,8 +13,13 @@ class SettingsFragment : PreferenceFragment() {
 
     private var countdownNbr: EditTextPreference? = null
     private var changeListener: Preference.OnPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
+        if(newValue.toString().isBlank()) {
+            // return false, stop the update of the preference
+            return@OnPreferenceChangeListener false
+        }
+
         updateCountdownSummary(newValue.toString())
-        true
+        return@OnPreferenceChangeListener true
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

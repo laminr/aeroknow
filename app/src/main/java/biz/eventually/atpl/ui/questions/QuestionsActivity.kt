@@ -77,6 +77,8 @@ class QuestionsActivity : BaseComponentActivity() {
 
     private lateinit var mQuestionCardView: List<CardView>
 
+    private var mDelay: Long = 60000L
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_questions)
@@ -136,6 +138,13 @@ class QuestionsActivity : BaseComponentActivity() {
 
         question_label.setBackgroundColor(Color.TRANSPARENT)
         question_label.settings.javaScriptEnabled = false
+
+
+        // countdown mDelay
+        val secondsStr = prefsGetValue(PREF_TIMER_NBR, "60")
+        if (secondsStr.isNotEmpty()) {
+            mDelay = secondsStr.toLong() * 1000
+        }
     }
 
     override fun onDestroy() {
@@ -398,8 +407,7 @@ class QuestionsActivity : BaseComponentActivity() {
 
         question_time.setTextColor(ContextCompat.getColor(applicationContext, R.color.colorGrey))
 
-        val seconds = prefsGetValue(PREF_TIMER_NBR, "60").toLong() * 1000
-        mTimer = object : CountDownTimer(seconds, 1000) {
+        mTimer = object : CountDownTimer(mDelay, 1000) {
             override fun onFinish() {
                 question_time.text = ""
                 question_label.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.colorAccent))
