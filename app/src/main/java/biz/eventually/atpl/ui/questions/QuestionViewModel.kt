@@ -157,7 +157,7 @@ class QuestionViewModel @Inject constructor(val repository: QuestionRepository) 
         var isGood: Boolean? = null
 
         mPosition.value?.let {
-            if (mAnswerIndexTick > -1 && it < mQuestions.size) {
+            if (mAnswerIndexTick > -1 && it < mQuestionState.question.answers.size) {
                 isGood = mQuestionState.question.answers[mAnswerIndexTick].good
 
                 if (follow) {
