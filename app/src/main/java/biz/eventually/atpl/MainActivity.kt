@@ -35,11 +35,12 @@ class MainActivity : BaseActivity<SourceRepository>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        val crashKit = Crashlytics.Builder()
-                .core(CrashlyticsCore.Builder().disabled(android.support.multidex.BuildConfig.DEBUG).build())
+        
+        val crashKit = CrashlyticsCore.Builder()
+                .disabled(BuildConfig.DEBUG)
                 .build()
-        Fabric.with(this, crashKit)
+
+        Fabric.with(this, Crashlytics.Builder().core(crashKit).build())
 
         setContentView(R.layout.activity_splash)
         AtplApplication.component.inject(this)
