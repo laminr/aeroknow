@@ -16,7 +16,7 @@ buildscript {
             retrofit  : '2.2.0',
             okhttp    : '3.6.0',
             dagger    : '2.11',
-            firebase  : '15.2.0',
+            firebase  : '16.0.0',
             anko      : '0.10.1',
             room      : '1.1.0',
             livecycle : '1.1.1',
