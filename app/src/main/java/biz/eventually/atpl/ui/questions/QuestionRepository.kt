@@ -62,79 +62,8 @@ class QuestionRepository @Inject constructor(private val dataProvider: DataProvi
                             then(data)
                         }, { e ->
                             if (!silent) status.postValue(NetworkStatus.ERROR)
-                            Timber.d("launchTest -> WebData: " + e)
+                            Timber.d("launchTest -> WebData: $e")
                         })
-            }
-        }
-    }
-
-    @SuppressLint("CheckResult")
-    fun updateFocus(questionId: Long, care: Boolean, then: (state: Boolean?) -> Unit) {
-        if (hasInternetConnection()) {
-            dataProvider.updateFocus(questionId, care)
-                    .subscribeOn(scheduler.network)
-                    .observeOn(scheduler.main)
-                    .subscribe({ focusInt ->
-                        val focus = when (focusInt) {
-                            0 -> false
-                            1 -> true
-                            else -> null
-                        }
-
-                        doAsync {
-                            dao.findById(questionId)?.let {
-                                it.focus = focus
-                                dao.update(it)
-                            }
-
-                            uiThread {
-                                then(focus)
-                            }
-                        }
-                    }, { e ->
-                        Timber.d("Question -> updateFocus: " + e)
-                        then(null)
-                    })
-        } else {
-            doAsync {
-                val db = dao.findById(questionId)?.also {
-                    it.focus = if (it.focus == care) null else care
-
-                    dao.update(it)
-                }
-                uiThread { then(db?.focus) }
-            }
-        }
-    }
-
-    @SuppressLint("CheckResult")
-    fun updateFollow(questionId: Long, good: Boolean, then: (question: Question?) -> Unit) {
-        if (hasInternetConnection()) {
-            dataProvider.updateFollow(questionId, good)
-                    .subscribeOn(scheduler.network)
-                    ?.observeOn(scheduler.main)
-                    ?.subscribe({ question ->
-                        dao.findById(question.idWeb)?.let {
-                            it.good = question.good
-                            it.wrong = question.wrong
-
-                            dao.update(it)
-                        }
-                        then(question)
-                    }, { e ->
-                        Timber.d("Question -> updateFollow: " + e)
-                        then(null)
-                    })
-        } else {
-            doAsync {
-                dao.findById(questionId)?.let {
-                    when (good) {
-                        true -> it.good += 1
-                        false -> it.wrong += 1
-                    }
-                    dao.update(it)
-                    then(it)
-                }
             }
         }
     }
@@ -149,10 +78,7 @@ class QuestionRepository @Inject constructor(private val dataProvider: DataProvi
                     it.question.idWeb,
                     topicId,
                     it.question.label,
-                    it.question.img,
-                    it.question.focus,
-                    it.question.good,
-                    it.question.wrong
+                    it.question.img
             ).apply {
                 answers = it.answers ?: listOf()
             }
@@ -170,9 +96,6 @@ class QuestionRepository @Inject constructor(private val dataProvider: DataProvi
                 dao.findById(qWeb.idWeb)?.let {
                     it.label = qWeb.label
                     it.img = qWeb.img
-                    it.focus = qWeb.focus
-                    it.good = qWeb.good
-                    it.wrong = qWeb.wrong
 
                     dao.updateQuestionAndAnswers(it)
                 }

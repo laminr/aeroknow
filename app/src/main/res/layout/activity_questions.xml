@@ -16,60 +16,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <Switch
-                android:id="@+id/question_follow"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                android:layout_marginTop="@dimen/margin_large"
-                android:layout_marginLeft="@dimen/margin_large"
-                android:layout_marginStart="@dimen/margin_large"
-                android:visibility="gone"
-                />
-
-            <TextView
-                android:id="@+id/question_follow_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/question_follow_up_label"
-                app:layout_constraintLeft_toRightOf="@+id/question_follow"
-                app:layout_constraintTop_toTopOf="@+id/question_follow"
-                app:layout_constraintBottom_toBottomOf="@+id/question_follow"
-                android:layout_marginLeft="8dp"
-                android:layout_marginStart="8dp"
-                android:textColor="@color/colorGrey"
-                android:visibility="gone"
-                />
-
-            <ImageView
-                android:id="@+id/question_care"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/margin_large"
-                android:layout_marginRight="@dimen/margin_large"
-                android:layout_marginTop="@dimen/margin_large"
-                android:contentDescription="do I care"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_star"
-                android:visibility="gone"
-                />
-
-            <ImageView
-                android:id="@+id/question_dontcare"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginTop="@dimen/margin_large"
-                android:contentDescription="I don't care"
-                app:layout_constraintRight_toLeftOf="@+id/question_care"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_visibility_off"
-                android:visibility="gone"
-                />
-
             <WebView
                 android:id="@+id/question_label"
                 android:layout_width="0dp"
@@ -283,62 +229,6 @@
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/question_answer_4"
                 android:elevation="2dp"
-                android:visibility="gone"
-                />
-
-            <TextView
-                android:id="@+id/question_good_value"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                tools:text="2"
-                android:textColor="@color/colorGrey"
-                android:layout_marginRight="8dp"
-                android:layout_marginEnd="8dp"
-                app:layout_constraintHorizontal_chainStyle="spread_inside"
-                app:layout_constraintRight_toLeftOf="@+id/question_good_img"
-                app:layout_constraintTop_toTopOf="@+id/question_good_img"
-                app:layout_constraintBottom_toBottomOf="@+id/question_good_img"
-                 />
-
-            <ImageView
-                android:id="@+id/question_good_img"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                app:srcCompat="@drawable/ic_thumb_up"
-                android:layout_marginRight="4dp"
-                android:layout_marginEnd="4dp"
-                app:layout_constraintRight_toLeftOf="@+id/question_wrong_img"
-                app:layout_constraintLeft_toLeftOf="@+id/question_answer_4"
-                app:layout_constraintTop_toBottomOf="@+id/question_answer_4"
-                app:layout_constraintHorizontal_chainStyle="packed"
-                android:layout_marginTop="16dp"
-                android:visibility="gone"
-                />
-
-            <TextView
-                android:id="@+id/question_wrong_value"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/colorGrey"
-                tools:text="2"
-                app:layout_constraintTop_toTopOf="@+id/question_wrong_img"
-                app:layout_constraintBottom_toBottomOf="@+id/question_wrong_img"
-                app:layout_constraintLeft_toRightOf="@+id/question_wrong_img"
-                android:layout_marginLeft="8dp"
-                android:layout_marginStart="8dp"
-                 />
-
-            <ImageView
-                android:id="@+id/question_wrong_img"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginLeft="4dp"
-                android:layout_marginStart="4dp"
-                app:srcCompat="@drawable/ic_thumb_down"
-                app:layout_constraintRight_toRightOf="@+id/question_answer_4"
-                app:layout_constraintTop_toBottomOf="@+id/question_answer_4"
-                app:layout_constraintLeft_toRightOf="@+id/question_good_img"
                 android:visibility="gone"
                 />
 

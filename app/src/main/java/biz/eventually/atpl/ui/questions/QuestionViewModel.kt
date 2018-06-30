@@ -21,7 +21,7 @@ import javax.inject.Singleton
  *
  */
 @Singleton
-class QuestionViewModel @Inject constructor(val repository: QuestionRepository) : ViewModel() {
+class QuestionViewModel @Inject constructor(private val repository: QuestionRepository) : ViewModel() {
 
     // topicId: Long, isSync: Boolean, hasOffline: Boolean
     var updateLine: MutableLiveData<Triple<Long, Boolean, Boolean>> = MutableLiveData()
@@ -96,30 +96,6 @@ class QuestionViewModel @Inject constructor(val repository: QuestionRepository) 
         }
     }
 
-    private fun updateFollow(good: Boolean) {
-        val index = mPosition.value ?: -1
-
-        question.value?.let {
-            repository.updateFollow(it.question.idWeb, good) { question ->
-                question?.let {
-                    if (index > -1) {
-                        // updating the question data in case of return on it
-                        when (good) {
-                            true -> mQuestions[index].good = question.good
-                            false -> mQuestions[index].wrong = question.wrong
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    fun updateFocus(good: Boolean, then: (state: Boolean?) -> Unit) {
-        question.value?.let {
-            repository.updateFocus(it.question.idWeb, good) { care -> then(care) }
-        }
-    }
-
     fun tickAnswer(tick: Int) {
         mAnswerIndexTick = tick
     }
@@ -128,17 +104,12 @@ class QuestionViewModel @Inject constructor(val repository: QuestionRepository) 
      * change index position for previous question
      * returning if ever the answer to the question was good.
      */
-    fun previous(follow: Boolean): Boolean? {
+    fun previous(): Boolean? {
         var isGood: Boolean? = null
 
         // adding check size while investigating for a crash...
         if (mAnswerIndexTick > -1 && mAnswerIndexTick < mQuestionState.question.answers.size) {
             isGood = mQuestionState.question.answers[mAnswerIndexTick].good
-
-            // server following
-            if (follow) {
-                updateFollow(isGood)
-            }
         }
 
         mPosition.value?.let {
@@ -152,17 +123,13 @@ class QuestionViewModel @Inject constructor(val repository: QuestionRepository) 
      * change index position for next question
      * returning if ever the answer to the question was good.
      */
-    fun next(follow: Boolean): Boolean? {
+    fun next(): Boolean? {
 
         var isGood: Boolean? = null
 
         mPosition.value?.let {
             if (mAnswerIndexTick > -1 && it < mQuestionState.question.answers.size) {
                 isGood = mQuestionState.question.answers[mAnswerIndexTick].good
-
-                if (follow) {
-                    updateFollow(isGood as Boolean)
-                }
             }
 
             if (it < mQuestions.size - 1) mPosition.postValue(it + 1)

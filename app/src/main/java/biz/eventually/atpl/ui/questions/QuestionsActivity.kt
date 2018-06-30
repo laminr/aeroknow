@@ -24,7 +24,6 @@ import biz.eventually.atpl.ui.BaseComponentActivity
 import biz.eventually.atpl.ui.ViewModelFactory
 import biz.eventually.atpl.utils.Prefields
 import biz.eventually.atpl.utils.Prefields.PREF_TIMER_NBR
-import biz.eventually.atpl.utils.Prefields.PREF_TOKEN
 import biz.eventually.atpl.utils.prefsGetValue
 import cn.pedant.SweetAlert.SweetAlertDialog
 import com.github.pwittchen.swipe.library.Swipe
@@ -86,22 +85,6 @@ class QuestionsActivity : BaseComponentActivity() {
         AtplApplication.component.inject(this)
 
         mQuestionCardView = listOf<CardView>(question_answer_1, question_answer_2, question_answer_3, question_answer_4)
-
-        /***
-         * settings properties
-         */
-        // has Token ?
-        prefsGetValue(PREF_TOKEN, "").let {
-            mHasToken = it.isNotEmpty()
-            if (mHasToken) {
-                question_care.visibility = View.VISIBLE
-                question_dontcare.visibility = View.VISIBLE
-
-                question_follow.visibility = View.VISIBLE
-                question_follow_label.visibility = View.VISIBLE
-            }
-        }
-
         mWithCountDown = prefsGetValue(Prefields.PREF_TIMER_ENABLE, true)
 
         /***
@@ -170,44 +153,33 @@ class QuestionsActivity : BaseComponentActivity() {
         question_previous.setOnClickListener {
             mMenuShare?.isVisible = false
 
-            val checked = question_follow.isChecked
-            mViewModel.previous(checked)?.let {
-                mStatistic.put(mData.question.idWeb, if (it) 1 else 0)
-                if (checked) mHadChange = true
+            mViewModel.previous()?.let {
+                mStatistic[mData.question.idWeb] = if (it) 1 else 0
                 mMenuShare?.isVisible = true
-            } ?: run({ mMenuShare?.isVisible = true })
+            } ?: run { mMenuShare?.isVisible = true }
         }
 
         question_next.setOnClickListener {
             mMenuShare?.isVisible = false
 
-            val checked = question_follow.isChecked
-            mViewModel.next(checked)?.let {
-                mStatistic.put(mData.question.idWeb, if (it) 1 else 0)
-                if (checked) mHadChange = true
+            mViewModel.next()?.let {
+                mStatistic[mData.question.idWeb] = if (it) 1 else 0
                 mMenuShare?.isVisible = true
-            } ?: run({ mMenuShare?.isVisible = false })
+            } ?: run { mMenuShare?.isVisible = false }
         }
 
         question_last.setOnClickListener {
             mMenuShare?.isVisible = false
 
-            val checked = question_follow.isChecked
-            mViewModel.next(checked)?.let {
-                mStatistic.put(mData.question.idWeb, if (it) 1 else 0)
-
-                if (checked) mHadChange = true
+            mViewModel.next()?.let {
+                mStatistic[mData.question.idWeb] = if (it) 1 else 0
                 mMenuShare?.isVisible = true
 
                 // show stats of result
                 showLocalStats()
-            } ?: run({ mMenuShare?.isVisible = false })
+            } ?: run { mMenuShare?.isVisible = false }
 
             it.visibility = View.GONE
-        }
-
-        question_follow.setOnCheckedChangeListener { _, isChecked ->
-            question_last.visibility = if (isChecked && mData.isLast) View.VISIBLE else View.GONE
         }
 
         mSwipe = Swipe()
@@ -360,13 +332,6 @@ class QuestionsActivity : BaseComponentActivity() {
                 questionAnswerTextView[i].text = answers[i].value
             }
 
-            if (mHasToken) {
-                displayFollowAndFocus()
-                attachFocusListener()
-            }
-
-            displayFollowCount()
-
             imgList.forEach { img ->
                 val imgContainer = ImageView(applicationContext)
                 // https://www.codeday.top/2017/07/31/31373.html
@@ -434,111 +399,12 @@ class QuestionsActivity : BaseComponentActivity() {
         }.start()
     }
 
-    private fun attachFocusListener() {
-
-        question_care.setOnClickListener {
-            mHadChange = true
-
-            question_care.isEnabled = false
-            question_care.setImageDrawable(ContextCompat.getDrawable(this@QuestionsActivity, R.drawable.ic_cached_black))
-            question_care.setColorFilter(ContextCompat.getColor(applicationContext, R.color.colorGrey))
-
-            mViewModel.updateFocus(true, this::onFocusSaves)
-
-            displayFollowAndFocus()
-        }
-
-        question_dontcare.setOnClickListener {
-            mHadChange = true
-
-            question_dontcare.isEnabled = false
-            question_dontcare.setImageDrawable(ContextCompat.getDrawable(this@QuestionsActivity, R.drawable.ic_cached_black))
-            question_dontcare.setColorFilter(ContextCompat.getColor(applicationContext, R.color.colorGrey))
-
-            mViewModel.updateFocus(false, this::onFocusSaves)
-
-            displayFollowAndFocus()
-        }
-    }
-
-    private fun onFocusSaves(state: Boolean?) {
-        mData.question.focus = state
-
-        question_care.isEnabled = true
-        question_care.setImageDrawable(ContextCompat.getDrawable(this@QuestionsActivity, R.drawable.ic_star))
-
-        question_dontcare.isEnabled = true
-        question_dontcare.setImageDrawable(ContextCompat.getDrawable(this@QuestionsActivity, R.drawable.ic_visibility_off))
-
-        displayFollowAndFocus()
-    }
-
     private fun onSavingError() {
         Alerter.create(this)
                 .setTitle(getString(R.string.dialog_title_error))
                 .setText(getString(R.string.question_focus_error))
                 .setBackgroundColorRes(R.color.colorSecondary)
                 .show()
-
-        displayFollowAndFocus()
-    }
-
-    private fun displayFollowAndFocus() {
-
-        question_dontcare.visibility = View.VISIBLE
-        question_care.visibility = View.VISIBLE
-
-        when (mData.question.focus) {
-            null -> {
-                question_care.setColorFilter(ContextCompat.getColor(applicationContext, R.color.colorGrey))
-                question_dontcare.setColorFilter(ContextCompat.getColor(applicationContext, R.color.colorGrey))
-            }
-            false -> {
-                question_care.setColorFilter(ContextCompat.getColor(applicationContext, R.color.colorGrey))
-                question_dontcare.setColorFilter(ContextCompat.getColor(applicationContext, R.color.colorAccent))
-            }
-            true -> {
-                question_care.setColorFilter(ContextCompat.getColor(applicationContext, R.color.colorAccent))
-                question_dontcare.setColorFilter(ContextCompat.getColor(applicationContext, R.color.colorGrey))
-            }
-        }
-    }
-
-    private fun displayFollowCount() {
-
-        val good = mData.question.good
-        val wrong = mData.question.wrong
-
-        if (good == 0 && wrong == 0) {
-            question_good_img.visibility = View.GONE
-            question_good_value.visibility = View.GONE
-
-            question_wrong_img.visibility = View.GONE
-            question_wrong_value.visibility = View.GONE
-        } else {
-            question_good_img.visibility = View.VISIBLE
-            question_good_value.visibility = View.VISIBLE
-            question_good_value.text = good.toString()
-
-            question_wrong_img.visibility = View.VISIBLE
-            question_wrong_value.visibility = View.VISIBLE
-            question_wrong_value.text = wrong.toString()
-
-            when {
-                good > wrong -> {
-                    question_good_img.setColorFilter(ContextCompat.getColor(applicationContext, R.color.colorAccent))
-                    question_wrong_img.setColorFilter(ContextCompat.getColor(applicationContext, R.color.colorGrey))
-                }
-                good < wrong -> {
-                    question_good_img.setColorFilter(ContextCompat.getColor(applicationContext, R.color.colorGrey))
-                    question_wrong_img.setColorFilter(ContextCompat.getColor(applicationContext, R.color.colorAccent))
-                }
-                else -> {
-                    question_good_img.setColorFilter(ContextCompat.getColor(applicationContext, R.color.colorGrey))
-                    question_wrong_img.setColorFilter(ContextCompat.getColor(applicationContext, R.color.colorGrey))
-                }
-            }
-        }
     }
 
     private fun initAnswerCardDisplay() {

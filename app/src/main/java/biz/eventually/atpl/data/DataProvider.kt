@@ -25,35 +25,17 @@ class DataProvider @Inject constructor(private val sourceService: SourceService,
     }
 
     fun dataGetSubjects(sourceId: Long, lastCall: Long = 0L): Observable<List<Subject>> {
-        val token = prefsGetString(context, PREF_TOKEN) ?: ""
-        return sourceService.loadSubjects(sourceId, lastCall, token).map { api -> toAppSubjects(sourceId, api.data) }
+        return sourceService.loadSubjects(sourceId, lastCall).map { api -> toAppSubjects(sourceId, api.data) }
     }
 
     fun dataGetTopicQuestions(topicId: Long, startFirst: Boolean, lastCall: Long = 0L): Observable<List<Question>> {
-        val token = prefsGetValue(PREF_TOKEN, "")
         val questions = when (startFirst) {
-            true -> sourceService.loadQuestionsStarred(topicId, lastCall, token)
-            false -> sourceService.loadQuestions(topicId, lastCall, token)
+            true -> sourceService.loadQuestionsStarred(topicId, lastCall)
+            false -> sourceService.loadQuestions(topicId, lastCall)
         }
 
         return questions.map { response ->
             response.data?.questions?.let { toAppQuestions(topicId, it) } ?: listOf()
-        }
-    }
-
-    fun updateFollow(questionId: Long, good: Boolean): Observable<Question> {
-        val isGood = if (good) 1 else 0
-        val token = prefsGetValue(PREF_TOKEN, "")
-        return sourceService.updateFollow(questionId, isGood, token).map { response ->
-            response.data?.let { toAppQuestion(-1, it) } ?: Question(-1, -1, "", "", null, 0, 0)
-        }
-    }
-
-    fun updateFocus(questionId: Long, care: Boolean): Observable<Int> {
-        val doCare = if (care) 1 else 0
-        val token = prefsGetValue(PREF_TOKEN, "")
-        return sourceService.updateFocus(questionId, doCare, token).map { response ->
-            response.data?.let({ it.focus?.let { if (it) 1 else 0 } }) ?: -1
         }
     }
 }
